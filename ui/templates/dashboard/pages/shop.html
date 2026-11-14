@@ -241,15 +241,17 @@
       position: fixed;
       inset: 0;
       background-color: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(8px);
       z-index: 90;
       opacity: 0;
       pointer-events: none;
+      visibility: hidden;
       transition: opacity 300ms;
     }
     .modal-backdrop.active {
       opacity: 1;
       pointer-events: auto;
+      visibility: visible;
+      backdrop-filter: blur(8px);
     }
     .modal-content {
       position: fixed;
@@ -276,13 +278,18 @@
       position: fixed;
       inset: 0;
       background-color: rgba(30, 41, 59, 0.6);
-      backdrop-filter: blur(4px);
       z-index: 80;
       opacity: 0;
       transition: opacity 300ms;
       pointer-events: none;
+      visibility: hidden;
     }
-    .cart-drawer-backdrop.active { opacity: 1; pointer-events: auto; }
+    .cart-drawer-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+      visibility: visible;
+      backdrop-filter: blur(4px);
+    }
     .cart-drawer {
       position: fixed;
       top: 0;

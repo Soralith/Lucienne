@@ -6,7 +6,25 @@
 mod filters;
 mod server;
 
+/// WebKitGTK's Wayland compositing path paints the scrolled content area blank
+/// and leaves the cursor frozen after scrolling on some drivers (seen on
+/// Hyprland with hybrid Intel/NVIDIA graphics). The X11/XWayland path renders
+/// the same page correctly. Pick X11 when both backends are available so the
+/// app works out of the box; an explicit GDK_BACKEND still wins.
+#[cfg(target_os = "linux")]
+fn prefer_x11_on_wayland() {
+    if std::env::var_os("GDK_BACKEND").is_none()
+        && std::env::var_os("WAYLAND_DISPLAY").is_some()
+        && std::env::var_os("DISPLAY").is_some()
+    {
+        std::env::set_var("GDK_BACKEND", "x11");
+    }
+}
+
 fn main() {
+    #[cfg(target_os = "linux")]
+    prefer_x11_on_wayland();
+
     let address = server::start().expect("local server failed to start");
     let url = format!("http://{address}/dashboard/");
 

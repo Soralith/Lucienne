@@ -222,6 +222,11 @@
 
     /* ===== THEME SWATCH ===== */
     .theme-swatch { transition: all 200ms ease; border-color: var(--border-soft) !important; }
+    /* A closed modal must not keep a full-screen backdrop-filter layer alive:
+       WebKitGTK composites that layer every frame and can paint the page blank. */
+    #deleteModal { backdrop-filter: none; -webkit-backdrop-filter: none; }
+    #deleteModal:not(.opacity-0) { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+
     .theme-swatch:hover { transform: translateY(-2px); }
     .theme-swatch.selected {
       box-shadow: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--brand);
@@ -286,7 +291,7 @@
           <button id="btn-discard" class="btn-ghost font-semibold px-5 py-2.5 rounded-full text-xs flex items-center gap-2">
             <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Discard
           </button>
-          <button id="btn-save" form="set-form" class="btn-brand font-semibold px-5 py-2.5 rounded-full text-xs flex items-center gap-2 shadow-sm">
+          <button id="btn-save" type="button" form="set-form" class="btn-brand font-semibold px-5 py-2.5 rounded-full text-xs flex items-center gap-2 shadow-sm">
             <i data-lucide="check" class="w-3.5 h-3.5"></i> Save Changes
           </button>
         </div>
@@ -644,7 +649,7 @@
   </div>
 
   <!-- Delete Account Confirmation Modal -->
-  <div id="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200" style="background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);">
+  <div id="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200" style="background: rgba(0,0,0,0.5);">
     <div class="w-full max-w-md p-6 rounded-2xl shadow-2xl transform scale-95 transition-transform duration-200" style="background: var(--bg-card); border: 1px solid var(--border-soft);">
       <div class="flex items-center gap-3 mb-4">
         <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: rgba(239, 68, 68, 0.15);">

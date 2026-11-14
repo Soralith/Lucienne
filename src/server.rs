@@ -373,6 +373,22 @@ async fn admin_page(State(state): State<AppState>) -> Response {
     page_response(&state, "admin")
 }
 
+// The converted pages still contain real <form method="post"> elements. This
+// mock server does not persist them, but without a POST route axum answers 405
+// with an empty body, which WebKit renders as a blank white window. Bounce the
+// submission back to the page instead of letting it replace the app with that.
+async fn profile_save() -> Redirect {
+    Redirect::to("/profile/")
+}
+
+async fn settings_save() -> Redirect {
+    Redirect::to("/settings/")
+}
+
+async fn admin_action() -> Redirect {
+    Redirect::to("/settings/admin/")
+}
+
 async fn game_detail(State(state): State<AppState>, AxumPath(id): AxumPath<String>) -> Response {
     let key = format!("detail-{id}");
     let known = {
@@ -819,10 +835,10 @@ pub fn router() -> Router {
         .route("/community/", get(community_page))
         .route("/wishlist/", get(wishlist_page))
         .route("/library/", get(library_page))
-        .route("/profile/", get(profile_page))
-        .route("/settings/", get(settings_page))
+        .route("/profile/", get(profile_page).post(profile_save))
+        .route("/settings/", get(settings_page).post(settings_save))
         .route("/settings/developer/", get(developer_page))
-        .route("/settings/admin/", get(admin_page))
+        .route("/settings/admin/", get(admin_page).post(admin_action))
         .route("/api/wishlist/list/", get(wishlist_list))
         .route("/api/wishlist/toggle/", post(wishlist_toggle))
         .route("/api/shop/check-ownership/", get(check_ownership))

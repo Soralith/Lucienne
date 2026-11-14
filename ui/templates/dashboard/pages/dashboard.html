@@ -498,6 +498,10 @@
         setTimeout(function () {
           splashScreen.classList.add("hidden");
           document.body.classList.remove("splash-active");
+          // Drop the 400px blur layer once it has faded: WebKitGTK keeps a
+          // 150px-blur fixed layer composited otherwise, which makes the whole
+          // window slow to repaint.
+          setTimeout(function () { splashScreen.remove(); }, 1000);
         }, 400);
       }
 
