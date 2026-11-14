@@ -1,0 +1,1988 @@
+{
+  "products": [
+    {
+      "id": 192,
+      "name": "NieR:Automata\u2122 GOTY Edition",
+      "category": "games",
+      "price": 19.99,
+      "original_price": 39.99,
+      "image": "/static/dashboard/remote/656cfe5dd03d11d2.jpg",
+      "data": {
+        "id": 1,
+        "name": "NieR:Automata\u2122 GOTY Edition",
+        "brand": "Square Enix",
+        "category": "games",
+        "type": "Action RPG",
+        "price": 19.99,
+        "originalPrice": 39.99,
+        "rating": 4.9,
+        "reviews": 2400,
+        "stock": "In stock \u00b7 Ships in 24h",
+        "badges": [
+          "-50%",
+          "Summer"
+        ],
+        "image": "/static/dashboard/remote/656cfe5dd03d11d2.jpg",
+        "popularity": 95,
+        "date": "2026-07-15",
+        "description": "The award-winning action RPG from PlatinumGames, now in its Game of the Year edition. Fight through a shattered world as android 2B in a breathtaking, melancholy story about machines, humanity and what it means to be alive.",
+        "releaseDate": "March 8, 2026",
+        "developer": "PlatinumGames",
+        "publisher": "Square Enix",
+        "tags": [
+          "Action",
+          "RPG",
+          "Singleplayer",
+          "Great Soundtrack",
+          "Futuristic",
+          "Cyberpunk"
+        ],
+        "media": [
+          {
+            "type": "video",
+            "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "poster": "/static/dashboard/remote/4f0ca99ddf0c3978.jpg",
+            "label": "Official Launch Trailer"
+          },
+          {
+            "type": "video",
+            "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+            "poster": "/static/dashboard/remote/45d1d697d0bb65c3.jpg",
+            "label": "Gameplay Preview"
+          }
+        ],
+        "screenshots": [
+          "/static/dashboard/remote/4f0ca99ddf0c3978.jpg",
+          "/static/dashboard/remote/45d1d697d0bb65c3.jpg",
+          "/static/dashboard/remote/9e1590a96103f53a.jpg",
+          "/static/dashboard/remote/f0eced1c900fc611.jpg"
+        ],
+        "friends": [
+          {
+            "name": "shiro_kun",
+            "status": "owns",
+            "avatar": "/static/dashboard/remote/d846e9ee1c036099.jpg"
+          },
+          {
+            "name": "hana_illustrator",
+            "status": "wants",
+            "avatar": "/static/dashboard/remote/a037b1caa972808f.jpg"
+          },
+          {
+            "name": "ren_dev",
+            "status": "owns",
+            "avatar": "/static/dashboard/remote/e573467d19cda38d.jpg"
+          }
+        ],
+        "bundles": [
+          {
+            "name": "Gameplay Bundle",
+            "price": 29.99,
+            "originalPrice": 49.99,
+            "includes": [
+              "Base game",
+              "Official OST \u2014 Chiptune Edition"
+            ],
+            "type": "bundle"
+          },
+          {
+            "name": "Collector's Edition",
+            "price": 79.99,
+            "originalPrice": 99.99,
+            "includes": [
+              "GOTY Edition",
+              "SteelBook case",
+              "Artbook",
+              "Acrylic pin"
+            ],
+            "type": "edition"
+          },
+          {
+            "name": "Automata DLC Pack",
+            "price": 9.99,
+            "originalPrice": 14.99,
+            "includes": [
+              "DLC 3C3C1D119440927",
+              "Costume pack"
+            ],
+            "type": "dlc"
+          }
+        ]
+      },
+      "created_at": "2026-11-13T19:18:52.596202+00:00"
+    },
+    {
+      "id": 193,
+      "name": "Honkai: Star Rail Collector's Edition",
+      "category": "games",
+      "price": 59.99,
+      "original_price": null,
+      "image": "/static/dashboard/remote/f5a2dd5a0e6bfc51.jpg",
+      "data": {
+        "id": 2,
+        "name": "Honkai: Star Rail Collector's Edition",
+        "brand": "HoYoverse",
+        "category": "games",
+        "type": "Turn-based RPG",
+        "price": 59.99,
+        "originalPrice": null,
+        "rating": 4.7,
+        "reviews": 1800,
+        "stock": "Pre-order \u00b7 Ships Dec 2026",
+        "badges": [
+          "New"
+        ],
+        "image": "/static/dashboard/remote/f5a2dd5a0e6bfc51.jpg",
+        "popularity": 88,
+        "date": "2026-08-01",
+        "description": "Ride the Astral Express across the stars in HoYoverse's turn-based space fantasy. Collector's Edition ships with a full-color artbook, a pinned server soundtrack, and exclusive in-game redemption codes.",
+        "releaseDate": "December 15, 2026",
+        "developer": "HoYoverse",
+        "publisher": "HoYoverse",
+        "tags": [
+          "Turn-based",
+          "RPG",
+          "Sci-Fi",
+          "Fantasy",
+          "Singleplayer"
+        ],
+        "media": [
+          {
+            "type": "video",
+            "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "poster": "/static/dashboard/remote/45d1d697d0bb65c3.jpg",
+            "label": "Star Rail \u2014 Launch Trailer"
+          },
+          {
+            "type": "video",
+            "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+            "poster": "/static/dashboard/remote/4f0ca99ddf0c3978.jpg",
+            "label": "Gameplay Preview"
+          }
+        ],
+        "screenshots": [
+          "/static/dashboard/remote/45d1d697d0bb65c3.jpg",
+          "/static/dashboard/remote/4f0ca99ddf0c3978.jpg",
+          "/static/dashboard/remote/f0eced1c900fc611.jpg"
+        ],
+        "friends": [
+          {
+            "name": "hana_illustrator",
+            "status": "wants",
+            "avatar": "/static/dashboard/remote/a037b1caa972808f.jpg"
+          },
+          {
+            "name": "shiro_kun",
+            "status": "wants",
+            "avatar": "/static/dashboard/remote/d846e9ee1c036099.jpg"
+          }
+        ],
+        "bundles": [
+          {
+            "name": "Deluxe Edition",
+            "price": 79.99,
+            "originalPrice": null,
+            "includes": [
+              "Collector's Edition",
+              "Early access \u2014 3 days early",
+              "Digital artbook vol. 2"
+            ],
+            "type": "edition"
+          }
+        ]
+      },
+      "created_at": "2026-11-13T19:18:52.597090+00:00"
+    },
+    {
+      "id": 194,
+      "name": "Genshin Impact 1/7 Scale PVC Figure",
+      "category": "figures",
+      "price": 99.99,
+      "original_price": 129.99,
+      "image": "/static/dashboard/remote/dd6f0727c587a7d1.jpg",
+      "data": {
+        "id": 3,
+        "name": "Genshin Impact 1/7 Scale PVC Figure",
+        "brand": "Anime Collectibles",
+        "category": "figures",
+        "type": "PVC Statue",
+        "price": 99.99,
+        "originalPrice": 129.99,
+        "rating": 4.9,
+        "reviews": 890,
+        "stock": "Release: Jan 2027",
+        "badges": [
+          "Pre-Order"
+        ],
+        "image": "/static/dashboard/remote/dd6f0727c587a7d1.jpg",
+        "popularity": 92,
+        "date": "2026-06-20",
+        "description": "A lovingly sculpted 1/7 scale PVC figure with a full display base. Pre-order ships worldwide in January 2027, wrapped in double-boxed collector-grade packaging with authenticity certificate.",
+        "releaseDate": "January 2027",
+        "developer": "HoYoverse",
+        "publisher": "Anime Collectibles",
+        "tags": [
+          "Figure",
+          "Pre-Order",
+          "Collectible",
+          "1/7 Scale"
+        ],
+        "media": [],
+        "screenshots": [
+          "/static/dashboard/remote/7d4266a03203b9b5.jpg",
+          "/static/dashboard/remote/4f0ca99ddf0c3978.jpg"
+        ],
+        "friends": [
+          {
+            "name": "shiro_kun",
+            "status": "wants",
+            "avatar": "/static/dashboard/remote/d846e9ee1c036099.jpg"
+          }
+        ],
+        "bundles": []
+      },
+      "created_at": "2026-11-13T19:18:52.597712+00:00"
+    },
+    {
+      "id": 195,
+      "name": "Persona 3 Reload Premium Hoodie",
+      "category": "apparel",
+      "price": 34.99,
+      "original_price": 49.99,
+      "image": "/static/dashboard/remote/8ca285a384248f70.jpg",
+      "data": {
+        "id": 4,
+        "name": "Persona 3 Reload Premium Hoodie",
+        "brand": "Official Apparel",
+        "category": "apparel",
+        "type": "Cotton Hoodie",
+        "price": 34.99,
+        "originalPrice": 49.99,
+        "rating": 4.6,
+        "reviews": 3100,
+        "stock": "In stock \u00b7 4 sizes",
+        "badges": [
+          "-30%",
+          "Bestseller"
+        ],
+        "image": "/static/dashboard/remote/8ca285a384248f70.jpg",
+        "popularity": 97,
+        "date": "2026-05-10",
+        "description": "Heavyweight cotton hoodie with the SEES emblem pressed on the chest. Official merchandise, machine-washable, available in S\u2013XL.",
+        "releaseDate": "In stock now",
+        "developer": "ATLUS",
+        "publisher": "Official Apparel",
+        "tags": [
+          "Apparel",
+          "Unisex",
+          "Cotton"
+        ],
+        "media": [],
+        "screenshots": [
+          "/static/dashboard/remote/f0eced1c900fc611.jpg"
+        ],
+        "friends": [],
+        "bundles": []
+      },
+      "created_at": "2026-11-13T19:18:52.598240+00:00"
+    },
+    {
+      "id": 196,
+      "name": "Monster Hunter World: Iceborne Master",
+      "category": "games",
+      "price": 9.89,
+      "original_price": 29.99,
+      "image": "/static/dashboard/remote/60622d538865c794.jpg",
+      "data": {
+        "id": 5,
+        "name": "Monster Hunter World: Iceborne Master",
+        "brand": "CAPCOM",
+        "category": "games",
+        "type": "Action",
+        "price": 9.89,
+        "originalPrice": 29.99,
+        "rating": 4.8,
+        "reviews": 5600,
+        "stock": "In stock \u00b7 Ships in 24h",
+        "badges": [
+          "-67%"
+        ],
+        "image": "/static/dashboard/remote/60622d538865c794.jpg",
+        "popularity": 85,
+        "date": "2025-12-01",
+        "description": "Master Edition bundles the base game and the massive Iceborne expansion. Hunt elder dragons in the Hoarfrost Reach with a full Master Rank campaign and new mounting mechanics.",
+        "releaseDate": "December 2025",
+        "developer": "CAPCOM",
+        "publisher": "CAPCOM",
+        "tags": [
+          "Action",
+          "Multiplayer",
+          "Co-op",
+          "Open World",
+          "Hunting"
+        ],
+        "media": [
+          {
+            "type": "video",
+            "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+            "poster": "/static/dashboard/remote/9e1590a96103f53a.jpg",
+            "label": "Iceborne Launch Trailer"
+          },
+          {
+            "type": "video",
+            "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "poster": "/static/dashboard/remote/45d1d697d0bb65c3.jpg",
+            "label": "Gameplay Preview"
+          }
+        ],
+        "screenshots": [
+          "/static/dashboard/remote/9e1590a96103f53a.jpg",
+          "/static/dashboard/remote/45d1d697d0bb65c3.jpg",
+          "/static/dashboard/remote/4f0ca99ddf0c3978.jpg"
+        ],
+        "friends": [
+          {
+            "name": "ren_dev",
+            "status": "owns",
+            "avatar": "/static/dashboard/remote/e573467d19cda38d.jpg"
+          },
+          {
+            "name": "shiro_kun",
+            "status": "owns",
+            "avatar": "/static/dashboard/remote/d846e9ee1c036099.jpg"
+          },
+          {
+            "name": "hana_illustrator",
+            "status": "wants",
+            "avatar": "/static/dashboard/remote/a037b1caa972808f.jpg"
+          }
+        ],
+        "bundles": [
+          {
+            "name": "Iceborne Master Bundles",
+            "price": 9.89,
+            "originalPrice": 29.99,
+            "includes": [
+              "Full Game",
+              "Iceborne Expansion"
+            ],
+            "type": "bundle"
+          },
+          {
+            "name": "Mega Deluxe Kit",
+            "price": 24.99,
+            "originalPrice": 39.99,
+            "includes": [
+              "Iceborne Master",
+              "Handler Costume pack",
+              "Samurai pose set"
+            ],
+            "type": "edition"
+          }
+        ]
+      },
+      "created_at": "2026-11-13T19:18:52.598797+00:00"
+    },
+    {
+      "id": 197,
+      "name": "Hatsune Miku Nendoroid 15th Anniversary",
+      "category": "figures",
+      "price": 79.99,
+      "original_price": null,
+      "image": "/static/dashboard/remote/f5a2dd5a0e6bfc51.jpg",
+      "data": {
+        "id": 6,
+        "name": "Hatsune Miku Nendoroid 15th Anniversary",
+        "brand": "Good Smile",
+        "category": "figures",
+        "type": "Nendoroid",
+        "price": 79.99,
+        "originalPrice": null,
+        "rating": 5.0,
+        "reviews": 4200,
+        "stock": "Only 12 left",
+        "badges": [
+          "Limited"
+        ],
+        "image": "/static/dashboard/remote/f5a2dd5a0e6bfc51.jpg",
+        "popularity": 99,
+        "date": "2026-04-15",
+        "description": "Celebrating 15 years of the world's most famous virtual singer with an anniversary nendoroid \u2014 three face plates, two buns, and a glow-scan hand-knitted scarf.",
+        "releaseDate": "April 15, 2026",
+        "developer": "Crypton Future Media",
+        "publisher": "Good Smile Company",
+        "tags": [
+          "Nendoroid",
+          "Limited",
+          "Vocaloid",
+          "Figure"
+        ],
+        "media": [],
+        "screenshots": [
+          "/static/dashboard/remote/45d1d697d0bb65c3.jpg",
+          "/static/dashboard/remote/4f0ca99ddf0c3978.jpg"
+        ],
+        "friends": [
+          {
+            "name": "hana_illustrator",
+            "status": "owns",
+            "avatar": "/static/dashboard/remote/a037b1caa972808f.jpg"
+          },
+          {
+            "name": "shiro_kun",
+            "status": "wants",
+            "avatar": "/static/dashboard/remote/d846e9ee1c036099.jpg"
+          }
+        ],
+        "bundles": []
+      },
+      "created_at": "2026-11-13T19:18:52.599313+00:00"
+    },
+    {
+      "id": 198,
+      "name": "Vintage Anime Art T-Shirt Collection",
+      "category": "apparel",
+      "price": 19.99,
+      "original_price": 24.99,
+      "image": "/static/dashboard/remote/dd6f0727c587a7d1.jpg",
+      "data": {
+        "id": 7,
+        "name": "Vintage Anime Art T-Shirt Collection",
+        "brand": "Official Apparel",
+        "category": "apparel",
+        "type": "Unisex Tee",
+        "price": 19.99,
+        "originalPrice": 24.99,
+        "rating": 4.4,
+        "reviews": 612,
+        "stock": "In stock \u00b7 Unisex",
+        "badges": [
+          "-20%"
+        ],
+        "image": "/static/dashboard/remote/dd6f0727c587a7d1.jpg",
+        "popularity": 72,
+        "date": "2026-03-20",
+        "description": "A retro anime-print unisex crew neck in soft-washed cotton. This drop celebrates the hand-drawn era with three limited prints.",
+        "releaseDate": "In stock now",
+        "developer": "various",
+        "publisher": "Official Apparel",
+        "tags": [
+          "Apparel",
+          "Unisex",
+          "Retro"
+        ],
+        "media": [],
+        "screenshots": [
+          "/static/dashboard/remote/7d4266a03203b9b5.jpg"
+        ],
+        "friends": [],
+        "bundles": []
+      },
+      "created_at": "2026-11-13T19:18:52.599818+00:00"
+    },
+    {
+      "id": 199,
+      "name": "Acrylic Keychain Collection Set (8 pcs)",
+      "category": "accessories",
+      "price": 12.99,
+      "original_price": null,
+      "image": "/static/dashboard/remote/656cfe5dd03d11d2.jpg",
+      "data": {
+        "id": 8,
+        "name": "Acrylic Keychain Collection Set (8 pcs)",
+        "brand": "Accessories",
+        "category": "accessories",
+        "type": "Acrylic",
+        "price": 12.99,
+        "originalPrice": null,
+        "rating": 4.9,
+        "reviews": 7800,
+        "stock": "In stock \u00b7 Ships in 24h",
+        "badges": [
+          "Bestseller"
+        ],
+        "image": "/static/dashboard/remote/656cfe5dd03d11d2.jpg",
+        "popularity": 94,
+        "date": "2026-02-28",
+        "description": "Eight enamel-backed acrylic keychains of the full fictional idol lineup. A quick way to spell your favourite show in satchel flair.",
+        "releaseDate": "In stock now",
+        "developer": "SEGA",
+        "publisher": "Accessories",
+        "tags": [
+          "Accessory",
+          "Acrylic",
+          "Set"
+        ],
+        "media": [],
+        "screenshots": [
+          "/static/dashboard/remote/4f0ca99ddf0c3978.jpg",
+          "/static/dashboard/remote/f0eced1c900fc611.jpg"
+        ],
+        "friends": [],
+        "bundles": []
+      },
+      "created_at": "2026-11-13T19:18:52.600257+00:00"
+    },
+    {
+      "id": 200,
+      "name": "Project Sekai Colorful Stage! Soundtrack",
+      "category": "accessories",
+      "price": 29.99,
+      "original_price": null,
+      "image": "/static/dashboard/remote/8ca285a384248f70.jpg",
+      "data": {
+        "id": 9,
+        "name": "Project Sekai Colorful Stage! Soundtrack",
+        "brand": "Sega",
+        "category": "accessories",
+        "type": "CD + Booklet",
+        "price": 29.99,
+        "originalPrice": null,
+        "rating": 4.8,
+        "reviews": 1200,
+        "stock": "In stock",
+        "badges": [
+          "New"
+        ],
+        "image": "/static/dashboard/remote/8ca285a384248f70.jpg",
+        "popularity": 80,
+        "date": "2026-07-01",
+        "description": "The piano-pressed Colorful Stage! original soundtrack with a full-color lyric booklet from the Secret Garden records garage.",
+        "releaseDate": "July 1, 2026",
+        "developer": "SEGA Colorful Palette",
+        "publisher": "Sega Music",
+        "tags": [
+          "Soundtrack",
+          "Music",
+          "Collectible"
+        ],
+        "media": [],
+        "screenshots": [
+          "/static/dashboard/remote/f0eced1c900fc611.jpg",
+          "/static/dashboard/remote/9e1590a96103f53a.jpg"
+        ],
+        "friends": [
+          {
+            "name": "hana_illustrator",
+            "status": "owns",
+            "avatar": "/static/dashboard/remote/a037b1caa972808f.jpg"
+          }
+        ],
+        "bundles": []
+      },
+      "created_at": "2026-11-13T19:18:52.600683+00:00"
+    },
+    {
+      "id": 201,
+      "name": "Chainsaw Man Power Scale Figure",
+      "category": "figures",
+      "price": 149.99,
+      "original_price": 179.99,
+      "image": "/static/dashboard/remote/60622d538865c794.jpg",
+      "data": {
+        "id": 10,
+        "name": "Chainsaw Man Power Scale Figure",
+        "brand": "Bandai",
+        "category": "figures",
+        "type": "1/8 Scale",
+        "price": 149.99,
+        "originalPrice": 179.99,
+        "rating": 4.9,
+        "reviews": 650,
+        "stock": "Pre-order \u00b7 Feb 2027",
+        "badges": [
+          "Pre-Order",
+          "-17%"
+        ],
+        "image": "/static/dashboard/remote/60622d538865c794.jpg",
+        "popularity": 87,
+        "date": "2026-06-15",
+        "description": "A limited pre-order of Power in her chainsaw-fiend pose, 1/8 scale with swap, shirt and optional part pieces. Ships February 2027.",
+        "releaseDate": "February 2027",
+        "developer": "MAPPA",
+        "publisher": "Bandai Spirits",
+        "tags": [
+          "Figure",
+          "1/8 Scale",
+          "Pre-Order",
+          "Collectible"
+        ],
+        "media": [],
+        "screenshots": [
+          "/static/dashboard/remote/9e1590a96103f53a.jpg",
+          "/static/dashboard/remote/45d1d697d0bb65c3.jpg"
+        ],
+        "friends": [
+          {
+            "name": "shiro_kun",
+            "status": "wants",
+            "avatar": "/static/dashboard/remote/d846e9ee1c036099.jpg"
+          },
+          {
+            "name": "ren_dev",
+            "status": "owns",
+            "avatar": "/static/dashboard/remote/e573467d19cda38d.jpg"
+          }
+        ],
+        "bundles": []
+      },
+      "created_at": "2026-11-13T19:18:52.601079+00:00"
+    },
+    {
+      "id": 202,
+      "name": "Elden Ring Shadow of the Erdtree DLC",
+      "category": "games",
+      "price": 39.99,
+      "original_price": null,
+      "image": "/static/dashboard/remote/f5a2dd5a0e6bfc51.jpg",
+      "data": {
+        "id": 11,
+        "name": "Elden Ring Shadow of the Erdtree DLC",
+        "brand": "FromSoftware",
+        "category": "games",
+        "type": "Expansion",
+        "price": 39.99,
+        "originalPrice": null,
+        "rating": 4.8,
+        "reviews": 8900,
+        "stock": "In stock \u00b7 Digital",
+        "badges": [
+          "Hot"
+        ],
+        "image": "/static/dashboard/remote/f5a2dd5a0e6bfc51.jpg",
+        "popularity": 96,
+        "date": "2026-05-20",
+        "description": "Explore the Land of Shadow in FromSoftware's acclaimed Elden Ring expansion, adding a colossal new region, 40+ weapons, and a host of terrifying bosses.",
+        "releaseDate": "May 2026",
+        "developer": "FromSoftware",
+        "publisher": "Bandai Namco",
+        "tags": [
+          "Action RPG",
+          "Soulslike",
+          "Singleplayer",
+          "Open World"
+        ],
+        "media": [
+          {
+            "type": "video",
+            "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+            "poster": "/static/dashboard/remote/45d1d697d0bb65c3.jpg",
+            "label": "Shadow Trailer"
+          },
+          {
+            "type": "video",
+            "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+            "poster": "/static/dashboard/remote/4f0ca99ddf0c3978.jpg",
+            "label": "Gameplay Preview"
+          }
+        ],
+        "screenshots": [
+          "/static/dashboard/remote/45d1d697d0bb65c3.jpg",
+          "/static/dashboard/remote/9e1590a96103f53a.jpg",
+          "/static/dashboard/remote/7d4266a03203b9b5.jpg"
+        ],
+        "friends": [
+          {
+            "name": "ren_dev",
+            "status": "owns",
+            "avatar": "/static/dashboard/remote/e573467d19cda38d.jpg"
+          },
+          {
+            "name": "shiro_kun",
+            "status": "owns",
+            "avatar": "/static/dashboard/remote/d846e9ee1c036099.jpg"
+          },
+          {
+            "name": "hana_illustrator",
+            "status": "wants",
+            "avatar": "/static/dashboard/remote/a037b1caa972808f.jpg"
+          }
+        ],
+        "bundles": [
+          {
+            "name": "Base Game Pack",
+            "price": 49.99,
+            "originalPrice": 59.99,
+            "includes": [
+              "Elden Ring",
+              "Shadow of the Erdtree DLC"
+            ],
+            "type": "edition"
+          },
+          {
+            "name": "Season Pass",
+            "price": 39.99,
+            "originalPrice": null,
+            "includes": [
+              "Shadow of the Erdtree",
+              "Future content drop"
+            ],
+            "type": "edition"
+          }
+        ]
+      },
+      "created_at": "2026-11-13T19:18:52.601502+00:00"
+    },
+    {
+      "id": 203,
+      "name": "Jujutsu Kaisen Sukuna Hoodie Black",
+      "category": "apparel",
+      "price": 54.99,
+      "original_price": 69.99,
+      "image": "/static/dashboard/remote/8ca285a384248f70.jpg",
+      "data": {
+        "id": 12,
+        "name": "Jujutsu Kaisen Sukuna Hoodie Black",
+        "brand": "Crunchyroll",
+        "category": "apparel",
+        "type": "Premium Cotton",
+        "price": 54.99,
+        "originalPrice": 69.99,
+        "rating": 4.7,
+        "reviews": 2100,
+        "stock": "In stock \u00b7 5 sizes",
+        "badges": [
+          "-21%"
+        ],
+        "image": "/static/dashboard/remote/8ca285a384248f70.jpg",
+        "popularity": 89,
+        "date": "2026-04-01",
+        "description": "A premium-cotton black hoodie with the King of Curses' domain-mark print and a ribbed kangaroo pocket.",
+        "releaseDate": "In stock now",
+        "developer": "MAPPA",
+        "publisher": "Crunchyroll",
+        "tags": [
+          "Apparel",
+          "Unisex",
+          "Premium"
+        ],
+        "media": [],
+        "screenshots": [
+          "/static/dashboard/remote/f0eced1c900fc611.jpg",
+          "/static/dashboard/remote/7d4266a03203b9b5.jpg"
+        ],
+        "friends": [],
+        "bundles": []
+      },
+      "created_at": "2026-11-13T19:18:52.601976+00:00"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "password": "pbkdf2_sha256$1500000$445Z6qptAjDyTsW8aDrQaa$tuNgdazW3FJMw36MUeKHZ1liJlJ5WUonEADkCHcoXMs=",
+      "last_login": "2026-11-13T19:14:21.885313+00:00",
+      "is_superuser": true,
+      "username": "kaichan",
+      "first_name": "",
+      "last_name": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2026-11-13T18:41:26.930736+00:00",
+      "display_name": "Kaichan",
+      "email": "kaichan@kaimono.id",
+      "age": 24,
+      "role": "developer",
+      "bio": "Collector of JRPGs, mechanical keyboards and limited figures.",
+      "twitter": "@kaichan",
+      "instagram": "@kaichan.plays",
+      "youtube": "@kaichanplays",
+      "twitch": "",
+      "avatar_url": "",
+      "banner_url": "",
+      "banner_position": 50,
+      "theme": "silver",
+      "language": "en",
+      "currency": "USD",
+      "timezone": "Asia/Jakarta",
+      "sidebar_expanded": false,
+      "reduce_animations": false,
+      "compact_mode": false,
+      "pk": 1,
+      "is_authenticated": true,
+      "get_role_display": "Developer"
+    }
+  ],
+  "library": [
+    {
+      "id": 73,
+      "title": "NieR:Automata\u2122 GOTY Edition",
+      "studio": "Square Enix",
+      "image_url": "/static/dashboard/remote/656cfe5dd03d11d2.jpg",
+      "meta": "Action RPG",
+      "status": "Now Playing",
+      "badge": "",
+      "favorite": true,
+      "user": 1,
+      "created_at": "2026-11-13T19:18:53.046886+00:00",
+      "user_id": 1
+    },
+    {
+      "id": 74,
+      "title": "Honkai: Star Rail Collector's Edition",
+      "studio": "HoYoverse",
+      "image_url": "/static/dashboard/remote/f5a2dd5a0e6bfc51.jpg",
+      "meta": "Turn-based RPG",
+      "status": "Installed",
+      "badge": "",
+      "favorite": false,
+      "user": 1,
+      "created_at": "2026-11-13T19:18:53.047986+00:00",
+      "user_id": 1
+    },
+    {
+      "id": 75,
+      "title": "Monster Hunter World: Iceborne Master",
+      "studio": "CAPCOM",
+      "image_url": "/static/dashboard/remote/60622d538865c794.jpg",
+      "meta": "Action",
+      "status": "Installed",
+      "badge": "",
+      "favorite": true,
+      "user": 1,
+      "created_at": "2026-11-13T19:18:53.048917+00:00",
+      "user_id": 1
+    },
+    {
+      "id": 76,
+      "title": "Elden Ring Shadow of the Erdtree DLC",
+      "studio": "FromSoftware",
+      "image_url": "/static/dashboard/remote/f5a2dd5a0e6bfc51.jpg",
+      "meta": "Expansion",
+      "status": "Not Installed",
+      "badge": "",
+      "favorite": false,
+      "user": 1,
+      "created_at": "2026-11-13T19:18:53.049737+00:00",
+      "user_id": 1
+    }
+  ],
+  "wishlist": [
+    {
+      "wishlist_id": 64,
+      "product_id": 195,
+      "created_at": "2026-11-13T19:18:53.057876+00:00",
+      "product": {
+        "id": 195,
+        "name": "Persona 3 Reload Premium Hoodie",
+        "category": "apparel",
+        "price": 34.99,
+        "original_price": 49.99,
+        "image": "/static/dashboard/remote/8ca285a384248f70.jpg",
+        "data": {
+          "id": 4,
+          "name": "Persona 3 Reload Premium Hoodie",
+          "brand": "Official Apparel",
+          "category": "apparel",
+          "type": "Cotton Hoodie",
+          "price": 34.99,
+          "originalPrice": 49.99,
+          "rating": 4.6,
+          "reviews": 3100,
+          "stock": "In stock \u00b7 4 sizes",
+          "badges": [
+            "-30%",
+            "Bestseller"
+          ],
+          "image": "/static/dashboard/remote/8ca285a384248f70.jpg",
+          "popularity": 97,
+          "date": "2026-05-10",
+          "description": "Heavyweight cotton hoodie with the SEES emblem pressed on the chest. Official merchandise, machine-washable, available in S\u2013XL.",
+          "releaseDate": "In stock now",
+          "developer": "ATLUS",
+          "publisher": "Official Apparel",
+          "tags": [
+            "Apparel",
+            "Unisex",
+            "Cotton"
+          ],
+          "media": [],
+          "screenshots": [
+            "/static/dashboard/remote/f0eced1c900fc611.jpg"
+          ],
+          "friends": [],
+          "bundles": []
+        },
+        "created_at": "2026-11-13T19:18:52.598240+00:00"
+      }
+    },
+    {
+      "wishlist_id": 63,
+      "product_id": 194,
+      "created_at": "2026-11-13T19:18:53.056520+00:00",
+      "product": {
+        "id": 194,
+        "name": "Genshin Impact 1/7 Scale PVC Figure",
+        "category": "figures",
+        "price": 99.99,
+        "original_price": 129.99,
+        "image": "/static/dashboard/remote/dd6f0727c587a7d1.jpg",
+        "data": {
+          "id": 3,
+          "name": "Genshin Impact 1/7 Scale PVC Figure",
+          "brand": "Anime Collectibles",
+          "category": "figures",
+          "type": "PVC Statue",
+          "price": 99.99,
+          "originalPrice": 129.99,
+          "rating": 4.9,
+          "reviews": 890,
+          "stock": "Release: Jan 2027",
+          "badges": [
+            "Pre-Order"
+          ],
+          "image": "/static/dashboard/remote/dd6f0727c587a7d1.jpg",
+          "popularity": 92,
+          "date": "2026-06-20",
+          "description": "A lovingly sculpted 1/7 scale PVC figure with a full display base. Pre-order ships worldwide in January 2027, wrapped in double-boxed collector-grade packaging with authenticity certificate.",
+          "releaseDate": "January 2027",
+          "developer": "HoYoverse",
+          "publisher": "Anime Collectibles",
+          "tags": [
+            "Figure",
+            "Pre-Order",
+            "Collectible",
+            "1/7 Scale"
+          ],
+          "media": [],
+          "screenshots": [
+            "/static/dashboard/remote/7d4266a03203b9b5.jpg",
+            "/static/dashboard/remote/4f0ca99ddf0c3978.jpg"
+          ],
+          "friends": [
+            {
+              "name": "shiro_kun",
+              "status": "wants",
+              "avatar": "/static/dashboard/remote/d846e9ee1c036099.jpg"
+            }
+          ],
+          "bundles": []
+        },
+        "created_at": "2026-11-13T19:18:52.597712+00:00"
+      }
+    },
+    {
+      "wishlist_id": 62,
+      "product_id": 202,
+      "created_at": "2026-11-13T19:18:53.055107+00:00",
+      "product": {
+        "id": 202,
+        "name": "Elden Ring Shadow of the Erdtree DLC",
+        "category": "games",
+        "price": 39.99,
+        "original_price": null,
+        "image": "/static/dashboard/remote/f5a2dd5a0e6bfc51.jpg",
+        "data": {
+          "id": 11,
+          "name": "Elden Ring Shadow of the Erdtree DLC",
+          "brand": "FromSoftware",
+          "category": "games",
+          "type": "Expansion",
+          "price": 39.99,
+          "originalPrice": null,
+          "rating": 4.8,
+          "reviews": 8900,
+          "stock": "In stock \u00b7 Digital",
+          "badges": [
+            "Hot"
+          ],
+          "image": "/static/dashboard/remote/f5a2dd5a0e6bfc51.jpg",
+          "popularity": 96,
+          "date": "2026-05-20",
+          "description": "Explore the Land of Shadow in FromSoftware's acclaimed Elden Ring expansion, adding a colossal new region, 40+ weapons, and a host of terrifying bosses.",
+          "releaseDate": "May 2026",
+          "developer": "FromSoftware",
+          "publisher": "Bandai Namco",
+          "tags": [
+            "Action RPG",
+            "Soulslike",
+            "Singleplayer",
+            "Open World"
+          ],
+          "media": [
+            {
+              "type": "video",
+              "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+              "poster": "/static/dashboard/remote/45d1d697d0bb65c3.jpg",
+              "label": "Shadow Trailer"
+            },
+            {
+              "type": "video",
+              "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+              "poster": "/static/dashboard/remote/4f0ca99ddf0c3978.jpg",
+              "label": "Gameplay Preview"
+            }
+          ],
+          "screenshots": [
+            "/static/dashboard/remote/45d1d697d0bb65c3.jpg",
+            "/static/dashboard/remote/9e1590a96103f53a.jpg",
+            "/static/dashboard/remote/7d4266a03203b9b5.jpg"
+          ],
+          "friends": [
+            {
+              "name": "ren_dev",
+              "status": "owns",
+              "avatar": "/static/dashboard/remote/e573467d19cda38d.jpg"
+            },
+            {
+              "name": "shiro_kun",
+              "status": "owns",
+              "avatar": "/static/dashboard/remote/d846e9ee1c036099.jpg"
+            },
+            {
+              "name": "hana_illustrator",
+              "status": "wants",
+              "avatar": "/static/dashboard/remote/a037b1caa972808f.jpg"
+            }
+          ],
+          "bundles": [
+            {
+              "name": "Base Game Pack",
+              "price": 49.99,
+              "originalPrice": 59.99,
+              "includes": [
+                "Elden Ring",
+                "Shadow of the Erdtree DLC"
+              ],
+              "type": "edition"
+            },
+            {
+              "name": "Season Pass",
+              "price": 39.99,
+              "originalPrice": null,
+              "includes": [
+                "Shadow of the Erdtree",
+                "Future content drop"
+              ],
+              "type": "edition"
+            }
+          ]
+        },
+        "created_at": "2026-11-13T19:18:52.601502+00:00"
+      }
+    },
+    {
+      "wishlist_id": 61,
+      "product_id": 196,
+      "created_at": "2026-11-13T19:18:53.053195+00:00",
+      "product": {
+        "id": 196,
+        "name": "Monster Hunter World: Iceborne Master",
+        "category": "games",
+        "price": 9.89,
+        "original_price": 29.99,
+        "image": "/static/dashboard/remote/60622d538865c794.jpg",
+        "data": {
+          "id": 5,
+          "name": "Monster Hunter World: Iceborne Master",
+          "brand": "CAPCOM",
+          "category": "games",
+          "type": "Action",
+          "price": 9.89,
+          "originalPrice": 29.99,
+          "rating": 4.8,
+          "reviews": 5600,
+          "stock": "In stock \u00b7 Ships in 24h",
+          "badges": [
+            "-67%"
+          ],
+          "image": "/static/dashboard/remote/60622d538865c794.jpg",
+          "popularity": 85,
+          "date": "2025-12-01",
+          "description": "Master Edition bundles the base game and the massive Iceborne expansion. Hunt elder dragons in the Hoarfrost Reach with a full Master Rank campaign and new mounting mechanics.",
+          "releaseDate": "December 2025",
+          "developer": "CAPCOM",
+          "publisher": "CAPCOM",
+          "tags": [
+            "Action",
+            "Multiplayer",
+            "Co-op",
+            "Open World",
+            "Hunting"
+          ],
+          "media": [
+            {
+              "type": "video",
+              "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+              "poster": "/static/dashboard/remote/9e1590a96103f53a.jpg",
+              "label": "Iceborne Launch Trailer"
+            },
+            {
+              "type": "video",
+              "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+              "poster": "/static/dashboard/remote/45d1d697d0bb65c3.jpg",
+              "label": "Gameplay Preview"
+            }
+          ],
+          "screenshots": [
+            "/static/dashboard/remote/9e1590a96103f53a.jpg",
+            "/static/dashboard/remote/45d1d697d0bb65c3.jpg",
+            "/static/dashboard/remote/4f0ca99ddf0c3978.jpg"
+          ],
+          "friends": [
+            {
+              "name": "ren_dev",
+              "status": "owns",
+              "avatar": "/static/dashboard/remote/e573467d19cda38d.jpg"
+            },
+            {
+              "name": "shiro_kun",
+              "status": "owns",
+              "avatar": "/static/dashboard/remote/d846e9ee1c036099.jpg"
+            },
+            {
+              "name": "hana_illustrator",
+              "status": "wants",
+              "avatar": "/static/dashboard/remote/a037b1caa972808f.jpg"
+            }
+          ],
+          "bundles": [
+            {
+              "name": "Iceborne Master Bundles",
+              "price": 9.89,
+              "originalPrice": 29.99,
+              "includes": [
+                "Full Game",
+                "Iceborne Expansion"
+              ],
+              "type": "bundle"
+            },
+            {
+              "name": "Mega Deluxe Kit",
+              "price": 24.99,
+              "originalPrice": 39.99,
+              "includes": [
+                "Iceborne Master",
+                "Handler Costume pack",
+                "Samurai pose set"
+              ],
+              "type": "edition"
+            }
+          ]
+        },
+        "created_at": "2026-11-13T19:18:52.598797+00:00"
+      }
+    }
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "post_type": "announcement",
+      "title": "\ud83c\udfae Summer Sale 2026 is HERE \u2014 Up to 80% off!",
+      "content": "The biggest sale of the year just dropped. Get exclusive discounts on games, figures, and merch from your favorite anime series. Sale ends August 31st.",
+      "author_name": "Kaimono Official",
+      "author_avatar": "/static/dashboard/remote/42213dd03306ee08.jpg",
+      "author_badge": "verified",
+      "channel": 1,
+      "is_pinned": true,
+      "time_ago": "2 hours ago",
+      "visibility": "Public",
+      "reaction_count": 2481,
+      "comment_count": 342,
+      "share_count": 1204,
+      "view_count": 0,
+      "bookmark_count": 0,
+      "created_at": "2026-11-13T18:38:04.367185+00:00",
+      "channel_id": 1,
+      "images": [
+        {
+          "id": 1,
+          "post": 1,
+          "url": "/static/dashboard/remote/76f8f45eb0470eac.jpg",
+          "caption": "",
+          "order": 0,
+          "post_id": 1
+        }
+      ],
+      "tags": [],
+      "reactions": [
+        {
+          "id": 1,
+          "post": 1,
+          "reaction_type": "heart",
+          "post_id": 1
+        },
+        {
+          "id": 2,
+          "post": 1,
+          "reaction_type": "thumbs-up",
+          "post_id": 1
+        }
+      ],
+      "comments": [],
+      "is_owner": false,
+      "poll_obj": null,
+      "poll_options": [],
+      "poll_voted": false,
+      "poll_selected_id": null,
+      "poll_total": 0
+    },
+    {
+      "id": 8,
+      "post_type": "discussion",
+      "title": "Co-op partner needed for Honkai Star Rail endgame content",
+      "content": "Looking for an active player to team up for Memory of Chaos and Simulated Universe. I'm TL65 with most meta characters built. DM me your UID!",
+      "author_name": "aoi_gamer",
+      "author_avatar": "/static/dashboard/remote/42213dd03306ee08.jpg",
+      "author_badge": "",
+      "channel": 5,
+      "is_pinned": false,
+      "time_ago": "2 days ago",
+      "visibility": "Public",
+      "reaction_count": 34,
+      "comment_count": 28,
+      "share_count": 5,
+      "view_count": 0,
+      "bookmark_count": 0,
+      "created_at": "2026-11-13T18:38:04.443888+00:00",
+      "channel_id": 5,
+      "images": [],
+      "tags": [
+        {
+          "id": 11,
+          "post": 8,
+          "name": "LFG",
+          "is_highlighted": false,
+          "post_id": 8
+        },
+        {
+          "id": 12,
+          "post": 8,
+          "name": "HonkaiStarRail",
+          "is_highlighted": false,
+          "post_id": 8
+        }
+      ],
+      "reactions": [
+        {
+          "id": 11,
+          "post": 8,
+          "reaction_type": "thumbs-up",
+          "post_id": 8
+        }
+      ],
+      "comments": [],
+      "is_owner": false,
+      "poll_obj": null,
+      "poll_options": [],
+      "poll_voted": false,
+      "poll_selected_id": null,
+      "poll_total": 0
+    },
+    {
+      "id": 7,
+      "post_type": "image",
+      "title": "",
+      "content": "My Genshin Impact shrine setup is finally complete! \ud83c\udfee The Raiden Shogun statue was the last piece. #GenshinImpact #Shrine",
+      "author_name": "kai_builder",
+      "author_avatar": "/static/dashboard/remote/8e329256f5b1f185.jpg",
+      "author_badge": "",
+      "channel": 3,
+      "is_pinned": false,
+      "time_ago": "1 day ago",
+      "visibility": "Public",
+      "reaction_count": 523,
+      "comment_count": 89,
+      "share_count": 134,
+      "view_count": 0,
+      "bookmark_count": 0,
+      "created_at": "2026-11-13T18:38:04.441523+00:00",
+      "channel_id": 3,
+      "images": [
+        {
+          "id": 7,
+          "post": 7,
+          "url": "/static/dashboard/remote/dd6f0727c587a7d1.jpg",
+          "caption": "",
+          "order": 0,
+          "post_id": 7
+        },
+        {
+          "id": 8,
+          "post": 7,
+          "url": "/static/dashboard/remote/656cfe5dd03d11d2.jpg",
+          "caption": "",
+          "order": 1,
+          "post_id": 7
+        }
+      ],
+      "tags": [
+        {
+          "id": 9,
+          "post": 7,
+          "name": "GenshinImpact",
+          "is_highlighted": false,
+          "post_id": 7
+        },
+        {
+          "id": 10,
+          "post": 7,
+          "name": "Shrine",
+          "is_highlighted": false,
+          "post_id": 7
+        }
+      ],
+      "reactions": [
+        {
+          "id": 9,
+          "post": 7,
+          "reaction_type": "heart",
+          "post_id": 7
+        },
+        {
+          "id": 10,
+          "post": 7,
+          "reaction_type": "camera",
+          "post_id": 7
+        }
+      ],
+      "comments": [],
+      "is_owner": false,
+      "poll_obj": null,
+      "poll_options": [],
+      "poll_voted": false,
+      "poll_selected_id": null,
+      "poll_total": 0
+    },
+    {
+      "id": 6,
+      "post_type": "discussion",
+      "title": "Best anime figure stores in Tokyo? Visiting next month!",
+      "content": "I'm planning a trip to Tokyo and want to hit up the best figure stores. Akihabara is a given, but any hidden gems? Looking for both new releases and vintage finds. Budget is around \u00a550,000.",
+      "author_name": "yuki_traveler",
+      "author_avatar": "/static/dashboard/remote/49f22d6b0ffb80b6.jpg",
+      "author_badge": "",
+      "channel": 6,
+      "is_pinned": false,
+      "time_ago": "12 hours ago",
+      "visibility": "Public",
+      "reaction_count": 156,
+      "comment_count": 67,
+      "share_count": 23,
+      "view_count": 0,
+      "bookmark_count": 0,
+      "created_at": "2026-11-13T18:38:04.439877+00:00",
+      "channel_id": 6,
+      "images": [],
+      "tags": [
+        {
+          "id": 6,
+          "post": 6,
+          "name": "tokyo",
+          "is_highlighted": false,
+          "post_id": 6
+        },
+        {
+          "id": 7,
+          "post": 6,
+          "name": "figures",
+          "is_highlighted": false,
+          "post_id": 6
+        },
+        {
+          "id": 8,
+          "post": 6,
+          "name": "travel",
+          "is_highlighted": false,
+          "post_id": 6
+        }
+      ],
+      "reactions": [
+        {
+          "id": 8,
+          "post": 6,
+          "reaction_type": "heart",
+          "post_id": 6
+        }
+      ],
+      "comments": [],
+      "is_owner": false,
+      "poll_obj": null,
+      "poll_options": [],
+      "poll_voted": false,
+      "poll_selected_id": null,
+      "poll_total": 0
+    },
+    {
+      "id": 5,
+      "post_type": "guide",
+      "title": "",
+      "content": "Just published my comprehensive guide on maximizing crystal farming in the new Honkai update.",
+      "author_name": "ren_dev",
+      "author_avatar": "/static/dashboard/remote/3a5c6e62c8dee109.jpg",
+      "author_badge": "verified",
+      "channel": 4,
+      "is_pinned": false,
+      "time_ago": "Yesterday",
+      "visibility": "Public",
+      "reaction_count": 2341,
+      "comment_count": 198,
+      "share_count": 487,
+      "view_count": 18000,
+      "bookmark_count": 842,
+      "created_at": "2026-11-13T18:38:04.438379+00:00",
+      "channel_id": 4,
+      "images": [
+        {
+          "id": 6,
+          "post": 5,
+          "url": "/static/dashboard/remote/863367a96019c56b.jpg",
+          "caption": "Ultimate Crystal Farming Guide v2.4 \u2014 10x Efficiency",
+          "order": 0,
+          "post_id": 5
+        }
+      ],
+      "tags": [],
+      "reactions": [
+        {
+          "id": 6,
+          "post": 5,
+          "reaction_type": "heart",
+          "post_id": 5
+        },
+        {
+          "id": 7,
+          "post": 5,
+          "reaction_type": "star",
+          "post_id": 5
+        }
+      ],
+      "comments": [],
+      "is_owner": false,
+      "poll_obj": null,
+      "poll_options": [],
+      "poll_voted": false,
+      "poll_selected_id": null,
+      "poll_total": 0
+    },
+    {
+      "id": 4,
+      "post_type": "discussion",
+      "title": "LF: Authentic Nendoroid Ichika (1st press) \u2014 WTB or Trade",
+      "content": "Hey everyone! I've been hunting for the first press edition of the Ichika Nendoroid for months now. I'm willing to pay a fair price or trade for my duplicate Miku V4X figure.",
+      "author_name": "mikaelle",
+      "author_avatar": "/static/dashboard/remote/0a82262c216d7b7e.jpg",
+      "author_badge": "",
+      "channel": 6,
+      "is_pinned": false,
+      "time_ago": "8 hours ago",
+      "visibility": "Public",
+      "reaction_count": 87,
+      "comment_count": 32,
+      "share_count": 12,
+      "view_count": 0,
+      "bookmark_count": 0,
+      "created_at": "2026-11-13T18:38:04.435946+00:00",
+      "channel_id": 6,
+      "images": [],
+      "tags": [
+        {
+          "id": 2,
+          "post": 4,
+          "name": "LF",
+          "is_highlighted": true,
+          "post_id": 4
+        },
+        {
+          "id": 3,
+          "post": 4,
+          "name": "nendoroid",
+          "is_highlighted": false,
+          "post_id": 4
+        },
+        {
+          "id": 4,
+          "post": 4,
+          "name": "projectsekai",
+          "is_highlighted": false,
+          "post_id": 4
+        },
+        {
+          "id": 5,
+          "post": 4,
+          "name": "trading",
+          "is_highlighted": false,
+          "post_id": 4
+        }
+      ],
+      "reactions": [
+        {
+          "id": 5,
+          "post": 4,
+          "reaction_type": "thumbs-up",
+          "post_id": 4
+        }
+      ],
+      "comments": [],
+      "is_owner": false,
+      "poll_obj": null,
+      "poll_options": [],
+      "poll_voted": false,
+      "poll_selected_id": null,
+      "poll_total": 0
+    },
+    {
+      "id": 3,
+      "post_type": "poll",
+      "title": "",
+      "content": "",
+      "author_name": "hana_illustrator",
+      "author_avatar": "/static/dashboard/remote/b74c6745620f1be3.jpg",
+      "author_badge": "",
+      "channel": 1,
+      "is_pinned": false,
+      "time_ago": "5 hours ago",
+      "visibility": "Public",
+      "reaction_count": 0,
+      "comment_count": 128,
+      "share_count": 42,
+      "view_count": 0,
+      "bookmark_count": 0,
+      "created_at": "2026-11-13T18:38:04.371586+00:00",
+      "channel_id": 1,
+      "images": [],
+      "tags": [],
+      "reactions": [],
+      "comments": [],
+      "is_owner": false,
+      "poll_obj": {
+        "id": 1,
+        "post": 3,
+        "question": "Which upcoming game are you most hyped for?",
+        "total_votes": 1284,
+        "time_left": "3 days left",
+        "post_id": 3
+      },
+      "poll_options": [
+        {
+          "id": 1,
+          "poll": 1,
+          "label": "Silksong",
+          "percentage": 48,
+          "is_selected": false,
+          "order": 0,
+          "poll_id": 1
+        },
+        {
+          "id": 2,
+          "poll": 1,
+          "label": "GTA VI",
+          "percentage": 29,
+          "is_selected": false,
+          "order": 1,
+          "poll_id": 1
+        },
+        {
+          "id": 3,
+          "poll": 1,
+          "label": "Metroid Prime 4",
+          "percentage": 15,
+          "is_selected": false,
+          "order": 2,
+          "poll_id": 1
+        },
+        {
+          "id": 4,
+          "poll": 1,
+          "label": "Fable",
+          "percentage": 8,
+          "is_selected": false,
+          "order": 3,
+          "poll_id": 1
+        }
+      ],
+      "poll_voted": false,
+      "poll_selected_id": null,
+      "poll_total": 1284
+    },
+    {
+      "id": 2,
+      "post_type": "image",
+      "title": "",
+      "content": "Finally got the perfect shot of the new event stage! The lighting in this update is absolutely stunning \ud83d\udcf8 #ProjectSekai",
+      "author_name": "shiro_kun",
+      "author_avatar": "/static/dashboard/remote/42213dd03306ee08.jpg",
+      "author_badge": "",
+      "channel": 2,
+      "is_pinned": false,
+      "time_ago": "3 hours ago",
+      "visibility": "Public",
+      "reaction_count": 341,
+      "comment_count": 42,
+      "share_count": 88,
+      "view_count": 0,
+      "bookmark_count": 0,
+      "created_at": "2026-11-13T18:38:04.369108+00:00",
+      "channel_id": 2,
+      "images": [
+        {
+          "id": 2,
+          "post": 2,
+          "url": "/static/dashboard/remote/60622d538865c794.jpg",
+          "caption": "",
+          "order": 0,
+          "post_id": 2
+        },
+        {
+          "id": 3,
+          "post": 2,
+          "url": "/static/dashboard/remote/dd6f0727c587a7d1.jpg",
+          "caption": "",
+          "order": 1,
+          "post_id": 2
+        },
+        {
+          "id": 4,
+          "post": 2,
+          "url": "/static/dashboard/remote/f5a2dd5a0e6bfc51.jpg",
+          "caption": "",
+          "order": 2,
+          "post_id": 2
+        },
+        {
+          "id": 5,
+          "post": 2,
+          "url": "/static/dashboard/remote/dd73a677f7dcd0cb.jpg",
+          "caption": "",
+          "order": 3,
+          "post_id": 2
+        }
+      ],
+      "tags": [
+        {
+          "id": 1,
+          "post": 2,
+          "name": "ProjectSekai",
+          "is_highlighted": false,
+          "post_id": 2
+        }
+      ],
+      "reactions": [
+        {
+          "id": 3,
+          "post": 2,
+          "reaction_type": "heart",
+          "post_id": 2
+        },
+        {
+          "id": 4,
+          "post": 2,
+          "reaction_type": "camera",
+          "post_id": 2
+        }
+      ],
+      "comments": [],
+      "is_owner": false,
+      "poll_obj": null,
+      "poll_options": [],
+      "poll_voted": false,
+      "poll_selected_id": null,
+      "poll_total": 0
+    }
+  ],
+  "channels": [
+    {
+      "id": 7,
+      "name": "cosplay",
+      "slug": "cosplay",
+      "icon": "sparkles",
+      "post_count": 34,
+      "is_active": true
+    },
+    {
+      "id": 3,
+      "name": "fan-art",
+      "slug": "fan-art",
+      "icon": "palette",
+      "post_count": 87,
+      "is_active": true
+    },
+    {
+      "id": 1,
+      "name": "general",
+      "slug": "general",
+      "icon": "hash",
+      "post_count": 24,
+      "is_active": true
+    },
+    {
+      "id": 4,
+      "name": "guides",
+      "slug": "guides",
+      "icon": "book-open",
+      "post_count": 42,
+      "is_active": true
+    },
+    {
+      "id": 5,
+      "name": "lfg",
+      "slug": "lfg",
+      "icon": "gamepad-2",
+      "post_count": 18,
+      "is_active": true
+    },
+    {
+      "id": 6,
+      "name": "merch-trading",
+      "slug": "merch-trading",
+      "icon": "shopping-bag",
+      "post_count": 56,
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "name": "screenshots",
+      "slug": "screenshots",
+      "icon": "image",
+      "post_count": 128,
+      "is_active": true
+    }
+  ],
+  "stories": [
+    {
+      "id": 1,
+      "username": "shiro",
+      "avatar_url": "/static/dashboard/remote/42213dd03306ee08.jpg",
+      "is_seen": false,
+      "order": 1
+    },
+    {
+      "id": 2,
+      "username": "hana",
+      "avatar_url": "/static/dashboard/remote/b74c6745620f1be3.jpg",
+      "is_seen": false,
+      "order": 2
+    },
+    {
+      "id": 3,
+      "username": "mika",
+      "avatar_url": "/static/dashboard/remote/0a82262c216d7b7e.jpg",
+      "is_seen": false,
+      "order": 3
+    },
+    {
+      "id": 4,
+      "username": "ren",
+      "avatar_url": "/static/dashboard/remote/3a5c6e62c8dee109.jpg",
+      "is_seen": false,
+      "order": 4
+    },
+    {
+      "id": 5,
+      "username": "yuki",
+      "avatar_url": "/static/dashboard/remote/49f22d6b0ffb80b6.jpg",
+      "is_seen": true,
+      "order": 5
+    },
+    {
+      "id": 6,
+      "username": "kai",
+      "avatar_url": "/static/dashboard/remote/8e329256f5b1f185.jpg",
+      "is_seen": false,
+      "order": 6
+    },
+    {
+      "id": 7,
+      "username": "aoi",
+      "avatar_url": "/static/dashboard/remote/42213dd03306ee08.jpg",
+      "is_seen": false,
+      "order": 7
+    },
+    {
+      "id": 8,
+      "username": "takumi",
+      "avatar_url": "/static/dashboard/remote/b74c6745620f1be3.jpg",
+      "is_seen": true,
+      "order": 8
+    }
+  ],
+  "games": [
+    {
+      "id": 1,
+      "name": "Project Sekai",
+      "image_url": "/static/dashboard/remote/d846e9ee1c036099.jpg",
+      "is_active": true,
+      "order": 1
+    },
+    {
+      "id": 2,
+      "name": "Genshin Impact",
+      "image_url": "/static/dashboard/remote/35b03aa62cf90def.jpg",
+      "is_active": false,
+      "order": 2
+    },
+    {
+      "id": 3,
+      "name": "Honkai: Star Rail",
+      "image_url": "/static/dashboard/remote/e573467d19cda38d.jpg",
+      "is_active": true,
+      "order": 3
+    },
+    {
+      "id": 4,
+      "name": "Elden Ring",
+      "image_url": "/static/dashboard/remote/a037b1caa972808f.jpg",
+      "is_active": false,
+      "order": 4
+    },
+    {
+      "id": 5,
+      "name": "Persona 3 Reload",
+      "image_url": "/static/dashboard/remote/614c56d61e33917f.jpg",
+      "is_active": false,
+      "order": 5
+    }
+  ],
+  "members": [
+    {
+      "id": 1,
+      "username": "shiro_kun",
+      "display_name": "Shiro",
+      "avatar_url": "/static/dashboard/remote/42213dd03306ee08.jpg",
+      "role": "gamer",
+      "bio": "Collecting every Genshin figure and rhythm game day-one. Ask me about the latest figure polls.",
+      "is_online": true,
+      "last_active": "Now",
+      "level": 42,
+      "games_played": 128,
+      "achievements": 96,
+      "followers": 1204,
+      "member_since": "Mar 2024",
+      "order": 1
+    },
+    {
+      "id": 2,
+      "username": "hana_illustrator",
+      "display_name": "Hana",
+      "avatar_url": "/static/dashboard/remote/b74c6745620f1be3.jpg",
+      "role": "developer",
+      "bio": "Character illustrator & co-op captain. I draw what I play.",
+      "is_online": true,
+      "last_active": "Now",
+      "level": 38,
+      "games_played": 87,
+      "achievements": 71,
+      "followers": 2891,
+      "member_since": "Jan 2023",
+      "order": 2
+    },
+    {
+      "id": 5,
+      "username": "mei_star",
+      "display_name": "Mei",
+      "avatar_url": "/static/dashboard/remote/cabcc2d0c5012017.jpg",
+      "role": "gamer",
+      "bio": "Burnout enjoyer. Screenshot queen of the fan-art channel.",
+      "is_online": true,
+      "last_active": "5m ago",
+      "level": 33,
+      "games_played": 92,
+      "achievements": 78,
+      "followers": 432,
+      "member_since": "Aug 2025",
+      "order": 5
+    },
+    {
+      "id": 3,
+      "username": "yuki_tactics",
+      "display_name": "Yuki",
+      "avatar_url": "/static/dashboard/remote/3a5c6e62c8dee109.jpg",
+      "role": "gamer",
+      "bio": "Turn-based tactics 4 life. Persona and Fire Emblem enjoyer.",
+      "is_online": false,
+      "last_active": "1h ago",
+      "level": 51,
+      "games_played": 176,
+      "achievements": 142,
+      "followers": 866,
+      "member_since": "Jun 2022",
+      "order": 3
+    },
+    {
+      "id": 4,
+      "username": "ren_dev",
+      "display_name": "Ren",
+      "avatar_url": "/static/dashboard/remote/8e329256f5b1f185.jpg",
+      "role": "developer",
+      "bio": "Indie dev sharing devlogs and playtests. Lore is my love language.",
+      "is_online": false,
+      "last_active": "3h ago",
+      "level": 29,
+      "games_played": 54,
+      "achievements": 40,
+      "followers": 1520,
+      "member_since": "Nov 2024",
+      "order": 4
+    },
+    {
+      "id": 6,
+      "username": "aoi_vinyl",
+      "display_name": "Aoi",
+      "avatar_url": "/static/dashboard/remote/f503cada6aca8e18.jpg",
+      "role": "gamer",
+      "bio": "Vinyl spins + ost collector. Currently deep-diving Persona 5.",
+      "is_online": false,
+      "last_active": "Last seen 2d ago",
+      "level": 45,
+      "games_played": 113,
+      "achievements": 89,
+      "followers": 977,
+      "member_since": "Feb 2023",
+      "order": 6
+    }
+  ],
+  "submissions": [
+    {
+      "id": 2,
+      "developer": 1,
+      "name": "Paper Lanterns",
+      "category": "games",
+      "type": "Puzzle",
+      "brand": "Moth & Moon",
+      "price": 12.5,
+      "original_price": null,
+      "image": "",
+      "description": "A quiet puzzle game about lighting lanterns for absent friends.",
+      "tags": "cozy, puzzle",
+      "trailer_url": "",
+      "stock": "In Stock",
+      "badges": "",
+      "developer_name": "Moth & Moon",
+      "publisher": "Moth & Moon",
+      "release_date": "2026-08-11",
+      "screenshots": [],
+      "status": "accepted",
+      "admin_note": "",
+      "created_at": "2026-11-13T18:41:27.453993+00:00",
+      "reviewed_at": null,
+      "developer_id": 1
+    },
+    {
+      "id": 1,
+      "developer": 1,
+      "name": "Neon Drifters",
+      "category": "games",
+      "type": "Roguelike",
+      "brand": "Studio Halcyon",
+      "price": 19.99,
+      "original_price": 24.99,
+      "image": "",
+      "description": "A neon-soaked roguelike about drifting through collapsing cities.",
+      "tags": "roguelike, pixel art",
+      "trailer_url": "https://example.com/trailer",
+      "stock": "In Stock",
+      "badges": "New",
+      "developer_name": "Studio Halcyon",
+      "publisher": "Studio Halcyon",
+      "release_date": "2026-10-30",
+      "screenshots": [],
+      "status": "pending",
+      "admin_note": "",
+      "created_at": "2026-11-13T18:41:27.453257+00:00",
+      "reviewed_at": null,
+      "developer_id": 1
+    }
+  ],
+  "reviews": [],
+  "comments": []
+}

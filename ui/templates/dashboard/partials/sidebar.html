@@ -1,0 +1,398 @@
+<!-- dashboard/templates/dashboard/partials/sidebar.html -->
+
+{% set default_avatar = "/static/dashboard/images/accsetup.jpg" %}
+<style>
+  /* ===== KAIMONO THEMES ===== */
+  body[data-theme="midnight"]  { background-color: #0f172a !important; }
+  body[data-theme="obsidian"]  { background-color: #000000 !important; }
+  body[data-theme="silver"]    { background-color: #e2e8f0 !important; }
+  body[data-theme="paper"]     { background-color: #f5f3ea !important; }
+
+  body[data-theme="midnight"] #sidebar,
+  body[data-theme="obsidian"] #sidebar { background: #16161f !important; box-shadow: none; }
+  body[data-theme="midnight"] #sidebar .nav-item,
+  body[data-theme="obsidian"] #sidebar .nav-item { color: #94a3b8; }
+  body[data-theme="midnight"] #sidebar .nav-item:hover,
+  body[data-theme="obsidian"] #sidebar .nav-item:hover { background: rgba(255,255,255,.07); color: #e2e8f0; }
+  body[data-theme="midnight"] #sidebar .nav-active,
+  body[data-theme="midnight"] #sidebar .nav-active:hover,
+  body[data-theme="obsidian"] #sidebar .nav-active,
+  body[data-theme="obsidian"] #sidebar .nav-active:hover { background: rgba(255,255,255,.12); color: #ffffff; box-shadow: none; }
+  body[data-theme="midnight"] #sidebar .nav-profile,
+  body[data-theme="obsidian"] #sidebar .nav-profile { border-bottom-color: rgba(255,255,255,.08); }
+  body[data-theme="midnight"] #sidebar .nav-profile .text-slate-800,
+  body[data-theme="obsidian"] #sidebar .nav-profile .text-slate-800 { color: #e2e8f0; }
+
+  /* Reduce animations: kill transitions/keyframes app-wide */
+  body[data-motion="reduced"] *, body[data-motion="reduced"] *::before, body[data-motion="reduced"] *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+  }
+
+  /* Compact mode: tighten shell spacing */
+  body[data-compact="1"] #sidebar { padding-top: 1rem; padding-bottom: 1rem; }
+  body[data-compact="1"] #sidebar .nav-item { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+  body[data-compact="1"] #sidebar .nav-profile { padding-bottom: 0.5rem; }
+
+  /* ===== KAIMONO SIDEBAR — UNIFIED (v3: icon center saat collapse, zero-shift) ===== */
+  #sidebar {
+    width: 5rem;
+    padding: 1.5rem 0.625rem; /* 10px kiri-kanan saat collapse */
+    background: #F7F9FC;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                padding 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 300ms ease;
+  }
+  #sidebar.expanded {
+    width: 16rem;
+    padding: 1.5rem 1rem; /* 16px kiri-kanan saat expand */
+    box-shadow: 0 18px 44px -18px rgba(50, 52, 70, 0.22);
+  }
+
+  /* Nav items */
+  #sidebar .nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0;
+    /* COLLAPSE: 10px (sidebar) + 20px (item) = ikon 20px tepat di tengah (center x=40 dari 80px) */
+    padding: 0.75rem 0 0.75rem 1.25rem;
+    width: 100%;
+    color: #64748b;
+    font-weight: 600;
+    border-radius: 1rem;
+    text-align: left;
+    transition: gap 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                padding 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                background-color 200ms ease,
+                color 200ms ease;
+  }
+  /* EXPAND: 16px (sidebar) + 14px (item) = x=30 → SAMA dengan collapse (10+20) → ikon tidak bergeser */
+  #sidebar.expanded .nav-item {
+    gap: 0.875rem;
+    padding: 0.75rem 0.875rem;
+  }
+
+  #sidebar .nav-item:hover {
+    background: rgba(226, 232, 240, 0.5);
+    color: #0f172a;
+  }
+  #sidebar .nav-active,
+  #sidebar .nav-active:hover {
+    background: rgba(226, 232, 240, 0.8);
+    color: #0f172a;
+    font-weight: 700;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  }
+
+  /* Tooltip — hanya tampil saat collapsed, muncul di kanan ikon */
+  #sidebar-tip {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: none;
+    align-items: center;
+    transform: translateY(-50%);
+    z-index: 100;
+    background: #323446;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.625rem;
+    box-shadow: 0 12px 28px -8px rgba(15, 23, 42, 0.35);
+    pointer-events: none;
+  }
+  #sidebar-tip .sidebar-tip-arrow {
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    margin-top: -5px;
+    border: 5px solid transparent;
+    border-right-color: #323446;
+    border-right-width: 5px;
+  }
+
+  /* Profile header: avatar 40px — center saat collapse, sumbu center sama dgn ikon saat expand */
+  #sidebar .nav-profile {
+    padding-left: 0.625rem;  /* collapse: 10+10 → avatar center di x=40 */
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  }
+  #sidebar.expanded .nav-profile {
+    padding-left: 0.25rem;   /* expand: 16+4 → avatar center di x=40, sejajar sumbu ikon */
+  }
+
+  /* Label text: fade smooth, tanpa transform */
+  #sidebar .sidebar-text {
+    display: block;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: max-width 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 160ms ease;
+  }
+  #sidebar.expanded .sidebar-text {
+    max-width: 12rem;
+    opacity: 1;
+    transition: max-width 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 220ms ease 90ms;
+  }
+  #sidebar.expanded .sidebar-text.fill {
+    flex: 1 1 auto;
+  }
+
+  /* ===== MOBILE: let grid children shrink below content min-size (prevents horizontal overflow) ===== */
+  @media (max-width: 1023px) {
+    .grid > * { min-width: 0; }
+  }
+
+  /* ===== MOBILE DRAWER (< 1024px): sidebar slides in over content ===== */
+  @media (max-width: 1023px) {
+    #sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      height: 100vh;
+      z-index: 60;
+      border-radius: 0 2rem 2rem 0;
+      transform: translateX(-110%);
+      box-shadow: 0 18px 44px -18px rgba(50, 52, 70, 0.35);
+      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #sidebar.mobile-open {
+      transform: translateX(0);
+    }
+    #sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      z-index: 55;
+    }
+    #sidebar-backdrop.show {
+      display: block;
+    }
+  }
+  @media (min-width: 1024px) {
+    #sidebar-backdrop {
+      display: none !important;
+    }
+  }
+</style>
+
+<aside id="sidebar" class="shrink-0 h-full bg-[#F7F9FC] text-slate-700 rounded-[2rem] border border-white flex flex-col justify-between">
+  <div class="flex flex-col gap-5 w-full flex-1 min-h-0">
+
+    <!-- Profile header -->
+    <a href="/profile/" data-path="/profile/" data-tip="Profile" class="nav-item nav-profile">
+      <img src="{{ request.user.avatar_url|ddefault(default_avatar) }}" alt="Avatar" class="w-10 h-10 rounded-full border-2 border-slate-300 object-cover shadow-sm shrink-0">
+      <span class="sidebar-text">
+        <span class="block font-bold text-slate-800 truncate text-xs">{{ request.user.display_name|ddefault(request.user.username) }}</span>
+        <span class="block text-[10px] text-slate-400 font-medium truncate">{{ request.user.get_role_display|ddefault('Member') }}</span>
+      </span>
+    </a>
+
+    <!-- Navigation -->
+    <nav class="flex flex-col gap-1.5 w-full overflow-y-auto min-h-0">
+      <a href="/dashboard/" data-path="/dashboard/" data-tip="Dashboard" class="nav-item">
+        <i data-lucide="home" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Dashboard</span>
+      </a>
+      <a href="/shop/" data-path="/shop/" data-tip="Shop" class="nav-item">
+        <i data-lucide="store" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Shop</span>
+      </a>
+      <a href="/community/" data-path="/community/" data-tip="Community" class="nav-item">
+        <i data-lucide="users" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Community</span>
+      </a>
+      <a href="/wishlist/" data-path="/wishlist/" data-tip="Wishlist" class="nav-item">
+        <i data-lucide="heart" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text fill text-xs">Wishlist</span>
+      </a>
+      <a href="/library/" data-path="/library/" data-tip="Library" class="nav-item">
+        <i data-lucide="inbox" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Library</span>
+      </a>
+      <a href="/settings/" data-path="/settings/" data-tip="Settings" class="nav-item">
+        <i data-lucide="settings" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Settings</span>
+      </a>
+      {% if request.user.is_authenticated %}
+      <a href="/settings/ai-companion/" data-path="/settings/ai-companion/" data-tip="AI Companion" class="nav-item">
+        <i data-lucide="bot" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">AI Companion</span>
+      </a>
+      {% endif %}
+      {% if request.user.is_authenticated and request.user.is_staff %}
+      <a href="/settings/admin/" data-path="/settings/admin/" data-tip="Admin Panel" class="nav-item">
+        <i data-lucide="shield" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Admin Panel</span>
+      </a>
+      {% endif %}
+      {% if request.user.is_authenticated and request.user.role == 'developer' %}
+      <a href="/settings/developer/" data-path="/settings/developer/" data-tip="Developer Panel" class="nav-item">
+        <i data-lucide="code-2" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Developer Panel</span>
+      </a>
+      {% endif %}
+    </nav>
+  </div>
+
+  <!-- Bottom actions -->
+  <div class="flex flex-col gap-1.5 w-full pt-4 border-t border-slate-200/80">
+    <button id="toggle-sidebar" class="nav-item" data-tip="Expand">
+      <span id="toggle-icon-holder" class="flex items-center justify-center w-5 h-5 shrink-0">
+        <i data-lucide="panel-left-open" class="w-5 h-5 shrink-0"></i>
+      </span>
+      <span id="collapse-label" class="sidebar-text text-xs">Expand</span>
+    </button>
+    <a href="/logout/" data-tip="Log Out" class="nav-item">
+      <i data-lucide="log-out" class="w-5 h-5 shrink-0"></i>
+      <span class="sidebar-text text-xs">Log Out</span>
+    </a>
+  </div>
+</aside>
+
+<!-- Mobile drawer backdrop -->
+<div id="sidebar-backdrop" aria-hidden="true"></div>
+
+<div id="sidebar-tip" role="tooltip" aria-hidden="true">
+  <span class="sidebar-tip-arrow"></span>
+  <span id="sidebar-tip-label"></span>
+</div>
+
+<script>
+// Apply the user's saved preferences to <body> as soon as the page loads.
+(function () {
+  if (document.body) {
+    var theme = localStorage.getItem('kaimono_theme') || '{{ request.user.theme|ddefault("silver") }}';
+    var motion = localStorage.getItem('kaimono_motion') || '{{ request.user.reduce_animations|yesno("reduced,") }}';
+    var compact = localStorage.getItem('kaimono_compact') || '{{ request.user.compact_mode|yesno("1,") }}';
+    document.body.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-motion', motion);
+    document.body.setAttribute('data-compact', compact);
+  }
+})();
+(function () {
+  var sidebar = document.getElementById('sidebar');
+  if (!sidebar) return;
+  var toggleBtn  = document.getElementById('toggle-sidebar');
+  var iconHolder = document.getElementById('toggle-icon-holder');
+  var label      = document.getElementById('collapse-label');
+  var tipEl      = document.getElementById('sidebar-tip');
+  var tipLabel   = document.getElementById('sidebar-tip-label');
+  var backdrop   = document.getElementById('sidebar-backdrop');
+
+  function isMobile() { return window.matchMedia('(max-width: 1023px)').matches; }
+
+  function openDrawer() {
+    sidebar.classList.add('mobile-open', 'expanded');
+    if (backdrop) backdrop.classList.add('show');
+  }
+  function closeDrawer() {
+    sidebar.classList.remove('mobile-open');
+    if (backdrop) backdrop.classList.remove('show');
+    render();
+  }
+  function toggleDrawer() {
+    if (sidebar.classList.contains('mobile-open')) closeDrawer(); else openDrawer();
+  }
+  if (backdrop) backdrop.addEventListener('click', closeDrawer);
+  sidebar.querySelectorAll('a.nav-item').forEach(function (a) {
+    a.addEventListener('click', function () { if (isMobile()) closeDrawer(); });
+  });
+  window.addEventListener('resize', function () {
+    if (!isMobile() && sidebar.classList.contains('mobile-open')) {
+      sidebar.classList.remove('mobile-open');
+      if (backdrop) backdrop.classList.remove('show');
+      render();
+    }
+  });
+  var expandedDefault = {{ request.user.sidebar_expanded|yesno("true,false") }};
+  var prefExpanded = localStorage.getItem('kaimono_sidebar');
+  var stored = localStorage.getItem('kaimono_sidebar_collapsed');
+  var isCollapsed;
+  if (prefExpanded !== null) {
+    isCollapsed = prefExpanded !== '1';
+  } else {
+    isCollapsed = stored !== null ? stored !== 'false' : !expandedDefault;
+  }
+
+  var path = window.location.pathname;
+  var best = null;
+  sidebar.querySelectorAll('[data-path]').forEach(function (a) {
+    var p = a.getAttribute('data-path');
+    if (p && path.indexOf(p) === 0 && (!best || p.length > best.getAttribute('data-path').length)) {
+      best = a;
+    }
+  });
+  if (best) best.classList.add('nav-active');
+
+  function setTip() {
+    tipEl.style.display = 'none';
+  }
+  setTip();
+
+  function showTip(item) {
+    if (!tipEl || !tipLabel) return;
+    if (sidebar.classList.contains('expanded')) return;
+    tipLabel.textContent = item.getAttribute('data-tip') || '';
+    if (!tipLabel.textContent) return;
+    var r = item.getBoundingClientRect();
+    tipEl.style.display = 'flex';
+    tipEl.style.transform = 'translateY(-50%)';
+    tipEl.style.left = (r.right + 10) + 'px';
+    tipEl.style.top = (r.top + r.height / 2) + 'px';
+    tipEl.setAttribute('aria-hidden', 'false');
+  }
+
+  function hideTip() {
+    if (!tipEl) return;
+    tipEl.style.display = 'none';
+    tipEl.setAttribute('aria-hidden', 'true');
+  }
+
+  sidebar.querySelectorAll('.nav-item').forEach(function (item) {
+    item.addEventListener('mouseenter', function () { showTip(item); });
+    item.addEventListener('mouseleave', hideTip);
+    item.addEventListener('focus', function () { showTip(item); });
+    item.addEventListener('blur', hideTip);
+  });
+
+  function render() {
+    if (!(isMobile() && sidebar.classList.contains('mobile-open'))) {
+      sidebar.classList.toggle('expanded', !isCollapsed);
+    }
+    if (iconHolder) {
+      iconHolder.innerHTML = '<i data-lucide="' + (isCollapsed ? 'panel-left-open' : 'panel-left-close') + '" class="w-5 h-5 shrink-0"></i>';
+    }
+    if (label) label.textContent = isCollapsed ? 'Expand' : 'Collapse';
+    toggleBtn.setAttribute('data-tip', isCollapsed ? 'Expand' : 'Collapse');
+    if (!isCollapsed) hideTip();
+    if (window.lucide) lucide.createIcons();
+  }
+  render();
+
+  if (toggleBtn) toggleBtn.addEventListener('click', function () {
+    if (isMobile()) { closeDrawer(); return; }
+    isCollapsed = !isCollapsed;
+    localStorage.setItem('kaimono_sidebar_collapsed', String(isCollapsed));
+    render();
+  });
+
+  window.__kaimonoToggleSidebar = function () {
+    if (isMobile()) { toggleDrawer(); return; }
+    isCollapsed = !isCollapsed;
+    localStorage.setItem('kaimono_sidebar_collapsed', String(isCollapsed));
+    render();
+  };
+})();
+</script>

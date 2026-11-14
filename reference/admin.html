@@ -1,0 +1,2543 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kaimono Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ===== THEME VARIABLES (GLOBAL) ===== */
+    :root, [data-theme="silver"] {
+      --bg-primary: #E2E7EE;
+      --bg-surface: #F7F9FC;
+      --bg-card: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --border-color: #ffffff;
+      --border-soft: #e2e8f0;
+      --brand: #323446;
+      --on-brand: #ffffff;
+      --brand-soft: rgba(50, 52, 70, 0.12);
+      --hover-bg: rgba(255, 255, 255, 0.7);
+      --shadow-color: rgba(50, 52, 70, 0.1);
+    }
+    [data-theme="midnight"] {
+      --bg-primary: #0f172a;
+      --bg-surface: #1e293b;
+      --bg-card: #334155;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --border-soft: #475569;
+      --brand: #64748b;
+      --on-brand: #ffffff;
+      --brand-soft: rgba(148, 163, 184, 0.15);
+      --hover-bg: rgba(255,255,255,0.03);
+      --shadow-color: rgba(0, 0, 0, 0.3);
+    }
+    [data-theme="paper"] {
+      --bg-primary: #F5F1E8;
+      --bg-surface: #FAF7F0;
+      --bg-card: #ffffff;
+      --text-primary: #1c1917;
+      --text-secondary: #57534e;
+      --text-muted: #a8a29e;
+      --border-color: #e7e5e4;
+      --border-soft: #d6d3d1;
+      --brand: #292524;
+      --on-brand: #ffffff;
+      --brand-soft: rgba(41, 37, 36, 0.1);
+      --hover-bg: rgba(255, 255, 255, 0.6);
+      --shadow-color: rgba(41, 37, 36, 0.08);
+    }
+    [data-theme="obsidian"] {
+      --bg-primary: #0a0a0a;
+      --bg-surface: #171717;
+      --bg-card: #1f1f1f;
+      --text-primary: #fafafa;
+      --text-secondary: #a3a3a3;
+      --text-muted: #525252;
+      --border-color: #262626;
+      --border-soft: #404040;
+      --brand: #fafafa;
+      --on-brand: #0a0a0a;
+      --brand-soft: rgba(255, 255, 255, 0.08);
+      --hover-bg: rgba(255,255,255,0.03);
+      --shadow-color: rgba(0, 0, 0, 0.5);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-secondary);
+      transition: background-color 300ms ease, color 300ms ease;
+    }
+    [data-theme] h1, [data-theme] h2, [data-theme] h3, [data-theme] h4 { color: var(--text-primary); }
+    [data-theme] label { color: var(--text-muted); }
+
+    .surface-card {
+      background-color: var(--bg-surface) !important;
+      border-color: var(--border-color) !important;
+      color: var(--text-secondary);
+    }
+    .dark-card {
+      background-color: var(--bg-card) !important;
+      color: var(--text-secondary);
+    }
+    [data-motion="reduced"] *, [data-motion="reduced"] *::before, [data-motion="reduced"] *::after {
+      animation-duration: 0.001s !important;
+      transition-duration: 0.001s !important;
+    }
+
+    /* ===== ADMIN NAV ===== */
+    .adm-tab { transition: all 200ms ease; color: var(--text-secondary); }
+    .adm-tab:hover { background-color: var(--hover-bg); color: var(--text-primary); }
+    .adm-tab.active {
+      background-color: var(--brand);
+      color: var(--on-brand);
+      box-shadow: 0 8px 20px -8px var(--shadow-color);
+    }
+    .adm-tab.active .adm-tab-icon, .adm-tab.active .adm-tab-desc { color: var(--on-brand); }
+
+    /* ===== PANEL TRANSITION ===== */
+    .adm-panel { animation: panelIn 350ms ease; }
+    @keyframes panelIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== FORM INPUT ===== */
+    .form-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      outline: none;
+      transition: all 200ms;
+    }
+    .form-input::placeholder { color: var(--text-muted); }
+    .form-input:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px var(--brand-soft);
+    }
+    textarea.form-input { resize: vertical; }
+
+    .btn-brand {
+      background-color: var(--brand);
+      color: var(--on-brand);
+      transition: opacity 200ms ease;
+    }
+    .btn-brand:hover { opacity: 0.88; }
+    .btn-ghost {
+      background-color: var(--bg-card);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-soft);
+      transition: all 200ms ease;
+    }
+    .btn-ghost:hover { background-color: var(--hover-bg); color: var(--text-primary); }
+
+    /* ===== TABLE ===== */
+    .adm-table { width: 100%; border-collapse: collapse; }
+    .adm-table th {
+      text-align: left;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 10px 12px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-soft);
+      font-weight: 700;
+    }
+    .adm-table td {
+      padding: 10px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .adm-table tbody tr { transition: background-color 150ms ease; }
+    .adm-table tbody tr:hover { background-color: var(--hover-bg); }
+
+    .status-dot { width: 8px; height: 8px; border-radius: 999px; display: inline-block; }
+    .status-chip { width: 8px; height: 8px; border-radius: 999px; display: inline-block; }
+
+    .pulse-dot { animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } }
+
+    ::-webkit-scrollbar { width: 0px; background: transparent; }
+  </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden text-sm">
+
+  <div class="pt-3 sm:pt-5 pb-2 sm:pb-3 px-3 sm:px-6 relative w-full shrink-0">
+  <header style="background-color: var(--brand); color: var(--on-brand); border: 1px solid color-mix(in srgb, var(--on-brand) 15%, transparent);" class="px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center shadow-md rounded-xl gap-3 sm:gap-6">
+    <div class="flex items-center gap-3 sm:gap-6 min-w-0">
+      <div class="flex items-center gap-2 shrink-0">
+        <i data-lucide="user" class="w-4 h-4 text-[var(--on-brand)]"></i>
+        <span class="font-bold text-[var(--on-brand)] tracking-widest uppercase text-sm truncate">@kaichan</span>
+      </div>
+      <span class="text-[var(--on-brand)] opacity-40 hidden sm:inline">|</span>
+      <div class="hidden md:flex items-center gap-3 text-[var(--on-brand)] tracking-wider">
+        <span class="font-semibold text-[var(--on-brand)] text-sm">Kaimono</span>
+        <span class="text-[var(--on-brand)] opacity-40">//</span>
+        <span class="text-[var(--on-brand)] opacity-80 text-xs">What's on your mind today?</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-3 sm:gap-6 shrink-0">
+      <div class="flex items-center gap-0 opacity-70">
+      </div>
+      <div class="flex items-center gap-3 sm:gap-4 pl-2 sm:pl-4">
+        <span class="font-bold text-[var(--on-brand)] tracking-widest text-sm hidden sm:block">KAICHAN</span>
+        <button type="button" onclick="if(window.__kaimonoToggleSidebar) window.__kaimonoToggleSidebar()" class="p-2 sm:p-1 transition-colors text-[var(--on-brand)] hover:opacity-70 cursor-pointer" aria-label="Toggle navigation">
+          <i data-lucide="list" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+</div>
+
+  <div class="flex flex-1 px-3 sm:px-6 pt-2 pb-4 sm:pb-6 gap-3 sm:gap-6 overflow-hidden max-w-[1920px] w-full mx-auto">
+
+    <!-- dashboard/templates/dashboard/partials/sidebar.html -->
+
+
+<style>
+  /* ===== KAIMONO THEMES ===== */
+  body[data-theme="midnight"]  { background-color: #0f172a !important; }
+  body[data-theme="obsidian"]  { background-color: #000000 !important; }
+  body[data-theme="silver"]    { background-color: #e2e8f0 !important; }
+  body[data-theme="paper"]     { background-color: #f5f3ea !important; }
+
+  body[data-theme="midnight"] #sidebar,
+  body[data-theme="obsidian"] #sidebar { background: #16161f !important; box-shadow: none; }
+  body[data-theme="midnight"] #sidebar .nav-item,
+  body[data-theme="obsidian"] #sidebar .nav-item { color: #94a3b8; }
+  body[data-theme="midnight"] #sidebar .nav-item:hover,
+  body[data-theme="obsidian"] #sidebar .nav-item:hover { background: rgba(255,255,255,.07); color: #e2e8f0; }
+  body[data-theme="midnight"] #sidebar .nav-active,
+  body[data-theme="midnight"] #sidebar .nav-active:hover,
+  body[data-theme="obsidian"] #sidebar .nav-active,
+  body[data-theme="obsidian"] #sidebar .nav-active:hover { background: rgba(255,255,255,.12); color: #ffffff; box-shadow: none; }
+  body[data-theme="midnight"] #sidebar .nav-profile,
+  body[data-theme="obsidian"] #sidebar .nav-profile { border-bottom-color: rgba(255,255,255,.08); }
+  body[data-theme="midnight"] #sidebar .nav-profile .text-slate-800,
+  body[data-theme="obsidian"] #sidebar .nav-profile .text-slate-800 { color: #e2e8f0; }
+
+  /* Reduce animations: kill transitions/keyframes app-wide */
+  body[data-motion="reduced"] *, body[data-motion="reduced"] *::before, body[data-motion="reduced"] *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+  }
+
+  /* Compact mode: tighten shell spacing */
+  body[data-compact="1"] #sidebar { padding-top: 1rem; padding-bottom: 1rem; }
+  body[data-compact="1"] #sidebar .nav-item { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+  body[data-compact="1"] #sidebar .nav-profile { padding-bottom: 0.5rem; }
+
+  /* ===== KAIMONO SIDEBAR — UNIFIED (v3: icon center saat collapse, zero-shift) ===== */
+  #sidebar {
+    width: 5rem;
+    padding: 1.5rem 0.625rem; /* 10px kiri-kanan saat collapse */
+    background: #F7F9FC;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                padding 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 300ms ease;
+  }
+  #sidebar.expanded {
+    width: 16rem;
+    padding: 1.5rem 1rem; /* 16px kiri-kanan saat expand */
+    box-shadow: 0 18px 44px -18px rgba(50, 52, 70, 0.22);
+  }
+
+  /* Nav items */
+  #sidebar .nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0;
+    /* COLLAPSE: 10px (sidebar) + 20px (item) = ikon 20px tepat di tengah (center x=40 dari 80px) */
+    padding: 0.75rem 0 0.75rem 1.25rem;
+    width: 100%;
+    color: #64748b;
+    font-weight: 600;
+    border-radius: 1rem;
+    text-align: left;
+    transition: gap 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                padding 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                background-color 200ms ease,
+                color 200ms ease;
+  }
+  /* EXPAND: 16px (sidebar) + 14px (item) = x=30 → SAMA dengan collapse (10+20) → ikon tidak bergeser */
+  #sidebar.expanded .nav-item {
+    gap: 0.875rem;
+    padding: 0.75rem 0.875rem;
+  }
+
+  #sidebar .nav-item:hover {
+    background: rgba(226, 232, 240, 0.5);
+    color: #0f172a;
+  }
+  #sidebar .nav-active,
+  #sidebar .nav-active:hover {
+    background: rgba(226, 232, 240, 0.8);
+    color: #0f172a;
+    font-weight: 700;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  }
+
+  /* Tooltip — hanya tampil saat collapsed, muncul di kanan ikon */
+  #sidebar-tip {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: none;
+    align-items: center;
+    transform: translateY(-50%);
+    z-index: 100;
+    background: #323446;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.625rem;
+    box-shadow: 0 12px 28px -8px rgba(15, 23, 42, 0.35);
+    pointer-events: none;
+  }
+  #sidebar-tip .sidebar-tip-arrow {
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    margin-top: -5px;
+    border: 5px solid transparent;
+    border-right-color: #323446;
+    border-right-width: 5px;
+  }
+
+  /* Profile header: avatar 40px — center saat collapse, sumbu center sama dgn ikon saat expand */
+  #sidebar .nav-profile {
+    padding-left: 0.625rem;  /* collapse: 10+10 → avatar center di x=40 */
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  }
+  #sidebar.expanded .nav-profile {
+    padding-left: 0.25rem;   /* expand: 16+4 → avatar center di x=40, sejajar sumbu ikon */
+  }
+
+  /* Label text: fade smooth, tanpa transform */
+  #sidebar .sidebar-text {
+    display: block;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: max-width 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 160ms ease;
+  }
+  #sidebar.expanded .sidebar-text {
+    max-width: 12rem;
+    opacity: 1;
+    transition: max-width 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 220ms ease 90ms;
+  }
+  #sidebar.expanded .sidebar-text.fill {
+    flex: 1 1 auto;
+  }
+
+  /* ===== MOBILE: let grid children shrink below content min-size (prevents horizontal overflow) ===== */
+  @media (max-width: 1023px) {
+    .grid > * { min-width: 0; }
+  }
+
+  /* ===== MOBILE DRAWER (< 1024px): sidebar slides in over content ===== */
+  @media (max-width: 1023px) {
+    #sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      height: 100vh;
+      z-index: 60;
+      border-radius: 0 2rem 2rem 0;
+      transform: translateX(-110%);
+      box-shadow: 0 18px 44px -18px rgba(50, 52, 70, 0.35);
+      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #sidebar.mobile-open {
+      transform: translateX(0);
+    }
+    #sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      z-index: 55;
+    }
+    #sidebar-backdrop.show {
+      display: block;
+    }
+  }
+  @media (min-width: 1024px) {
+    #sidebar-backdrop {
+      display: none !important;
+    }
+  }
+</style>
+
+<aside id="sidebar" class="shrink-0 h-full bg-[#F7F9FC] text-slate-700 rounded-[2rem] border border-white flex flex-col justify-between">
+  <div class="flex flex-col gap-5 w-full flex-1 min-h-0">
+
+    <!-- Profile header -->
+    <a href="/profile/" data-path="/profile/" data-tip="Profile" class="nav-item nav-profile">
+      <img src="/static/dashboard/images/accsetup.jpg" alt="Avatar" class="w-10 h-10 rounded-full border-2 border-slate-300 object-cover shadow-sm shrink-0">
+      <span class="sidebar-text">
+        <span class="block font-bold text-slate-800 truncate text-xs">Kaichan</span>
+        <span class="block text-[10px] text-slate-400 font-medium truncate">Developer</span>
+      </span>
+    </a>
+
+    <!-- Navigation -->
+    <nav class="flex flex-col gap-1.5 w-full overflow-y-auto min-h-0">
+      <a href="/dashboard/" data-path="/dashboard/" data-tip="Dashboard" class="nav-item">
+        <i data-lucide="home" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Dashboard</span>
+      </a>
+      <a href="/shop/" data-path="/shop/" data-tip="Shop" class="nav-item">
+        <i data-lucide="store" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Shop</span>
+      </a>
+      <a href="/community/" data-path="/community/" data-tip="Community" class="nav-item">
+        <i data-lucide="users" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Community</span>
+      </a>
+      <a href="/wishlist/" data-path="/wishlist/" data-tip="Wishlist" class="nav-item">
+        <i data-lucide="heart" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text fill text-xs">Wishlist</span>
+      </a>
+      <a href="/library/" data-path="/library/" data-tip="Library" class="nav-item">
+        <i data-lucide="inbox" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Library</span>
+      </a>
+      <a href="/settings/" data-path="/settings/" data-tip="Settings" class="nav-item">
+        <i data-lucide="settings" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Settings</span>
+      </a>
+      
+      <a href="/settings/ai-companion/" data-path="/settings/ai-companion/" data-tip="AI Companion" class="nav-item">
+        <i data-lucide="bot" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">AI Companion</span>
+      </a>
+      
+      
+      <a href="/settings/admin/" data-path="/settings/admin/" data-tip="Admin Panel" class="nav-item">
+        <i data-lucide="shield" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Admin Panel</span>
+      </a>
+      
+      
+      <a href="/settings/developer/" data-path="/settings/developer/" data-tip="Developer Panel" class="nav-item">
+        <i data-lucide="code-2" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Developer Panel</span>
+      </a>
+      
+    </nav>
+  </div>
+
+  <!-- Bottom actions -->
+  <div class="flex flex-col gap-1.5 w-full pt-4 border-t border-slate-200/80">
+    <button id="toggle-sidebar" class="nav-item" data-tip="Expand">
+      <span id="toggle-icon-holder" class="flex items-center justify-center w-5 h-5 shrink-0">
+        <i data-lucide="panel-left-open" class="w-5 h-5 shrink-0"></i>
+      </span>
+      <span id="collapse-label" class="sidebar-text text-xs">Expand</span>
+    </button>
+    <a href="/logout/" data-tip="Log Out" class="nav-item">
+      <i data-lucide="log-out" class="w-5 h-5 shrink-0"></i>
+      <span class="sidebar-text text-xs">Log Out</span>
+    </a>
+  </div>
+</aside>
+
+<!-- Mobile drawer backdrop -->
+<div id="sidebar-backdrop" aria-hidden="true"></div>
+
+<div id="sidebar-tip" role="tooltip" aria-hidden="true">
+  <span class="sidebar-tip-arrow"></span>
+  <span id="sidebar-tip-label"></span>
+</div>
+
+<script>
+// Apply the user's saved preferences to <body> as soon as the page loads.
+(function () {
+  if (document.body) {
+    var theme = localStorage.getItem('kaimono_theme') || 'silver';
+    var motion = localStorage.getItem('kaimono_motion') || '';
+    var compact = localStorage.getItem('kaimono_compact') || '';
+    document.body.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-motion', motion);
+    document.body.setAttribute('data-compact', compact);
+  }
+})();
+(function () {
+  var sidebar = document.getElementById('sidebar');
+  if (!sidebar) return;
+  var toggleBtn  = document.getElementById('toggle-sidebar');
+  var iconHolder = document.getElementById('toggle-icon-holder');
+  var label      = document.getElementById('collapse-label');
+  var tipEl      = document.getElementById('sidebar-tip');
+  var tipLabel   = document.getElementById('sidebar-tip-label');
+  var backdrop   = document.getElementById('sidebar-backdrop');
+
+  function isMobile() { return window.matchMedia('(max-width: 1023px)').matches; }
+
+  function openDrawer() {
+    sidebar.classList.add('mobile-open', 'expanded');
+    if (backdrop) backdrop.classList.add('show');
+  }
+  function closeDrawer() {
+    sidebar.classList.remove('mobile-open');
+    if (backdrop) backdrop.classList.remove('show');
+    render();
+  }
+  function toggleDrawer() {
+    if (sidebar.classList.contains('mobile-open')) closeDrawer(); else openDrawer();
+  }
+  if (backdrop) backdrop.addEventListener('click', closeDrawer);
+  sidebar.querySelectorAll('a.nav-item').forEach(function (a) {
+    a.addEventListener('click', function () { if (isMobile()) closeDrawer(); });
+  });
+  window.addEventListener('resize', function () {
+    if (!isMobile() && sidebar.classList.contains('mobile-open')) {
+      sidebar.classList.remove('mobile-open');
+      if (backdrop) backdrop.classList.remove('show');
+      render();
+    }
+  });
+  var expandedDefault = false;
+  var prefExpanded = localStorage.getItem('kaimono_sidebar');
+  var stored = localStorage.getItem('kaimono_sidebar_collapsed');
+  var isCollapsed;
+  if (prefExpanded !== null) {
+    isCollapsed = prefExpanded !== '1';
+  } else {
+    isCollapsed = stored !== null ? stored !== 'false' : !expandedDefault;
+  }
+
+  var path = window.location.pathname;
+  var best = null;
+  sidebar.querySelectorAll('[data-path]').forEach(function (a) {
+    var p = a.getAttribute('data-path');
+    if (p && path.indexOf(p) === 0 && (!best || p.length > best.getAttribute('data-path').length)) {
+      best = a;
+    }
+  });
+  if (best) best.classList.add('nav-active');
+
+  function setTip() {
+    tipEl.style.display = 'none';
+  }
+  setTip();
+
+  function showTip(item) {
+    if (!tipEl || !tipLabel) return;
+    if (sidebar.classList.contains('expanded')) return;
+    tipLabel.textContent = item.getAttribute('data-tip') || '';
+    if (!tipLabel.textContent) return;
+    var r = item.getBoundingClientRect();
+    tipEl.style.display = 'flex';
+    tipEl.style.transform = 'translateY(-50%)';
+    tipEl.style.left = (r.right + 10) + 'px';
+    tipEl.style.top = (r.top + r.height / 2) + 'px';
+    tipEl.setAttribute('aria-hidden', 'false');
+  }
+
+  function hideTip() {
+    if (!tipEl) return;
+    tipEl.style.display = 'none';
+    tipEl.setAttribute('aria-hidden', 'true');
+  }
+
+  sidebar.querySelectorAll('.nav-item').forEach(function (item) {
+    item.addEventListener('mouseenter', function () { showTip(item); });
+    item.addEventListener('mouseleave', hideTip);
+    item.addEventListener('focus', function () { showTip(item); });
+    item.addEventListener('blur', hideTip);
+  });
+
+  function render() {
+    if (!(isMobile() && sidebar.classList.contains('mobile-open'))) {
+      sidebar.classList.toggle('expanded', !isCollapsed);
+    }
+    if (iconHolder) {
+      iconHolder.innerHTML = '<i data-lucide="' + (isCollapsed ? 'panel-left-open' : 'panel-left-close') + '" class="w-5 h-5 shrink-0"></i>';
+    }
+    if (label) label.textContent = isCollapsed ? 'Expand' : 'Collapse';
+    toggleBtn.setAttribute('data-tip', isCollapsed ? 'Expand' : 'Collapse');
+    if (!isCollapsed) hideTip();
+    if (window.lucide) lucide.createIcons();
+  }
+  render();
+
+  if (toggleBtn) toggleBtn.addEventListener('click', function () {
+    if (isMobile()) { closeDrawer(); return; }
+    isCollapsed = !isCollapsed;
+    localStorage.setItem('kaimono_sidebar_collapsed', String(isCollapsed));
+    render();
+  });
+
+  window.__kaimonoToggleSidebar = function () {
+    if (isMobile()) { toggleDrawer(); return; }
+    isCollapsed = !isCollapsed;
+    localStorage.setItem('kaimono_sidebar_collapsed', String(isCollapsed));
+    render();
+  };
+})();
+</script>
+
+    <main class="flex-1 flex flex-col gap-5 overflow-y-auto pr-1 pb-4">
+
+      <!-- BREADCRUMB -->
+      <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 px-2 pt-1 pb-1 shrink-0">
+        <div class="flex items-center gap-3">
+          <h1 class="text-base font-medium tracking-wide" style="color: var(--text-secondary);">
+            KAI<span class="font-bold" style="color: var(--text-primary);">MONO</span>
+            <span class="font-bold" style="color: var(--text-primary);">/ ADMIN PANEL</span>
+          </h1>
+          <span class="text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5" style="background: var(--brand-soft); color: var(--brand);">
+            <i data-lucide="shield" class="w-3 h-3"></i> Staff only
+          </span>
+        </div>
+        <a href="/settings/" class="btn-ghost font-semibold px-4 py-2 rounded-full text-xs flex items-center gap-2">
+          <i data-lucide="settings" class="w-3.5 h-3.5"></i> User Settings
+        </a>
+      </div>
+
+      <!-- MESSAGES -->
+      
+
+      <!-- 2 COLUMN: NAV + PANELS -->
+      <div class="grid grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)] gap-4 lg:gap-5 flex-1 min-h-0">
+        <!-- ============ LEFT: SECTIONS ============ -->
+        <aside class="flex flex-col gap-4 overflow-y-auto pr-1">
+          <div class="surface-card rounded-2xl border shadow-sm p-2.5 shrink-0">
+            <nav class="flex flex-col gap-1">
+              <a href="/settings/admin/?section=overview" data-section="overview" class="adm-tab flex items-center gap-3 px-3.5 py-3 rounded-xl text-left w-full active">
+                <i data-lucide="layout-dashboard" class="adm-tab-icon w-4 h-4 shrink-0"></i>
+                <span class="flex-1 min-w-0">
+                  <span class="block text-xs font-bold">Overview</span>
+                  <span class="adm-tab-desc block text-[10px] truncate">Site at a glance</span>
+                </span>
+              </a>
+              <a href="/settings/admin/?section=products" data-section="products" class="adm-tab flex items-center gap-3 px-3.5 py-3 rounded-xl text-left w-full ">
+                <i data-lucide="gamepad-2" class="adm-tab-icon w-4 h-4 shrink-0"></i>
+                <span class="flex-1 min-w-0">
+                  <span class="block text-xs font-bold">Products</span>
+                  <span class="adm-tab-desc block text-[10px] truncate">Games on the store</span>
+                </span>
+              </a>
+              <a href="/settings/admin/?section=users" data-section="users" class="adm-tab flex items-center gap-3 px-3.5 py-3 rounded-xl text-left w-full ">
+                <i data-lucide="users" class="adm-tab-icon w-4 h-4 shrink-0"></i>
+                <span class="flex-1 min-w-0">
+                  <span class="block text-xs font-bold">Users</span>
+                  <span class="adm-tab-desc block text-[10px] truncate">Accounts & roles</span>
+                </span>
+              </a>
+              <a href="/settings/admin/?section=community" data-section="community" class="adm-tab flex items-center gap-3 px-3.5 py-3 rounded-xl text-left w-full ">
+                <i data-lucide="message-square" class="adm-tab-icon w-4 h-4 shrink-0"></i>
+                <span class="flex-1 min-w-0">
+                  <span class="block text-xs font-bold">Community</span>
+                  <span class="adm-tab-desc block text-[10px] truncate">Posts, channels & more</span>
+                </span>
+              </a>
+              <a href="/settings/admin/?section=submissions" data-section="submissions" class="adm-tab flex items-center gap-3 px-3.5 py-3 rounded-xl text-left w-full ">
+                <i data-lucide="inbox" class="adm-tab-icon w-4 h-4 shrink-0"></i>
+                <span class="flex-1 min-w-0">
+                  <span class="block text-xs font-bold">Submissions</span>
+                  <span class="adm-tab-desc block text-[10px] truncate"><span style="color: #f59e0b;">1 pending</span></span>
+                </span>
+              </a>
+            </nav>
+          </div>
+
+          <div class="accent rounded-2xl p-5 shrink-0 relative overflow-hidden" style="background: var(--brand); color: var(--on-brand); box-shadow: 0 20px 40px -12px var(--shadow-color);">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style="background: color-mix(in srgb, var(--on-brand) 12%, transparent);">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+            </div>
+            <p class="text-sm font-bold leading-snug">Admin powers</p>
+            <p class="text-[11px] mt-1.5 leading-relaxed" style="color: color-mix(in srgb, var(--on-brand) 70%, transparent);">You can manage products, users, and community content from here.</p>
+            <a href="/admin/" class="mt-4 w-full flex items-center justify-center gap-2 text-xs font-bold py-2.5 rounded-full transition-all hover:-translate-y-0.5" style="background: var(--on-brand); color: var(--brand);">
+              <i data-lucide="database" class="w-3.5 h-3.5"></i> Django Admin
+            </a>
+          </div>
+        </aside>
+
+        <!-- ============ RIGHT: PANELS ============ -->
+        <section class="overflow-y-auto pr-1 adm-panel">
+
+          <!-- ================= OVERVIEW ================= -->
+          <div class="flex flex-col gap-4 " data-panel="overview">
+            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+              <div class="surface-card rounded-2xl border shadow-sm p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-[10px] font-bold uppercase tracking-wider" style="color: var(--text-muted);">Products</span>
+                  <i data-lucide="shopping-bag" class="w-4 h-4" style="color: var(--brand);"></i>
+                </div>
+                <p class="text-2xl font-extrabold" style="color: var(--text-primary);">12</p>
+                <p class="text-[10px] mt-1" style="color: var(--text-muted);">12 visible</p>
+              </div>
+              <div class="surface-card rounded-2xl border shadow-sm p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-[10px] font-bold uppercase tracking-wider" style="color: var(--text-muted);">Users</span>
+                  <i data-lucide="users" class="w-4 h-4" style="color: var(--brand);"></i>
+                </div>
+                <p class="text-2xl font-extrabold" style="color: var(--text-primary);">1</p>
+                <p class="text-[10px] mt-1" style="color: var(--text-muted);">1 staff</p>
+              </div>
+              <div class="surface-card rounded-2xl border shadow-sm p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-[10px] font-bold uppercase tracking-wider" style="color: var(--text-muted);">Posts</span>
+                  <i data-lucide="file-text" class="w-4 h-4" style="color: var(--brand);"></i>
+                </div>
+                <p class="text-2xl font-extrabold" style="color: var(--text-primary);">8</p>
+                <p class="text-[10px] mt-1" style="color: var(--text-muted);">community</p>
+              </div>
+              <div class="surface-card rounded-2xl border shadow-sm p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-[10px] font-bold uppercase tracking-wider" style="color: var(--text-muted);">Comments</span>
+                  <i data-lucide="message-circle" class="w-4 h-4" style="color: var(--brand);"></i>
+                </div>
+                <p class="text-2xl font-extrabold" style="color: var(--text-primary);">0</p>
+                <p class="text-[10px] mt-1" style="color: var(--text-muted);">on posts</p>
+              </div>
+              <div class="surface-card rounded-2xl border shadow-sm p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-[10px] font-bold uppercase tracking-wider" style="color: var(--text-muted);">Channels</span>
+                  <i data-lucide="hash" class="w-4 h-4" style="color: var(--brand);"></i>
+                </div>
+                <p class="text-2xl font-extrabold" style="color: var(--text-primary);">7</p>
+                <p class="text-[10px] mt-1" style="color: var(--text-muted);">6 members</p>
+              </div>
+              <div class="surface-card rounded-2xl border shadow-sm p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-[10px] font-bold uppercase tracking-wider" style="color: var(--text-muted);">Collection</span>
+                  <i data-lucide="library" class="w-4 h-4" style="color: var(--brand);"></i>
+                </div>
+                <p class="text-2xl font-extrabold" style="color: var(--text-primary);">4</p>
+                <p class="text-[10px] mt-1" style="color: var(--text-muted);">10 wishlisted</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 min-h-0">
+              <!-- Recent posts -->
+              <div class="surface-card rounded-2xl border shadow-sm p-5">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-sm font-bold">Recent Community Posts</h3>
+                  <a href="/settings/admin/?section=community" class="text-[10px] font-bold uppercase tracking-wider" style="color: var(--brand);">Manage</a>
+                </div>
+                
+                <div class="flex items-center justify-between gap-3 py-2.5 border-b last:border-0" style="border-color: var(--border-soft);">
+                  <div class="min-w-0">
+                    <p class="text-xs font-bold truncate" style="color: var(--text-primary);">Co-op partner needed for Honkai Star Rail endgame…</p>
+                    <p class="text-[10px] mt-0.5" style="color: var(--text-muted);">by aoi_gamer · discussion</p>
+                  </div>
+                  
+                  <span class="status-chip shrink-0" style="background: var(--border-soft);" title="Not pinned"></span>
+                  
+                </div>
+                
+                <div class="flex items-center justify-between gap-3 py-2.5 border-b last:border-0" style="border-color: var(--border-soft);">
+                  <div class="min-w-0">
+                    <p class="text-xs font-bold truncate" style="color: var(--text-primary);">My Genshin Impact shrine setup is finally complet…</p>
+                    <p class="text-[10px] mt-0.5" style="color: var(--text-muted);">by kai_builder · image</p>
+                  </div>
+                  
+                  <span class="status-chip shrink-0" style="background: var(--border-soft);" title="Not pinned"></span>
+                  
+                </div>
+                
+                <div class="flex items-center justify-between gap-3 py-2.5 border-b last:border-0" style="border-color: var(--border-soft);">
+                  <div class="min-w-0">
+                    <p class="text-xs font-bold truncate" style="color: var(--text-primary);">Best anime figure stores in Tokyo? Visiting next …</p>
+                    <p class="text-[10px] mt-0.5" style="color: var(--text-muted);">by yuki_traveler · discussion</p>
+                  </div>
+                  
+                  <span class="status-chip shrink-0" style="background: var(--border-soft);" title="Not pinned"></span>
+                  
+                </div>
+                
+                <div class="flex items-center justify-between gap-3 py-2.5 border-b last:border-0" style="border-color: var(--border-soft);">
+                  <div class="min-w-0">
+                    <p class="text-xs font-bold truncate" style="color: var(--text-primary);">Just published my comprehensive guide on maximizi…</p>
+                    <p class="text-[10px] mt-0.5" style="color: var(--text-muted);">by ren_dev · guide</p>
+                  </div>
+                  
+                  <span class="status-chip shrink-0" style="background: var(--border-soft);" title="Not pinned"></span>
+                  
+                </div>
+                
+                <div class="flex items-center justify-between gap-3 py-2.5 border-b last:border-0" style="border-color: var(--border-soft);">
+                  <div class="min-w-0">
+                    <p class="text-xs font-bold truncate" style="color: var(--text-primary);">LF: Authentic Nendoroid Ichika (1st press) — WTB …</p>
+                    <p class="text-[10px] mt-0.5" style="color: var(--text-muted);">by mikaelle · discussion</p>
+                  </div>
+                  
+                  <span class="status-chip shrink-0" style="background: var(--border-soft);" title="Not pinned"></span>
+                  
+                </div>
+                
+              </div>
+              <!-- Recent users -->
+              <div class="surface-card rounded-2xl border shadow-sm p-5">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-sm font-bold">Newest Users</h3>
+                  <a href="/settings/admin/?section=users" class="text-[10px] font-bold uppercase tracking-wider" style="color: var(--brand);">Manage</a>
+                </div>
+                
+                <div class="flex items-center gap-3 py-2.5 border-b last:border-0" style="border-color: var(--border-soft);">
+                  <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=80&q=80" class="w-8 h-8 rounded-full object-cover shrink-0 border" style="border-color: var(--border-soft);" alt="">
+                  <div class="min-w-0 flex-1">
+                    <p class="text-xs font-bold truncate" style="color: var(--text-primary);">Kaichan</p>
+                    <p class="text-[10px]" style="color: var(--text-muted);">@kaichan · Developer</p>
+                  </div>
+                  <span class="text-[9px] font-bold px-2 py-0.5 rounded-full shrink-0" style="background: var(--brand-soft); color: var(--brand);">ADMIN</span>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= PRODUCTS ================= -->
+          <div class="flex flex-col gap-4 hidden" data-panel="products">
+            <!-- Product form -->
+            <div class="surface-card rounded-2xl border shadow-sm p-5 shrink-0">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-bold flex items-center gap-2">
+                  <i data-lucide="plus" class="w-4 h-4" style="color: var(--brand);"></i>
+                  Add Product
+                </h3>
+                
+              </div>
+              <form method="post" action="/settings/admin/" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                <input type="hidden" name="action" value="product_save">
+                <input type="hidden" name="id" value="">
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Name *</label>
+                  <input type="text" name="name" value="" class="form-input" placeholder="Game title" required>
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Category *</label>
+                  <select name="category" disabled class="form-input" style="opacity:.5; cursor:not-allowed;">
+                    
+                  </select>
+                  <input type="hidden" name="category" value="games">
+                  <p class="text-[9px] mt-1" style="color: var(--text-muted);">Kaimono is a games-only store.</p>
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Type</label>
+                  <input type="text" name="type" value="" class="form-input" placeholder="Action RPG, PVC Statue…">
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Brand / Studio</label>
+                  <input type="text" name="brand" value="" class="form-input" placeholder="e.g. Square Enix">
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Price</label>
+                  <input type="number" step="0.01" min="0" name="price" value="" class="form-input" placeholder="19.99">
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Original Price</label>
+                  <input type="number" step="0.01" min="0" name="original_price" value="" class="form-input" placeholder="39.99">
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Stock line</label>
+                  <input type="text" name="stock" value="" class="form-input" placeholder="In stock · Ships in 24h">
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Badges</label>
+                  <input type="text" name="badges" value="" class="form-input" placeholder="-50%, New">
+                </div>
+                <div class="flex gap-3">
+                  <div class="flex-1">
+                    <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Rating</label>
+                    <input type="number" step="0.1" min="0" max="5" name="rating" value="" class="form-input">
+                  </div>
+                  <div class="flex-1">
+                    <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Reviews</label>
+                    <input type="number" min="0" name="reviews" value="" class="form-input">
+                  </div>
+                </div>
+                <div class="md:col-span-2">
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Product Image</label>
+                  <div class="flex items-center gap-3">
+                    <div id="adm-img-preview" class="w-16 h-16 rounded-xl overflow-hidden shrink-0 flex items-center justify-center" style="background: var(--bg-surface); border: 1px solid var(--border-soft);">
+                      
+                      <i data-lucide="image" class="w-5 h-5" style="color: var(--text-muted);"></i>
+                      
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <input type="hidden" name="image" id="adm-img-url" value="">
+                      <label class="inline-flex items-center gap-2 cursor-pointer btn-brand text-[11px] font-bold px-4 py-2 rounded-full">
+                        <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                        Upload image
+                        <input type="file" name="image_file" id="adm-img-file" accept="image/*" class="hidden" onchange="previewAdminImage(this)">
+                      </label>
+                      <p id="adm-img-name" class="text-[10px] mt-1.5 truncate" style="color: var(--text-muted);">JPG, PNG, WebP or GIF</p>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Developer</label>
+                  <input type="text" name="developer" value="" class="form-input">
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Publisher</label>
+                  <input type="text" name="publisher" value="" class="form-input">
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Release date</label>
+                  <input type="text" name="release_date" value="" class="form-input" placeholder="March 8, 2026">
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Tags</label>
+                  <input type="text" name="tags" value="" class="form-input" placeholder="Action, RPG, Co-op">
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Show on shop</label>
+                  <div class="flex items-center h-[38px]">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" name="is_active" class="sr-only peer" checked>
+                      <div class="w-9 h-5 rounded-full peer peer-checked:bg-[var(--brand)] bg-[var(--border-soft)] transition after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4"></div>
+                    </label>
+                  </div>
+                </div>
+                <div class="md:col-span-2">
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Description</label>
+                  <textarea name="description" class="form-input" rows="2" placeholder="Short marketing blurb…"></textarea>
+                </div>
+                <div class="md:col-span-2">
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Trailer (YouTube link)</label>
+                  <input type="url" name="trailer_url" value="" class="form-input" placeholder="https://www.youtube.com/watch?v=…">
+                  <p class="text-[9px] mt-1" style="color: var(--text-muted);">Any YouTube watch, short, or embed link. Plays as an embedded trailer on the product page.</p>
+                </div>
+                <div class="md:col-span-2">
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Screenshots</label>
+                  <label class="flex items-center justify-center gap-2 cursor-pointer rounded-xl border-2 border-dashed px-4 py-3 text-[11px] font-bold transition-colors" style="border-color: var(--border-soft); color: var(--text-muted);" onmouseover="this.style.borderColor='var(--brand)'" onmouseout="this.style.borderColor='var(--border-soft)'">
+                    <i data-lucide="images" class="w-4 h-4"></i>
+                    Click to upload screenshots (multiple)
+                    <input type="file" name="screenshot_files" id="adm-shots" accept="image/*" multiple class="hidden" onchange="previewAdminShots(this)">
+                  </label>
+                  <div id="adm-shot-preview" class="flex flex-wrap gap-2 mt-2">
+                    
+                  </div>
+                  <p class="text-[9px] mt-1.5" style="color: var(--text-muted);">JPG, PNG, WebP or GIF. Uploading new files replaces the current screenshots.</p>
+                </div>
+                <div class="md:col-span-3 flex items-end justify-end">
+                  <button type="submit" class="btn-brand font-semibold px-6 py-2.5 rounded-full text-xs flex items-center gap-2 shadow-sm">
+                    <i data-lucide="save" class="w-3.5 h-3.5"></i> Save Product
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Product list -->
+            <div class="surface-card rounded-2xl border shadow-sm p-0">
+              <div class="overflow-x-auto">
+                <table class="adm-table">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Category</th>
+                      <th>Price</th>
+                      <th>Status</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-3 min-w-0">
+                          
+                          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&amp;fit=crop&amp;w=400&amp;q=80" class="w-9 h-9 rounded-lg object-cover shrink-0" style="border: 1px solid var(--border-soft);" alt="">
+                          
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate max-w-[220px]" style="color: var(--text-primary);">NieR:Automata™ GOTY Edition</p>
+                            <p class="text-[10px] truncate" style="color: var(--text-muted);">Square Enix</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">games</span></td>
+                      <td>
+                        <span class="text-[10px] line-through mr-1" style="color: var(--text-muted);">$39.99</span>
+                        <span class="font-bold" style="color: var(--text-primary);">$19.99</span>
+                      </td>
+                      <td>
+                        
+                        <span class="status-chip shrink-0 align-middle" style="background:#22c55e;"></span>
+                        <span class="text-[10px] font-bold ml-1">Live</span>
+                        
+                      </td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/" class="inline">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_toggle">
+                            <input type="hidden" name="id" value="192">
+                            <button class="btn-ghost p-1.5 rounded-lg" title="Toggle visibility"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <a href="/settings/admin/?section=products&edit=192" class="btn-ghost p-1.5 rounded-lg inline-flex" title="Edit"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a>
+                          <form method="post" action="/settings/admin/" class="inline" onsubmit="return confirm('Delete \\'NieR:Automata™ GOTY Edition\\' permanently?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_delete">
+                            <input type="hidden" name="id" value="192">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-3 min-w-0">
+                          
+                          <img src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&amp;fit=crop&amp;w=400&amp;q=80" class="w-9 h-9 rounded-lg object-cover shrink-0" style="border: 1px solid var(--border-soft);" alt="">
+                          
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate max-w-[220px]" style="color: var(--text-primary);">Honkai: Star Rail Collector&#x27;s Edition</p>
+                            <p class="text-[10px] truncate" style="color: var(--text-muted);">HoYoverse</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">games</span></td>
+                      <td>
+                        
+                        <span class="font-bold" style="color: var(--text-primary);">$59.99</span>
+                      </td>
+                      <td>
+                        
+                        <span class="status-chip shrink-0 align-middle" style="background:#22c55e;"></span>
+                        <span class="text-[10px] font-bold ml-1">Live</span>
+                        
+                      </td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/" class="inline">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_toggle">
+                            <input type="hidden" name="id" value="193">
+                            <button class="btn-ghost p-1.5 rounded-lg" title="Toggle visibility"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <a href="/settings/admin/?section=products&edit=193" class="btn-ghost p-1.5 rounded-lg inline-flex" title="Edit"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a>
+                          <form method="post" action="/settings/admin/" class="inline" onsubmit="return confirm('Delete \\'Honkai: Star Rail Collector\u0027s Edition\\' permanently?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_delete">
+                            <input type="hidden" name="id" value="193">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-3 min-w-0">
+                          
+                          <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&amp;fit=crop&amp;w=400&amp;q=80" class="w-9 h-9 rounded-lg object-cover shrink-0" style="border: 1px solid var(--border-soft);" alt="">
+                          
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate max-w-[220px]" style="color: var(--text-primary);">Genshin Impact 1/7 Scale PVC Figure</p>
+                            <p class="text-[10px] truncate" style="color: var(--text-muted);">Anime Collectibles</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">figures</span></td>
+                      <td>
+                        <span class="text-[10px] line-through mr-1" style="color: var(--text-muted);">$129.99</span>
+                        <span class="font-bold" style="color: var(--text-primary);">$99.99</span>
+                      </td>
+                      <td>
+                        
+                        <span class="status-chip shrink-0 align-middle" style="background:#22c55e;"></span>
+                        <span class="text-[10px] font-bold ml-1">Live</span>
+                        
+                      </td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/" class="inline">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_toggle">
+                            <input type="hidden" name="id" value="194">
+                            <button class="btn-ghost p-1.5 rounded-lg" title="Toggle visibility"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <a href="/settings/admin/?section=products&edit=194" class="btn-ghost p-1.5 rounded-lg inline-flex" title="Edit"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a>
+                          <form method="post" action="/settings/admin/" class="inline" onsubmit="return confirm('Delete \\'Genshin Impact 1/7 Scale PVC Figure\\' permanently?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_delete">
+                            <input type="hidden" name="id" value="194">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-3 min-w-0">
+                          
+                          <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&amp;fit=crop&amp;w=400&amp;q=80" class="w-9 h-9 rounded-lg object-cover shrink-0" style="border: 1px solid var(--border-soft);" alt="">
+                          
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate max-w-[220px]" style="color: var(--text-primary);">Persona 3 Reload Premium Hoodie</p>
+                            <p class="text-[10px] truncate" style="color: var(--text-muted);">Official Apparel</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">apparel</span></td>
+                      <td>
+                        <span class="text-[10px] line-through mr-1" style="color: var(--text-muted);">$49.99</span>
+                        <span class="font-bold" style="color: var(--text-primary);">$34.99</span>
+                      </td>
+                      <td>
+                        
+                        <span class="status-chip shrink-0 align-middle" style="background:#22c55e;"></span>
+                        <span class="text-[10px] font-bold ml-1">Live</span>
+                        
+                      </td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/" class="inline">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_toggle">
+                            <input type="hidden" name="id" value="195">
+                            <button class="btn-ghost p-1.5 rounded-lg" title="Toggle visibility"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <a href="/settings/admin/?section=products&edit=195" class="btn-ghost p-1.5 rounded-lg inline-flex" title="Edit"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a>
+                          <form method="post" action="/settings/admin/" class="inline" onsubmit="return confirm('Delete \\'Persona 3 Reload Premium Hoodie\\' permanently?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_delete">
+                            <input type="hidden" name="id" value="195">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-3 min-w-0">
+                          
+                          <img src="https://images.unsplash.com/photo-1547394765-185e1e68f34e?auto=format&amp;fit=crop&amp;w=400&amp;q=80" class="w-9 h-9 rounded-lg object-cover shrink-0" style="border: 1px solid var(--border-soft);" alt="">
+                          
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate max-w-[220px]" style="color: var(--text-primary);">Monster Hunter World: Iceborne Master</p>
+                            <p class="text-[10px] truncate" style="color: var(--text-muted);">CAPCOM</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">games</span></td>
+                      <td>
+                        <span class="text-[10px] line-through mr-1" style="color: var(--text-muted);">$29.99</span>
+                        <span class="font-bold" style="color: var(--text-primary);">$9.89</span>
+                      </td>
+                      <td>
+                        
+                        <span class="status-chip shrink-0 align-middle" style="background:#22c55e;"></span>
+                        <span class="text-[10px] font-bold ml-1">Live</span>
+                        
+                      </td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/" class="inline">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_toggle">
+                            <input type="hidden" name="id" value="196">
+                            <button class="btn-ghost p-1.5 rounded-lg" title="Toggle visibility"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <a href="/settings/admin/?section=products&edit=196" class="btn-ghost p-1.5 rounded-lg inline-flex" title="Edit"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a>
+                          <form method="post" action="/settings/admin/" class="inline" onsubmit="return confirm('Delete \\'Monster Hunter World: Iceborne Master\\' permanently?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_delete">
+                            <input type="hidden" name="id" value="196">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-3 min-w-0">
+                          
+                          <img src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&amp;fit=crop&amp;w=400&amp;q=80" class="w-9 h-9 rounded-lg object-cover shrink-0" style="border: 1px solid var(--border-soft);" alt="">
+                          
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate max-w-[220px]" style="color: var(--text-primary);">Hatsune Miku Nendoroid 15th Anniversary</p>
+                            <p class="text-[10px] truncate" style="color: var(--text-muted);">Good Smile</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">figures</span></td>
+                      <td>
+                        
+                        <span class="font-bold" style="color: var(--text-primary);">$79.99</span>
+                      </td>
+                      <td>
+                        
+                        <span class="status-chip shrink-0 align-middle" style="background:#22c55e;"></span>
+                        <span class="text-[10px] font-bold ml-1">Live</span>
+                        
+                      </td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/" class="inline">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_toggle">
+                            <input type="hidden" name="id" value="197">
+                            <button class="btn-ghost p-1.5 rounded-lg" title="Toggle visibility"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <a href="/settings/admin/?section=products&edit=197" class="btn-ghost p-1.5 rounded-lg inline-flex" title="Edit"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a>
+                          <form method="post" action="/settings/admin/" class="inline" onsubmit="return confirm('Delete \\'Hatsune Miku Nendoroid 15th Anniversary\\' permanently?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_delete">
+                            <input type="hidden" name="id" value="197">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-3 min-w-0">
+                          
+                          <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&amp;fit=crop&amp;w=400&amp;q=80" class="w-9 h-9 rounded-lg object-cover shrink-0" style="border: 1px solid var(--border-soft);" alt="">
+                          
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate max-w-[220px]" style="color: var(--text-primary);">Vintage Anime Art T-Shirt Collection</p>
+                            <p class="text-[10px] truncate" style="color: var(--text-muted);">Official Apparel</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">apparel</span></td>
+                      <td>
+                        <span class="text-[10px] line-through mr-1" style="color: var(--text-muted);">$24.99</span>
+                        <span class="font-bold" style="color: var(--text-primary);">$19.99</span>
+                      </td>
+                      <td>
+                        
+                        <span class="status-chip shrink-0 align-middle" style="background:#22c55e;"></span>
+                        <span class="text-[10px] font-bold ml-1">Live</span>
+                        
+                      </td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/" class="inline">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_toggle">
+                            <input type="hidden" name="id" value="198">
+                            <button class="btn-ghost p-1.5 rounded-lg" title="Toggle visibility"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <a href="/settings/admin/?section=products&edit=198" class="btn-ghost p-1.5 rounded-lg inline-flex" title="Edit"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a>
+                          <form method="post" action="/settings/admin/" class="inline" onsubmit="return confirm('Delete \\'Vintage Anime Art T\u002DShirt Collection\\' permanently?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_delete">
+                            <input type="hidden" name="id" value="198">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-3 min-w-0">
+                          
+                          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&amp;fit=crop&amp;w=400&amp;q=80" class="w-9 h-9 rounded-lg object-cover shrink-0" style="border: 1px solid var(--border-soft);" alt="">
+                          
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate max-w-[220px]" style="color: var(--text-primary);">Acrylic Keychain Collection Set (8 pcs)</p>
+                            <p class="text-[10px] truncate" style="color: var(--text-muted);">Accessories</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">accessories</span></td>
+                      <td>
+                        
+                        <span class="font-bold" style="color: var(--text-primary);">$12.99</span>
+                      </td>
+                      <td>
+                        
+                        <span class="status-chip shrink-0 align-middle" style="background:#22c55e;"></span>
+                        <span class="text-[10px] font-bold ml-1">Live</span>
+                        
+                      </td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/" class="inline">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_toggle">
+                            <input type="hidden" name="id" value="199">
+                            <button class="btn-ghost p-1.5 rounded-lg" title="Toggle visibility"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <a href="/settings/admin/?section=products&edit=199" class="btn-ghost p-1.5 rounded-lg inline-flex" title="Edit"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a>
+                          <form method="post" action="/settings/admin/" class="inline" onsubmit="return confirm('Delete \\'Acrylic Keychain Collection Set (8 pcs)\\' permanently?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_delete">
+                            <input type="hidden" name="id" value="199">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-3 min-w-0">
+                          
+                          <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&amp;fit=crop&amp;w=400&amp;q=80" class="w-9 h-9 rounded-lg object-cover shrink-0" style="border: 1px solid var(--border-soft);" alt="">
+                          
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate max-w-[220px]" style="color: var(--text-primary);">Project Sekai Colorful Stage! Soundtrack</p>
+                            <p class="text-[10px] truncate" style="color: var(--text-muted);">Sega</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">accessories</span></td>
+                      <td>
+                        
+                        <span class="font-bold" style="color: var(--text-primary);">$29.99</span>
+                      </td>
+                      <td>
+                        
+                        <span class="status-chip shrink-0 align-middle" style="background:#22c55e;"></span>
+                        <span class="text-[10px] font-bold ml-1">Live</span>
+                        
+                      </td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/" class="inline">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_toggle">
+                            <input type="hidden" name="id" value="200">
+                            <button class="btn-ghost p-1.5 rounded-lg" title="Toggle visibility"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <a href="/settings/admin/?section=products&edit=200" class="btn-ghost p-1.5 rounded-lg inline-flex" title="Edit"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a>
+                          <form method="post" action="/settings/admin/" class="inline" onsubmit="return confirm('Delete \\'Project Sekai Colorful Stage! Soundtrack\\' permanently?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_delete">
+                            <input type="hidden" name="id" value="200">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-3 min-w-0">
+                          
+                          <img src="https://images.unsplash.com/photo-1547394765-185e1e68f34e?auto=format&amp;fit=crop&amp;w=400&amp;q=80" class="w-9 h-9 rounded-lg object-cover shrink-0" style="border: 1px solid var(--border-soft);" alt="">
+                          
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate max-w-[220px]" style="color: var(--text-primary);">Chainsaw Man Power Scale Figure</p>
+                            <p class="text-[10px] truncate" style="color: var(--text-muted);">Bandai</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">figures</span></td>
+                      <td>
+                        <span class="text-[10px] line-through mr-1" style="color: var(--text-muted);">$179.99</span>
+                        <span class="font-bold" style="color: var(--text-primary);">$149.99</span>
+                      </td>
+                      <td>
+                        
+                        <span class="status-chip shrink-0 align-middle" style="background:#22c55e;"></span>
+                        <span class="text-[10px] font-bold ml-1">Live</span>
+                        
+                      </td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/" class="inline">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_toggle">
+                            <input type="hidden" name="id" value="201">
+                            <button class="btn-ghost p-1.5 rounded-lg" title="Toggle visibility"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <a href="/settings/admin/?section=products&edit=201" class="btn-ghost p-1.5 rounded-lg inline-flex" title="Edit"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a>
+                          <form method="post" action="/settings/admin/" class="inline" onsubmit="return confirm('Delete \\'Chainsaw Man Power Scale Figure\\' permanently?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_delete">
+                            <input type="hidden" name="id" value="201">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-3 min-w-0">
+                          
+                          <img src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&amp;fit=crop&amp;w=400&amp;q=80" class="w-9 h-9 rounded-lg object-cover shrink-0" style="border: 1px solid var(--border-soft);" alt="">
+                          
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate max-w-[220px]" style="color: var(--text-primary);">Elden Ring Shadow of the Erdtree DLC</p>
+                            <p class="text-[10px] truncate" style="color: var(--text-muted);">FromSoftware</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">games</span></td>
+                      <td>
+                        
+                        <span class="font-bold" style="color: var(--text-primary);">$39.99</span>
+                      </td>
+                      <td>
+                        
+                        <span class="status-chip shrink-0 align-middle" style="background:#22c55e;"></span>
+                        <span class="text-[10px] font-bold ml-1">Live</span>
+                        
+                      </td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/" class="inline">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_toggle">
+                            <input type="hidden" name="id" value="202">
+                            <button class="btn-ghost p-1.5 rounded-lg" title="Toggle visibility"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <a href="/settings/admin/?section=products&edit=202" class="btn-ghost p-1.5 rounded-lg inline-flex" title="Edit"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a>
+                          <form method="post" action="/settings/admin/" class="inline" onsubmit="return confirm('Delete \\'Elden Ring Shadow of the Erdtree DLC\\' permanently?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_delete">
+                            <input type="hidden" name="id" value="202">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-3 min-w-0">
+                          
+                          <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&amp;fit=crop&amp;w=400&amp;q=80" class="w-9 h-9 rounded-lg object-cover shrink-0" style="border: 1px solid var(--border-soft);" alt="">
+                          
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate max-w-[220px]" style="color: var(--text-primary);">Jujutsu Kaisen Sukuna Hoodie Black</p>
+                            <p class="text-[10px] truncate" style="color: var(--text-muted);">Crunchyroll</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">apparel</span></td>
+                      <td>
+                        <span class="text-[10px] line-through mr-1" style="color: var(--text-muted);">$69.99</span>
+                        <span class="font-bold" style="color: var(--text-primary);">$54.99</span>
+                      </td>
+                      <td>
+                        
+                        <span class="status-chip shrink-0 align-middle" style="background:#22c55e;"></span>
+                        <span class="text-[10px] font-bold ml-1">Live</span>
+                        
+                      </td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/" class="inline">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_toggle">
+                            <input type="hidden" name="id" value="203">
+                            <button class="btn-ghost p-1.5 rounded-lg" title="Toggle visibility"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <a href="/settings/admin/?section=products&edit=203" class="btn-ghost p-1.5 rounded-lg inline-flex" title="Edit"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a>
+                          <form method="post" action="/settings/admin/" class="inline" onsubmit="return confirm('Delete \\'Jujutsu Kaisen Sukuna Hoodie Black\\' permanently?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="product_delete">
+                            <input type="hidden" name="id" value="203">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= USERS ================= -->
+          <div class="flex flex-col gap-4 hidden" data-panel="users">
+            <div class="surface-card rounded-2xl border shadow-sm p-5 shrink-0">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-bold flex items-center gap-2">
+                  <i data-lucide="user-plus" class="w-4 h-4" style="color: var(--brand);"></i>
+                  Create User
+                </h3>
+                
+              </div>
+              <form method="post" action="/settings/admin/" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                <input type="hidden" name="action" value="user_save">
+                <input type="hidden" name="id" value="">
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Username *</label>
+                  <input type="text" name="username" value="" class="form-input" required>
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Display name</label>
+                  <input type="text" name="display_name" value="" class="form-input">
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Email *</label>
+                  <input type="email" name="email" value="" class="form-input" required>
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Role</label>
+                  <select name="role" class="form-input">
+                    
+                  </select>
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Password</label>
+                  <input type="password" name="password" class="form-input" required>
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Options</label>
+                  <div class="flex items-center gap-4 h-[38px]">
+                    <label class="flex items-center gap-1.5 cursor-pointer text-[11px] font-semibold">
+                      <input type="checkbox" name="is_staff" class="accent-[var(--brand)]" > Admin
+                    </label>
+                    <label class="flex items-center gap-1.5 cursor-pointer text-[11px] font-semibold">
+                      <input type="checkbox" name="is_active" class="accent-[var(--brand)]" checked> Active
+                    </label>
+                  </div>
+                </div>
+                <div class="md:col-span-3 flex justify-end">
+                  <button type="submit" class="btn-brand font-semibold px-6 py-2.5 rounded-full text-xs flex items-center gap-2 shadow-sm">
+                    <i data-lucide="save" class="w-3.5 h-3.5"></i> Save User
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div class="surface-card rounded-2xl border shadow-sm p-0">
+              <div class="overflow-x-auto">
+                <table class="adm-table">
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Email</th>
+                      <th>Role</th>
+                      <th>Status</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-3 min-w-0">
+                          <img src="https://images.unsplash.com/photo-1578639557115-351597cf2477?auto=format&fit=crop&w=80&q=60" class="w-8 h-8 rounded-full object-cover shrink-0" style="border: 1px solid var(--border-soft);" alt="">
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate" style="color: var(--text-primary);">Kaichan</p>
+                            <p class="text-[10px]" style="color: var(--text-muted);">@kaichan</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-xs truncate max-w-[180px]">kaichan@kaimono.id</td>
+                      <td>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full" style="background: var(--brand-soft); color: var(--brand);">Developer</span>
+                        <span class="text-[9px] font-bold px-2 py-0.5 rounded-full ml-1" style="background:#f59e0b20; color:#f59e0b;">SUPER</span>
+                      </td>
+                      <td>
+                        
+                        <span class="status-chip" style="background:#22c55e;"></span>
+                        
+                      </td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          
+                          <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400">You</span>
+                          
+                        </div>
+                      </td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= COMMUNITY ================= -->
+          <div class="flex flex-col gap-4 hidden" data-panel="community">
+            <!-- Channels -->
+            <div class="surface-card rounded-2xl border shadow-sm p-5">
+              <h3 class="text-sm font-bold flex items-center gap-2 mb-4">
+                <i data-lucide="hash" class="w-4 h-4" style="color: var(--brand);"></i> Channels
+              </h3>
+              <div class="flex flex-col lg:flex-row gap-4">
+                <table class="adm-table flex-1 min-w-0">
+                  <thead>
+                    <tr>
+                      <th>Channel</th>
+                      <th>Posts</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-2 min-w-0">
+                          <span class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style="background: var(--brand-soft);"><i data-lucide="hash" class="w-3.5 h-3.5" style="color: var(--brand);"></i></span>
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate" style="color: var(--text-primary);">cosplay</p>
+                            <p class="text-[10px]" style="color: var(--text-muted);">/cosplay</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>34</td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="channel_toggle">
+                            <input type="hidden" name="id" value="7">
+                            <button class="btn-ghost !p-1.5 rounded-lg" title="Toggle active"><i data-lucide="eye-off" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <form method="post" action="/settings/admin/" onsubmit="return confirm('Delete channel #cosplay?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="channel_delete">
+                            <input type="hidden" name="id" value="7">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-2 min-w-0">
+                          <span class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style="background: var(--brand-soft);"><i data-lucide="hash" class="w-3.5 h-3.5" style="color: var(--brand);"></i></span>
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate" style="color: var(--text-primary);">fan-art</p>
+                            <p class="text-[10px]" style="color: var(--text-muted);">/fan-art</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>87</td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="channel_toggle">
+                            <input type="hidden" name="id" value="3">
+                            <button class="btn-ghost !p-1.5 rounded-lg" title="Toggle active"><i data-lucide="eye-off" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <form method="post" action="/settings/admin/" onsubmit="return confirm('Delete channel #fan\u002Dart?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="channel_delete">
+                            <input type="hidden" name="id" value="3">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-2 min-w-0">
+                          <span class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style="background: var(--brand-soft);"><i data-lucide="hash" class="w-3.5 h-3.5" style="color: var(--brand);"></i></span>
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate" style="color: var(--text-primary);">general</p>
+                            <p class="text-[10px]" style="color: var(--text-muted);">/general</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>24</td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="channel_toggle">
+                            <input type="hidden" name="id" value="1">
+                            <button class="btn-ghost !p-1.5 rounded-lg" title="Toggle active"><i data-lucide="eye-off" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <form method="post" action="/settings/admin/" onsubmit="return confirm('Delete channel #general?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="channel_delete">
+                            <input type="hidden" name="id" value="1">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-2 min-w-0">
+                          <span class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style="background: var(--brand-soft);"><i data-lucide="hash" class="w-3.5 h-3.5" style="color: var(--brand);"></i></span>
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate" style="color: var(--text-primary);">guides</p>
+                            <p class="text-[10px]" style="color: var(--text-muted);">/guides</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>42</td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="channel_toggle">
+                            <input type="hidden" name="id" value="4">
+                            <button class="btn-ghost !p-1.5 rounded-lg" title="Toggle active"><i data-lucide="eye-off" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <form method="post" action="/settings/admin/" onsubmit="return confirm('Delete channel #guides?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="channel_delete">
+                            <input type="hidden" name="id" value="4">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-2 min-w-0">
+                          <span class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style="background: var(--brand-soft);"><i data-lucide="hash" class="w-3.5 h-3.5" style="color: var(--brand);"></i></span>
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate" style="color: var(--text-primary);">lfg</p>
+                            <p class="text-[10px]" style="color: var(--text-muted);">/lfg</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>18</td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="channel_toggle">
+                            <input type="hidden" name="id" value="5">
+                            <button class="btn-ghost !p-1.5 rounded-lg" title="Toggle active"><i data-lucide="eye-off" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <form method="post" action="/settings/admin/" onsubmit="return confirm('Delete channel #lfg?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="channel_delete">
+                            <input type="hidden" name="id" value="5">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-2 min-w-0">
+                          <span class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style="background: var(--brand-soft);"><i data-lucide="hash" class="w-3.5 h-3.5" style="color: var(--brand);"></i></span>
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate" style="color: var(--text-primary);">merch-trading</p>
+                            <p class="text-[10px]" style="color: var(--text-muted);">/merch-trading</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>56</td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="channel_toggle">
+                            <input type="hidden" name="id" value="6">
+                            <button class="btn-ghost !p-1.5 rounded-lg" title="Toggle active"><i data-lucide="eye-off" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <form method="post" action="/settings/admin/" onsubmit="return confirm('Delete channel #merch\u002Dtrading?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="channel_delete">
+                            <input type="hidden" name="id" value="6">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-2 min-w-0">
+                          <span class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style="background: var(--brand-soft);"><i data-lucide="hash" class="w-3.5 h-3.5" style="color: var(--brand);"></i></span>
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate" style="color: var(--text-primary);">screenshots</p>
+                            <p class="text-[10px]" style="color: var(--text-muted);">/screenshots</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>128</td>
+                      <td>
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="channel_toggle">
+                            <input type="hidden" name="id" value="2">
+                            <button class="btn-ghost !p-1.5 rounded-lg" title="Toggle active"><i data-lucide="eye-off" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <form method="post" action="/settings/admin/" onsubmit="return confirm('Delete channel #screenshots?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="channel_delete">
+                            <input type="hidden" name="id" value="2">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+                <form method="post" action="/settings/admin/" class="lg:w-64 shrink-0 rounded-xl p-4" style="background: var(--bg-card); border: 1px solid var(--border-soft);">
+                  <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                  <input type="hidden" name="action" value="channel_save">
+                  <h4 class="text-[11px] font-bold uppercase tracking-wider mb-3">New channel</h4>
+                  <input type="hidden" name="id" value="">
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1 mt-1">Name *</label>
+                  <input type="text" name="name" class="form-input mb-2" placeholder="Announcements" required>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1 mt-1">Slug *</label>
+                  <input type="text" name="slug" class="form-input mb-2" placeholder="announcements" required>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1 mt-1">Icon</label>
+                  <select name="icon" class="form-input mb-2">
+                    
+                  </select>
+                  <label class="flex items-center gap-2 text-[11px] font-semibold cursor-pointer my-2">
+                    <input type="checkbox" name="is_active" class="accent-[var(--brand)]" checked> Active
+                  </label>
+                  <button class="btn-brand w-full text-xs font-bold py-2 rounded-full flex items-center justify-center gap-1.5">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Create Channel
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Posts -->
+            <div class="surface-card rounded-2xl border shadow-sm p-0">
+              <div class="p-5 pb-2">
+                <h3 class="font-bold flex items-center gap-2 text-sm">
+                  <i data-lucide="file-text" class="w-4 h-4" style="color: var(--brand);"></i> Posts
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full" style="background: var(--brand-soft); color: var(--brand);">8</span>
+                </h3>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="adm-table">
+                  <thead>
+                    <tr>
+                      <th>Post</th>
+                      <th>Author</th>
+                      <th>Type</th>
+                      <th>Pin</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                    <tr>
+                      <td>
+                        <p class="text-xs font-bold truncate max-w-[240px]" style="color: var(--text-primary);">Co-op partner needed for Honkai Star Rail endgame…</p>
+                        <p class="text-[10px]" style="color: var(--text-muted);">lfg · Nov 13, 2026</p>
+                      </td>
+                      <td>
+                        <div class="flex items-center gap-2">
+                          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&amp;fit=crop&amp;w=100&amp;q=80" class="w-6 h-6 rounded-full object-cover" alt="">
+                          <span class="text-[11px] font-semibold">aoi_gamer</span>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">discussion</span></td>
+                      <td>
+                        <form method="post" action="/settings/admin/">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_pin">
+                          <input type="hidden" name="id" value="8">
+                          <button class="btn-ghost !p-1.5 rounded-lg" title="Toggle pin">
+                            <i data-lucide="pin" class="w-3.5 h-3.5 </i>
+                          </button>
+                        </form>
+                      </td>
+                      <td>
+                        <form method="post" action="/settings/admin/" onsubmit="return confirm('Delete this post?');" class="text-right">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_delete">
+                          <input type="hidden" name="id" value="8">
+                          <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                        </form>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <p class="text-xs font-bold truncate max-w-[240px]" style="color: var(--text-primary);">My Genshin Impact shrine setup is finally complet…</p>
+                        <p class="text-[10px]" style="color: var(--text-muted);">fan-art · Nov 13, 2026</p>
+                      </td>
+                      <td>
+                        <div class="flex items-center gap-2">
+                          <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&amp;fit=crop&amp;w=100&amp;q=80" class="w-6 h-6 rounded-full object-cover" alt="">
+                          <span class="text-[11px] font-semibold">kai_builder</span>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">image</span></td>
+                      <td>
+                        <form method="post" action="/settings/admin/">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_pin">
+                          <input type="hidden" name="id" value="7">
+                          <button class="btn-ghost !p-1.5 rounded-lg" title="Toggle pin">
+                            <i data-lucide="pin" class="w-3.5 h-3.5 </i>
+                          </button>
+                        </form>
+                      </td>
+                      <td>
+                        <form method="post" action="/settings/admin/" onsubmit="return confirm('Delete this post?');" class="text-right">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_delete">
+                          <input type="hidden" name="id" value="7">
+                          <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                        </form>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <p class="text-xs font-bold truncate max-w-[240px]" style="color: var(--text-primary);">Best anime figure stores in Tokyo? Visiting next …</p>
+                        <p class="text-[10px]" style="color: var(--text-muted);">merch-trading · Nov 13, 2026</p>
+                      </td>
+                      <td>
+                        <div class="flex items-center gap-2">
+                          <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&amp;fit=crop&amp;w=100&amp;q=80" class="w-6 h-6 rounded-full object-cover" alt="">
+                          <span class="text-[11px] font-semibold">yuki_traveler</span>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">discussion</span></td>
+                      <td>
+                        <form method="post" action="/settings/admin/">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_pin">
+                          <input type="hidden" name="id" value="6">
+                          <button class="btn-ghost !p-1.5 rounded-lg" title="Toggle pin">
+                            <i data-lucide="pin" class="w-3.5 h-3.5 </i>
+                          </button>
+                        </form>
+                      </td>
+                      <td>
+                        <form method="post" action="/settings/admin/" onsubmit="return confirm('Delete this post?');" class="text-right">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_delete">
+                          <input type="hidden" name="id" value="6">
+                          <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                        </form>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <p class="text-xs font-bold truncate max-w-[240px]" style="color: var(--text-primary);">Just published my comprehensive guide on maximizi…</p>
+                        <p class="text-[10px]" style="color: var(--text-muted);">guides · Nov 13, 2026</p>
+                      </td>
+                      <td>
+                        <div class="flex items-center gap-2">
+                          <img src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&amp;fit=crop&amp;w=100&amp;q=80" class="w-6 h-6 rounded-full object-cover" alt="">
+                          <span class="text-[11px] font-semibold">ren_dev</span>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">guide</span></td>
+                      <td>
+                        <form method="post" action="/settings/admin/">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_pin">
+                          <input type="hidden" name="id" value="5">
+                          <button class="btn-ghost !p-1.5 rounded-lg" title="Toggle pin">
+                            <i data-lucide="pin" class="w-3.5 h-3.5 </i>
+                          </button>
+                        </form>
+                      </td>
+                      <td>
+                        <form method="post" action="/settings/admin/" onsubmit="return confirm('Delete this post?');" class="text-right">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_delete">
+                          <input type="hidden" name="id" value="5">
+                          <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                        </form>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <p class="text-xs font-bold truncate max-w-[240px]" style="color: var(--text-primary);">LF: Authentic Nendoroid Ichika (1st press) — WTB …</p>
+                        <p class="text-[10px]" style="color: var(--text-muted);">merch-trading · Nov 13, 2026</p>
+                      </td>
+                      <td>
+                        <div class="flex items-center gap-2">
+                          <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&amp;fit=crop&amp;w=100&amp;q=80" class="w-6 h-6 rounded-full object-cover" alt="">
+                          <span class="text-[11px] font-semibold">mikaelle</span>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">discussion</span></td>
+                      <td>
+                        <form method="post" action="/settings/admin/">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_pin">
+                          <input type="hidden" name="id" value="4">
+                          <button class="btn-ghost !p-1.5 rounded-lg" title="Toggle pin">
+                            <i data-lucide="pin" class="w-3.5 h-3.5 </i>
+                          </button>
+                        </form>
+                      </td>
+                      <td>
+                        <form method="post" action="/settings/admin/" onsubmit="return confirm('Delete this post?');" class="text-right">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_delete">
+                          <input type="hidden" name="id" value="4">
+                          <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                        </form>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <p class="text-xs font-bold truncate max-w-[240px]" style="color: var(--text-primary);"></p>
+                        <p class="text-[10px]" style="color: var(--text-muted);">general · Nov 13, 2026</p>
+                      </td>
+                      <td>
+                        <div class="flex items-center gap-2">
+                          <img src="https://images.unsplash.com/photo-1547394765-185e1e68f34e?auto=format&amp;fit=crop&amp;w=100&amp;q=80" class="w-6 h-6 rounded-full object-cover" alt="">
+                          <span class="text-[11px] font-semibold">hana_illustrator</span>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">poll</span></td>
+                      <td>
+                        <form method="post" action="/settings/admin/">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_pin">
+                          <input type="hidden" name="id" value="3">
+                          <button class="btn-ghost !p-1.5 rounded-lg" title="Toggle pin">
+                            <i data-lucide="pin" class="w-3.5 h-3.5 </i>
+                          </button>
+                        </form>
+                      </td>
+                      <td>
+                        <form method="post" action="/settings/admin/" onsubmit="return confirm('Delete this post?');" class="text-right">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_delete">
+                          <input type="hidden" name="id" value="3">
+                          <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                        </form>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <p class="text-xs font-bold truncate max-w-[240px]" style="color: var(--text-primary);">Finally got the perfect shot of the new event sta…</p>
+                        <p class="text-[10px]" style="color: var(--text-muted);">screenshots · Nov 13, 2026</p>
+                      </td>
+                      <td>
+                        <div class="flex items-center gap-2">
+                          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&amp;fit=crop&amp;w=100&amp;q=80" class="w-6 h-6 rounded-full object-cover" alt="">
+                          <span class="text-[11px] font-semibold">shiro_kun</span>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">image</span></td>
+                      <td>
+                        <form method="post" action="/settings/admin/">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_pin">
+                          <input type="hidden" name="id" value="2">
+                          <button class="btn-ghost !p-1.5 rounded-lg" title="Toggle pin">
+                            <i data-lucide="pin" class="w-3.5 h-3.5 </i>
+                          </button>
+                        </form>
+                      </td>
+                      <td>
+                        <form method="post" action="/settings/admin/" onsubmit="return confirm('Delete this post?');" class="text-right">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_delete">
+                          <input type="hidden" name="id" value="2">
+                          <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                        </form>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <p class="text-xs font-bold truncate max-w-[240px]" style="color: var(--text-primary);">🎮 Summer Sale 2026 is HERE — Up to 80% off!</p>
+                        <p class="text-[10px]" style="color: var(--text-muted);">general · Nov 13, 2026</p>
+                      </td>
+                      <td>
+                        <div class="flex items-center gap-2">
+                          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&amp;fit=crop&amp;w=100&amp;q=80" class="w-6 h-6 rounded-full object-cover" alt="">
+                          <span class="text-[11px] font-semibold">Kaimono Official</span>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">announcement</span></td>
+                      <td>
+                        <form method="post" action="/settings/admin/">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_pin">
+                          <input type="hidden" name="id" value="1">
+                          <button class="btn-ghost !p-1.5 rounded-lg" title="Toggle pin">
+                            <i data-lucide="pin" class="w-3.5 h-3.5 " style="color: var(--brand);"></i>
+                          </button>
+                        </form>
+                      </td>
+                      <td>
+                        <form method="post" action="/settings/admin/" onsubmit="return confirm('Delete this post?');" class="text-right">
+                          <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                          <input type="hidden" name="action" value="post_delete">
+                          <input type="hidden" name="id" value="1">
+                          <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                        </form>
+                      </td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="surface-card rounded-2xl border shadow-sm p-0">
+              <div class="p-5 pb-3">
+                <h3 class="font-bold flex items-center gap-2 text-sm">
+                  <i data-lucide="message-circle" class="w-4 h-4" style="color: var(--brand);"></i> Comments
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full" style="background: var(--brand-soft); color: var(--brand);">0</span>
+                </h3>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="adm-table">
+                  <thead>
+                    <tr>
+                      <th>Comment</th>
+                      <th>Author</th>
+                      <th>Post</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                    <tr><td colspan="4" class="text-center py-6" style="color: var(--text-muted);">No comments yet.</td></tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Members -->
+            <div class="surface-card rounded-2xl border shadow-sm p-5">
+              <h3 class="font-bold flex items-center gap-2 text-sm mb-4">
+                <i data-lucide="users" class="w-4 h-4" style="color: var(--brand);"></i> Community Members
+              </h3>
+              <div class="flex flex-col lg:flex-row gap-3">
+                <div class="flex-1 min-w-0 overflow-x-auto">
+                  <table class="adm-table">
+                    <thead>
+                      <tr><th>Member</th><th>Role</th><th>Level</th><th>Online</th><th class="text-right">Actions</th></tr>
+                    </thead>
+                    <tbody>
+                      
+                      <tr>
+                        <td>
+                          <div class="flex items-center gap-2 min-w-0">
+                            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&amp;fit=crop&amp;w=100&amp;q=80" class="w-7 h-7 rounded-full object-cover shrink-0" alt="">
+                            <div class="min-w-0">
+                              <p class="text-xs font-bold truncate" style="color: var(--text-primary);">Shiro</p>
+                              <p class="text-[10px]" style="color: var(--text-muted);">@shiro_kun</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td><span class="text-[10px] font-bold">Gamer</span></td>
+                        <td>42</td>
+                        <td>
+                          <span class="status-chip" style="background:#22c55e;"></span>
+                        </td>
+                        <td>
+                          <form method="post" action="/settings/admin/" onsubmit="return confirm('Remove member @shiro_kun?');" class="text-right">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="member_delete">
+                            <input type="hidden" name="id" value="1">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </td>
+                      </tr>
+                      
+                      <tr>
+                        <td>
+                          <div class="flex items-center gap-2 min-w-0">
+                            <img src="https://images.unsplash.com/photo-1547394765-185e1e68f34e?auto=format&amp;fit=crop&amp;w=100&amp;q=80" class="w-7 h-7 rounded-full object-cover shrink-0" alt="">
+                            <div class="min-w-0">
+                              <p class="text-xs font-bold truncate" style="color: var(--text-primary);">Hana</p>
+                              <p class="text-[10px]" style="color: var(--text-muted);">@hana_illustrator</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td><span class="text-[10px] font-bold">Developer</span></td>
+                        <td>38</td>
+                        <td>
+                          <span class="status-chip" style="background:#22c55e;"></span>
+                        </td>
+                        <td>
+                          <form method="post" action="/settings/admin/" onsubmit="return confirm('Remove member @hana_illustrator?');" class="text-right">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="member_delete">
+                            <input type="hidden" name="id" value="2">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </td>
+                      </tr>
+                      
+                      <tr>
+                        <td>
+                          <div class="flex items-center gap-2 min-w-0">
+                            <img src="https://images.unsplash.com/photo-1518725522904-4b3939358342?auto=format&amp;fit=crop&amp;w=100&amp;q=80" class="w-7 h-7 rounded-full object-cover shrink-0" alt="">
+                            <div class="min-w-0">
+                              <p class="text-xs font-bold truncate" style="color: var(--text-primary);">Mei</p>
+                              <p class="text-[10px]" style="color: var(--text-muted);">@mei_star</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td><span class="text-[10px] font-bold">Gamer</span></td>
+                        <td>33</td>
+                        <td>
+                          <span class="status-chip" style="background:#22c55e;"></span>
+                        </td>
+                        <td>
+                          <form method="post" action="/settings/admin/" onsubmit="return confirm('Remove member @mei_star?');" class="text-right">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="member_delete">
+                            <input type="hidden" name="id" value="5">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </td>
+                      </tr>
+                      
+                      <tr>
+                        <td>
+                          <div class="flex items-center gap-2 min-w-0">
+                            <img src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&amp;fit=crop&amp;w=100&amp;q=80" class="w-7 h-7 rounded-full object-cover shrink-0" alt="">
+                            <div class="min-w-0">
+                              <p class="text-xs font-bold truncate" style="color: var(--text-primary);">Yuki</p>
+                              <p class="text-[10px]" style="color: var(--text-muted);">@yuki_tactics</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td><span class="text-[10px] font-bold">Gamer</span></td>
+                        <td>51</td>
+                        <td>
+                          <span class="status-chip" style="background:var(--border-soft);"></span>
+                        </td>
+                        <td>
+                          <form method="post" action="/settings/admin/" onsubmit="return confirm('Remove member @yuki_tactics?');" class="text-right">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="member_delete">
+                            <input type="hidden" name="id" value="3">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </td>
+                      </tr>
+                      
+                      <tr>
+                        <td>
+                          <div class="flex items-center gap-2 min-w-0">
+                            <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&amp;fit=crop&amp;w=100&amp;q=80" class="w-7 h-7 rounded-full object-cover shrink-0" alt="">
+                            <div class="min-w-0">
+                              <p class="text-xs font-bold truncate" style="color: var(--text-primary);">Ren</p>
+                              <p class="text-[10px]" style="color: var(--text-muted);">@ren_dev</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td><span class="text-[10px] font-bold">Developer</span></td>
+                        <td>29</td>
+                        <td>
+                          <span class="status-chip" style="background:var(--border-soft);"></span>
+                        </td>
+                        <td>
+                          <form method="post" action="/settings/admin/" onsubmit="return confirm('Remove member @ren_dev?');" class="text-right">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="member_delete">
+                            <input type="hidden" name="id" value="4">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </td>
+                      </tr>
+                      
+                      <tr>
+                        <td>
+                          <div class="flex items-center gap-2 min-w-0">
+                            <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&amp;fit=crop&amp;w=100&amp;q=80" class="w-7 h-7 rounded-full object-cover shrink-0" alt="">
+                            <div class="min-w-0">
+                              <p class="text-xs font-bold truncate" style="color: var(--text-primary);">Aoi</p>
+                              <p class="text-[10px]" style="color: var(--text-muted);">@aoi_vinyl</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td><span class="text-[10px] font-bold">Gamer</span></td>
+                        <td>45</td>
+                        <td>
+                          <span class="status-chip" style="background:var(--border-soft);"></span>
+                        </td>
+                        <td>
+                          <form method="post" action="/settings/admin/" onsubmit="return confirm('Remove member @aoi_vinyl?');" class="text-right">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="member_delete">
+                            <input type="hidden" name="id" value="6">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                </div>
+                <form method="post" action="/settings/admin/" class="w-full lg:w-64 shrink-0 rounded-xl p-4" style="background: var(--bg-card); border: 1px solid var(--border-soft);">
+                  <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                  <input type="hidden" name="action" value="member_save">
+                  <input type="hidden" name="id" value="">
+                  <h4 class="text-[11px] font-bold uppercase tracking-wider mb-3">Add member</h4>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Username *</label>
+                  <input type="text" name="username" class="form-input mb-2" required>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Display name</label>
+                  <input type="text" name="display_name" class="form-input mb-2">
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Avatar URL</label>
+                  <input type="url" name="avatar_url" class="form-input mb-2">
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Role</label>
+                  <select name="role" class="form-input mb-2">
+                    <option value="gamer">Gamer</option>
+                    <option value="developer">Developer</option>
+                  </select>
+                  <label class="text-[10px] font-bold uppercase tracking-wider block mb-1">Bio</label>
+                  <textarea name="bio" class="form-input mb-2" rows="2"></textarea>
+                  <label class="flex items-center gap-2 text-[11px] font-semibold cursor-pointer my-2">
+                    <input type="checkbox" name="is_online" class="accent-[var(--brand)]"> Online now
+                  </label>
+                  <button class="btn-brand w-full text-xs font-bold py-2 rounded-full flex items-center justify-center gap-1.5">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Member
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= SUBMISSIONS ================= -->
+          <div class="flex flex-col gap-4 hidden" data-panel="submissions">
+            <!-- Pending submissions -->
+            <div class="surface-card rounded-2xl border shadow-sm p-5">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-bold flex items-center gap-2">
+                  <i data-lucide="inbox" class="w-4 h-4" style="color: var(--brand);"></i> Game Submissions
+                  
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full" style="background: #f59e0b20; color: #f59e0b;">1 pending</span>
+                  
+                </h3>
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="adm-table">
+                  <thead>
+                    <tr>
+                      <th>Game</th>
+                      <th>Developer</th>
+                      <th>Type</th>
+                      <th>Price</th>
+                      <th>Status</th>
+                      <th>Submitted</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-3 min-w-0">
+                          
+                          <div class="w-10 h-10 rounded-lg shrink-0 flex items-center justify-center" style="background: var(--brand-soft);">
+                            <i data-lucide="gamepad-2" class="w-4 h-4" style="color: var(--brand);"></i>
+                          </div>
+                          
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate max-w-[200px]" style="color: var(--text-primary);">Paper Lanterns</p>
+                            <p class="text-[10px] truncate" style="color: var(--text-muted);">Moth &amp; Moon</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="flex items-center gap-2">
+                          <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=80&q=60" class="w-6 h-6 rounded-full object-cover" alt="">
+                          <span class="text-[11px] font-semibold">Kaichan</span>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">Puzzle</span></td>
+                      <td>
+                        
+                        <span class="font-bold" style="color: var(--text-primary);">$12.50</span>
+                        
+                      </td>
+                      <td>
+                        
+                        <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full" style="background: #22c55e20; color: #22c55e;">
+                          <span class="status-chip" style="background: #22c55e;"></span> Accepted
+                        </span>
+                        
+                      </td>
+                      <td><span class="text-[10px]" style="color: var(--text-muted);">Nov 13, 2026</span></td>
+                      <td>
+                        
+                        <span class="text-[10px]" style="color: var(--text-muted);">Reviewed</span>
+                        
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>
+                        <div class="flex items-center gap-3 min-w-0">
+                          
+                          <div class="w-10 h-10 rounded-lg shrink-0 flex items-center justify-center" style="background: var(--brand-soft);">
+                            <i data-lucide="gamepad-2" class="w-4 h-4" style="color: var(--brand);"></i>
+                          </div>
+                          
+                          <div class="min-w-0">
+                            <p class="text-xs font-bold truncate max-w-[200px]" style="color: var(--text-primary);">Neon Drifters</p>
+                            <p class="text-[10px] truncate" style="color: var(--text-muted);">Studio Halcyon</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="flex items-center gap-2">
+                          <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=80&q=60" class="w-6 h-6 rounded-full object-cover" alt="">
+                          <span class="text-[11px] font-semibold">Kaichan</span>
+                        </div>
+                      </td>
+                      <td><span class="text-[10px] font-bold uppercase tracking-wider">Roguelike</span></td>
+                      <td>
+                        
+                        <span class="font-bold" style="color: var(--text-primary);">$19.99</span>
+                        
+                      </td>
+                      <td>
+                        
+                        <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full" style="background: #f59e0b20; color: #f59e0b;">
+                          <span class="status-chip" style="background: #f59e0b;"></span> Pending
+                        </span>
+                        
+                      </td>
+                      <td><span class="text-[10px]" style="color: var(--text-muted);">Nov 13, 2026</span></td>
+                      <td>
+                        
+                        <div class="flex items-center justify-end gap-2">
+                          <form method="post" action="/settings/admin/" class="inline" onsubmit="return confirm('Accept \'Neon Drifters\' and publish it to the shop?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="submission_accept">
+                            <input type="hidden" name="id" value="1">
+                            <button class="btn-ghost !p-1.5 rounded-lg" style="color: #22c55e;" title="Accept & publish"><i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                          <form method="post" action="/settings/admin/" class="inline" onsubmit="return confirm('Reject \'Neon Drifters\'?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="YmcqwaTRHXeC7YigrDhM9dzPEfew216mN3X0RFOduROh8zQf1fPxvHXPkvBMGmfA">
+                            <input type="hidden" name="action" value="submission_reject">
+                            <input type="hidden" name="id" value="1">
+                            <button class="btn-ghost !p-1.5 rounded-lg text-red-500" title="Reject"><i data-lucide="x-circle" class="w-3.5 h-3.5"></i></button>
+                          </form>
+                        </div>
+                        
+                      </td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // ===== PRODUCT IMAGE UPLOAD PREVIEW =====
+    function previewAdminImage(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const preview = document.getElementById('adm-img-preview');
+        if (preview) {
+          preview.innerHTML = '';
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.className = 'w-full h-full object-cover';
+          preview.appendChild(img);
+        }
+        const name = document.getElementById('adm-img-name');
+        if (name) name.textContent = file.name + ' · ready to upload';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ===== PRODUCT SCREENSHOTS UPLOAD PREVIEW =====
+    function previewAdminShots(input) {
+      const files = input.files || [];
+      const container = document.getElementById('adm-shot-preview');
+      if (!container) return;
+      container.innerHTML = '';
+      Array.from(files).forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.className = 'w-16 h-16 rounded-lg object-cover';
+          img.style.border = '1px solid var(--border-soft)';
+          container.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // ===== SUBMISSION ACCEPT/REJECT WITH NOTE =====
+    document.querySelectorAll('form[action*="admin_panel"]').forEach(form => {
+      const action = form.querySelector('input[name="action"]');
+      if (!action) return;
+      const val = action.value;
+      if (val === 'submission_accept' || val === 'submission_reject') {
+        form.addEventListener('submit', function(e) {
+          const label = val === 'submission_accept' ? 'Accept' : 'Reject';
+          const note = prompt(label + ' note (optional):');
+          if (note === null) { e.preventDefault(); return; }
+          let noteInput = form.querySelector('input[name="note"]');
+          if (!noteInput) {
+            noteInput = document.createElement('input');
+            noteInput.type = 'hidden';
+            noteInput.name = 'note';
+            form.appendChild(noteInput);
+          }
+          noteInput.value = note;
+        });
+      }
+    });
+
+    // ===== LOAD THEME FROM LOCALSTORAGE =====
+    (function () {
+      const theme = localStorage.getItem('kaimono_theme');
+      const motion = localStorage.getItem('kaimono_motion');
+      const compact = localStorage.getItem('kaimono_compact');
+      if (theme) document.body.setAttribute('data-theme', theme);
+      if (motion === 'reduced') document.body.setAttribute('data-motion', 'reduced');
+      if (compact === '1') document.body.setAttribute('data-compact', '1');
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kaimono Community</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root, [data-theme="silver"] {
+      --bg-primary: #E2E7EE; --bg-surface: #F7F9FC; --bg-card: #ffffff;
+      --text-primary: #0f172a; --text-secondary: #475569; --text-muted: #94a3b8;
+      --border-color: #ffffff; --border-soft: #e2e8f0;
+      --brand: #323446; --on-brand: #ffffff; --brand-soft: rgba(50,52,70,0.12);
+      --hover-bg: rgba(255,255,255,0.7); --shadow-color: rgba(50,52,70,0.1);
+    }
+    [data-theme="midnight"] {
+      --bg-primary: #0f172a; --bg-surface: #1e293b; --bg-card: #334155;
+      --text-primary: #f1f5f9; --text-secondary: #cbd5e1; --text-muted: #94a3b8;
+      --border-color: #334155; --border-soft: #475569;
+      --brand: #64748b; --on-brand: #ffffff; --brand-soft: rgba(148,163,184,0.15);
+      --hover-bg: rgba(255,255,255,0.03); --shadow-color: rgba(0,0,0,0.3);
+    }
+    [data-theme="paper"] {
+      --bg-primary: #F5F1E8; --bg-surface: #FAF7F0; --bg-card: #ffffff;
+      --text-primary: #1c1917; --text-secondary: #57534e; --text-muted: #a8a29e;
+      --border-color: #e7e5e4; --border-soft: #d6d3d1;
+      --brand: #292524; --on-brand: #ffffff; --brand-soft: rgba(41,37,36,0.1);
+      --hover-bg: rgba(255,255,255,0.6); --shadow-color: rgba(41,37,36,0.08);
+    }
+    [data-theme="obsidian"] {
+      --bg-primary: #0a0a0a; --bg-surface: #171717; --bg-card: #1f1f1f;
+      --text-primary: #fafafa; --text-secondary: #a3a3a3; --text-muted: #525252;
+      --border-color: #262626; --border-soft: #404040;
+      --brand: #fafafa; --on-brand: #0a0a0a; --brand-soft: rgba(255,255,255,0.08);
+      --hover-bg: rgba(255,255,255,0.03); --shadow-color: rgba(0,0,0,0.5);
+    }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-primary); color: var(--text-secondary); transition: background 300ms ease, color 300ms ease; }
+    [data-theme] h1,[data-theme] h2,[data-theme] h3,[data-theme] h4 { color: var(--text-primary); }
+    .surface-card { background-color: var(--bg-surface) !important; border-color: var(--border-color) !important; color: var(--text-secondary); }
+    ::-webkit-scrollbar { width: 0px; background: transparent; }
+    .pulse-dot { animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+    .story-ring { background: linear-gradient(135deg, var(--brand) 0%, color-mix(in srgb, var(--brand) 60%, black) 50%, var(--brand) 100%); padding: 2px; }
+    .story-ring.seen { background: var(--border-soft); padding: 2px; }
+    .story-ring-inner { border-color: var(--bg-surface) !important; }
+    .post-card { transition: all 250ms ease; background-color: var(--bg-surface); border-color: var(--border-color); }
+    .post-card:hover { border-color: var(--border-soft); }
+    .feed-filter { transition: all 200ms ease; color: var(--text-muted); cursor: pointer; }
+    .feed-filter.active { background-color: var(--brand); color: var(--on-brand); }
+    .feed-filter:not(.active):hover { color: var(--text-primary); }
+    .poll-option { transition: all 200ms ease; cursor: pointer; }
+    .poll-option:hover { border-color: var(--brand); }
+    .poll-option.selected { border-color: var(--brand); }
+    .poll-options:not(.show-results) .poll-bar,
+    .poll-options:not(.show-results) .poll-pct { display: none; }
+    .rail-item { transition: background-color 200ms ease; color: var(--text-secondary); cursor: pointer; }
+    .rail-item:hover { background: var(--hover-bg); }
+    .channel-link { color: var(--text-secondary); }
+    .channel-link .ch-name,
+    .channel-link .ch-icon { color: inherit; }
+    .channel-link.rail-item:hover { background: var(--hover-bg); color: var(--text-primary); }
+    .channel-link.btn-brand { background-color: var(--brand); color: var(--on-brand); }
+    .channel-link.btn-brand:hover { background-color: var(--brand); color: var(--on-brand); opacity: 0.9; }
+    .btn-brand { background-color: var(--brand); color: var(--on-brand); transition: opacity 200ms ease; }
+    .btn-brand:hover { opacity: 0.9; }
+    .icon-muted { color: var(--text-muted); }
+    .icon-brand { color: var(--brand); fill: var(--brand); }
+    .themed-input { background-color: var(--bg-surface); color: var(--text-primary); border-color: var(--border-color); }
+    .themed-input::placeholder { color: var(--text-muted); }
+    .themed-input:focus { border-color: var(--brand); }
+    .badge-brand { background-color: var(--brand); color: var(--on-brand); }
+
+    /* Modal overlay */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 200ms ease; }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal-content { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 1rem; width: 90%; max-width: 560px; max-height: 85vh; overflow-y: auto; transform: translateY(20px); transition: transform 200ms ease; }
+    .modal-overlay.open .modal-content { transform: translateY(0); }
+
+    /* Comment animation */
+    .comment-section { transition: all 200ms ease; }
+
+    /* Toast notification */
+    .toast { position: fixed; bottom: 24px; right: 24px; z-index: 200; background: var(--brand); color: var(--on-brand); padding: 10px 20px; border-radius: 12px; font-size: 12px; font-weight: 600; transform: translateY(80px); opacity: 0; transition: all 300ms ease; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden text-sm">
+
+  <div class="pt-3 sm:pt-5 pb-2 sm:pb-3 px-3 sm:px-6 relative w-full shrink-0">
+  <header style="background-color: var(--brand); color: var(--on-brand); border: 1px solid color-mix(in srgb, var(--on-brand) 15%, transparent);" class="px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center shadow-md rounded-xl gap-3 sm:gap-6">
+    <div class="flex items-center gap-3 sm:gap-6 min-w-0">
+      <div class="flex items-center gap-2 shrink-0">
+        <i data-lucide="user" class="w-4 h-4 text-[var(--on-brand)]"></i>
+        <span class="font-bold text-[var(--on-brand)] tracking-widest uppercase text-sm truncate">@kaichan</span>
+      </div>
+      <span class="text-[var(--on-brand)] opacity-40 hidden sm:inline">|</span>
+      <div class="hidden md:flex items-center gap-3 text-[var(--on-brand)] tracking-wider">
+        <span class="font-semibold text-[var(--on-brand)] text-sm">Kaimono</span>
+        <span class="text-[var(--on-brand)] opacity-40">//</span>
+        <span class="text-[var(--on-brand)] opacity-80 text-xs">What's on your mind today?</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-3 sm:gap-6 shrink-0">
+      <div class="flex items-center gap-0 opacity-70">
+      </div>
+      <div class="flex items-center gap-3 sm:gap-4 pl-2 sm:pl-4">
+        <span class="font-bold text-[var(--on-brand)] tracking-widest text-sm hidden sm:block">KAICHAN</span>
+        <button type="button" onclick="if(window.__kaimonoToggleSidebar) window.__kaimonoToggleSidebar()" class="p-2 sm:p-1 transition-colors text-[var(--on-brand)] hover:opacity-70 cursor-pointer" aria-label="Toggle navigation">
+          <i data-lucide="list" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+</div>
+
+  <div class="flex flex-1 px-3 sm:px-6 pt-2 pb-4 sm:pb-6 gap-3 sm:gap-6 overflow-hidden max-w-[1920px] w-full mx-auto">
+    <!-- dashboard/templates/dashboard/partials/sidebar.html -->
+
+
+<style>
+  /* ===== KAIMONO THEMES ===== */
+  body[data-theme="midnight"]  { background-color: #0f172a !important; }
+  body[data-theme="obsidian"]  { background-color: #000000 !important; }
+  body[data-theme="silver"]    { background-color: #e2e8f0 !important; }
+  body[data-theme="paper"]     { background-color: #f5f3ea !important; }
+
+  body[data-theme="midnight"] #sidebar,
+  body[data-theme="obsidian"] #sidebar { background: #16161f !important; box-shadow: none; }
+  body[data-theme="midnight"] #sidebar .nav-item,
+  body[data-theme="obsidian"] #sidebar .nav-item { color: #94a3b8; }
+  body[data-theme="midnight"] #sidebar .nav-item:hover,
+  body[data-theme="obsidian"] #sidebar .nav-item:hover { background: rgba(255,255,255,.07); color: #e2e8f0; }
+  body[data-theme="midnight"] #sidebar .nav-active,
+  body[data-theme="midnight"] #sidebar .nav-active:hover,
+  body[data-theme="obsidian"] #sidebar .nav-active,
+  body[data-theme="obsidian"] #sidebar .nav-active:hover { background: rgba(255,255,255,.12); color: #ffffff; box-shadow: none; }
+  body[data-theme="midnight"] #sidebar .nav-profile,
+  body[data-theme="obsidian"] #sidebar .nav-profile { border-bottom-color: rgba(255,255,255,.08); }
+  body[data-theme="midnight"] #sidebar .nav-profile .text-slate-800,
+  body[data-theme="obsidian"] #sidebar .nav-profile .text-slate-800 { color: #e2e8f0; }
+
+  /* Reduce animations: kill transitions/keyframes app-wide */
+  body[data-motion="reduced"] *, body[data-motion="reduced"] *::before, body[data-motion="reduced"] *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+  }
+
+  /* Compact mode: tighten shell spacing */
+  body[data-compact="1"] #sidebar { padding-top: 1rem; padding-bottom: 1rem; }
+  body[data-compact="1"] #sidebar .nav-item { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+  body[data-compact="1"] #sidebar .nav-profile { padding-bottom: 0.5rem; }
+
+  /* ===== KAIMONO SIDEBAR — UNIFIED (v3: icon center saat collapse, zero-shift) ===== */
+  #sidebar {
+    width: 5rem;
+    padding: 1.5rem 0.625rem; /* 10px kiri-kanan saat collapse */
+    background: #F7F9FC;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                padding 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 300ms ease;
+  }
+  #sidebar.expanded {
+    width: 16rem;
+    padding: 1.5rem 1rem; /* 16px kiri-kanan saat expand */
+    box-shadow: 0 18px 44px -18px rgba(50, 52, 70, 0.22);
+  }
+
+  /* Nav items */
+  #sidebar .nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0;
+    /* COLLAPSE: 10px (sidebar) + 20px (item) = ikon 20px tepat di tengah (center x=40 dari 80px) */
+    padding: 0.75rem 0 0.75rem 1.25rem;
+    width: 100%;
+    color: #64748b;
+    font-weight: 600;
+    border-radius: 1rem;
+    text-align: left;
+    transition: gap 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                padding 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                background-color 200ms ease,
+                color 200ms ease;
+  }
+  /* EXPAND: 16px (sidebar) + 14px (item) = x=30 → SAMA dengan collapse (10+20) → ikon tidak bergeser */
+  #sidebar.expanded .nav-item {
+    gap: 0.875rem;
+    padding: 0.75rem 0.875rem;
+  }
+
+  #sidebar .nav-item:hover {
+    background: rgba(226, 232, 240, 0.5);
+    color: #0f172a;
+  }
+  #sidebar .nav-active,
+  #sidebar .nav-active:hover {
+    background: rgba(226, 232, 240, 0.8);
+    color: #0f172a;
+    font-weight: 700;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  }
+
+  /* Tooltip — hanya tampil saat collapsed, muncul di kanan ikon */
+  #sidebar-tip {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: none;
+    align-items: center;
+    transform: translateY(-50%);
+    z-index: 100;
+    background: #323446;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.625rem;
+    box-shadow: 0 12px 28px -8px rgba(15, 23, 42, 0.35);
+    pointer-events: none;
+  }
+  #sidebar-tip .sidebar-tip-arrow {
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    margin-top: -5px;
+    border: 5px solid transparent;
+    border-right-color: #323446;
+    border-right-width: 5px;
+  }
+
+  /* Profile header: avatar 40px — center saat collapse, sumbu center sama dgn ikon saat expand */
+  #sidebar .nav-profile {
+    padding-left: 0.625rem;  /* collapse: 10+10 → avatar center di x=40 */
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  }
+  #sidebar.expanded .nav-profile {
+    padding-left: 0.25rem;   /* expand: 16+4 → avatar center di x=40, sejajar sumbu ikon */
+  }
+
+  /* Label text: fade smooth, tanpa transform */
+  #sidebar .sidebar-text {
+    display: block;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: max-width 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 160ms ease;
+  }
+  #sidebar.expanded .sidebar-text {
+    max-width: 12rem;
+    opacity: 1;
+    transition: max-width 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 220ms ease 90ms;
+  }
+  #sidebar.expanded .sidebar-text.fill {
+    flex: 1 1 auto;
+  }
+
+  /* ===== MOBILE: let grid children shrink below content min-size (prevents horizontal overflow) ===== */
+  @media (max-width: 1023px) {
+    .grid > * { min-width: 0; }
+  }
+
+  /* ===== MOBILE DRAWER (< 1024px): sidebar slides in over content ===== */
+  @media (max-width: 1023px) {
+    #sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      height: 100vh;
+      z-index: 60;
+      border-radius: 0 2rem 2rem 0;
+      transform: translateX(-110%);
+      box-shadow: 0 18px 44px -18px rgba(50, 52, 70, 0.35);
+      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #sidebar.mobile-open {
+      transform: translateX(0);
+    }
+    #sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      z-index: 55;
+    }
+    #sidebar-backdrop.show {
+      display: block;
+    }
+  }
+  @media (min-width: 1024px) {
+    #sidebar-backdrop {
+      display: none !important;
+    }
+  }
+</style>
+
+<aside id="sidebar" class="shrink-0 h-full bg-[#F7F9FC] text-slate-700 rounded-[2rem] border border-white flex flex-col justify-between">
+  <div class="flex flex-col gap-5 w-full flex-1 min-h-0">
+
+    <!-- Profile header -->
+    <a href="/profile/" data-path="/profile/" data-tip="Profile" class="nav-item nav-profile">
+      <img src="/static/dashboard/images/accsetup.jpg" alt="Avatar" class="w-10 h-10 rounded-full border-2 border-slate-300 object-cover shadow-sm shrink-0">
+      <span class="sidebar-text">
+        <span class="block font-bold text-slate-800 truncate text-xs">Kaichan</span>
+        <span class="block text-[10px] text-slate-400 font-medium truncate">Developer</span>
+      </span>
+    </a>
+
+    <!-- Navigation -->
+    <nav class="flex flex-col gap-1.5 w-full overflow-y-auto min-h-0">
+      <a href="/dashboard/" data-path="/dashboard/" data-tip="Dashboard" class="nav-item">
+        <i data-lucide="home" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Dashboard</span>
+      </a>
+      <a href="/shop/" data-path="/shop/" data-tip="Shop" class="nav-item">
+        <i data-lucide="store" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Shop</span>
+      </a>
+      <a href="/community/" data-path="/community/" data-tip="Community" class="nav-item">
+        <i data-lucide="users" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Community</span>
+      </a>
+      <a href="/wishlist/" data-path="/wishlist/" data-tip="Wishlist" class="nav-item">
+        <i data-lucide="heart" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text fill text-xs">Wishlist</span>
+      </a>
+      <a href="/library/" data-path="/library/" data-tip="Library" class="nav-item">
+        <i data-lucide="inbox" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Library</span>
+      </a>
+      <a href="/settings/" data-path="/settings/" data-tip="Settings" class="nav-item">
+        <i data-lucide="settings" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Settings</span>
+      </a>
+      
+      <a href="/settings/ai-companion/" data-path="/settings/ai-companion/" data-tip="AI Companion" class="nav-item">
+        <i data-lucide="bot" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">AI Companion</span>
+      </a>
+      
+      
+      <a href="/settings/admin/" data-path="/settings/admin/" data-tip="Admin Panel" class="nav-item">
+        <i data-lucide="shield" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Admin Panel</span>
+      </a>
+      
+      
+      <a href="/settings/developer/" data-path="/settings/developer/" data-tip="Developer Panel" class="nav-item">
+        <i data-lucide="code-2" class="w-5 h-5 shrink-0"></i>
+        <span class="sidebar-text text-xs">Developer Panel</span>
+      </a>
+      
+    </nav>
+  </div>
+
+  <!-- Bottom actions -->
+  <div class="flex flex-col gap-1.5 w-full pt-4 border-t border-slate-200/80">
+    <button id="toggle-sidebar" class="nav-item" data-tip="Expand">
+      <span id="toggle-icon-holder" class="flex items-center justify-center w-5 h-5 shrink-0">
+        <i data-lucide="panel-left-open" class="w-5 h-5 shrink-0"></i>
+      </span>
+      <span id="collapse-label" class="sidebar-text text-xs">Expand</span>
+    </button>
+    <a href="/logout/" data-tip="Log Out" class="nav-item">
+      <i data-lucide="log-out" class="w-5 h-5 shrink-0"></i>
+      <span class="sidebar-text text-xs">Log Out</span>
+    </a>
+  </div>
+</aside>
+
+<!-- Mobile drawer backdrop -->
+<div id="sidebar-backdrop" aria-hidden="true"></div>
+
+<div id="sidebar-tip" role="tooltip" aria-hidden="true">
+  <span class="sidebar-tip-arrow"></span>
+  <span id="sidebar-tip-label"></span>
+</div>
+
+<script>
+// Apply the user's saved preferences to <body> as soon as the page loads.
+(function () {
+  if (document.body) {
+    var theme = localStorage.getItem('kaimono_theme') || 'silver';
+    var motion = localStorage.getItem('kaimono_motion') || '';
+    var compact = localStorage.getItem('kaimono_compact') || '';
+    document.body.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-motion', motion);
+    document.body.setAttribute('data-compact', compact);
+  }
+})();
+(function () {
+  var sidebar = document.getElementById('sidebar');
+  if (!sidebar) return;
+  var toggleBtn  = document.getElementById('toggle-sidebar');
+  var iconHolder = document.getElementById('toggle-icon-holder');
+  var label      = document.getElementById('collapse-label');
+  var tipEl      = document.getElementById('sidebar-tip');
+  var tipLabel   = document.getElementById('sidebar-tip-label');
+  var backdrop   = document.getElementById('sidebar-backdrop');
+
+  function isMobile() { return window.matchMedia('(max-width: 1023px)').matches; }
+
+  function openDrawer() {
+    sidebar.classList.add('mobile-open', 'expanded');
+    if (backdrop) backdrop.classList.add('show');
+  }
+  function closeDrawer() {
+    sidebar.classList.remove('mobile-open');
+    if (backdrop) backdrop.classList.remove('show');
+    render();
+  }
+  function toggleDrawer() {
+    if (sidebar.classList.contains('mobile-open')) closeDrawer(); else openDrawer();
+  }
+  if (backdrop) backdrop.addEventListener('click', closeDrawer);
+  sidebar.querySelectorAll('a.nav-item').forEach(function (a) {
+    a.addEventListener('click', function () { if (isMobile()) closeDrawer(); });
+  });
+  window.addEventListener('resize', function () {
+    if (!isMobile() && sidebar.classList.contains('mobile-open')) {
+      sidebar.classList.remove('mobile-open');
+      if (backdrop) backdrop.classList.remove('show');
+      render();
+    }
+  });
+  var expandedDefault = false;
+  var prefExpanded = localStorage.getItem('kaimono_sidebar');
+  var stored = localStorage.getItem('kaimono_sidebar_collapsed');
+  var isCollapsed;
+  if (prefExpanded !== null) {
+    isCollapsed = prefExpanded !== '1';
+  } else {
+    isCollapsed = stored !== null ? stored !== 'false' : !expandedDefault;
+  }
+
+  var path = window.location.pathname;
+  var best = null;
+  sidebar.querySelectorAll('[data-path]').forEach(function (a) {
+    var p = a.getAttribute('data-path');
+    if (p && path.indexOf(p) === 0 && (!best || p.length > best.getAttribute('data-path').length)) {
+      best = a;
+    }
+  });
+  if (best) best.classList.add('nav-active');
+
+  function setTip() {
+    tipEl.style.display = 'none';
+  }
+  setTip();
+
+  function showTip(item) {
+    if (!tipEl || !tipLabel) return;
+    if (sidebar.classList.contains('expanded')) return;
+    tipLabel.textContent = item.getAttribute('data-tip') || '';
+    if (!tipLabel.textContent) return;
+    var r = item.getBoundingClientRect();
+    tipEl.style.display = 'flex';
+    tipEl.style.transform = 'translateY(-50%)';
+    tipEl.style.left = (r.right + 10) + 'px';
+    tipEl.style.top = (r.top + r.height / 2) + 'px';
+    tipEl.setAttribute('aria-hidden', 'false');
+  }
+
+  function hideTip() {
+    if (!tipEl) return;
+    tipEl.style.display = 'none';
+    tipEl.setAttribute('aria-hidden', 'true');
+  }
+
+  sidebar.querySelectorAll('.nav-item').forEach(function (item) {
+    item.addEventListener('mouseenter', function () { showTip(item); });
+    item.addEventListener('mouseleave', hideTip);
+    item.addEventListener('focus', function () { showTip(item); });
+    item.addEventListener('blur', hideTip);
+  });
+
+  function render() {
+    if (!(isMobile() && sidebar.classList.contains('mobile-open'))) {
+      sidebar.classList.toggle('expanded', !isCollapsed);
+    }
+    if (iconHolder) {
+      iconHolder.innerHTML = '<i data-lucide="' + (isCollapsed ? 'panel-left-open' : 'panel-left-close') + '" class="w-5 h-5 shrink-0"></i>';
+    }
+    if (label) label.textContent = isCollapsed ? 'Expand' : 'Collapse';
+    toggleBtn.setAttribute('data-tip', isCollapsed ? 'Expand' : 'Collapse');
+    if (!isCollapsed) hideTip();
+    if (window.lucide) lucide.createIcons();
+  }
+  render();
+
+  if (toggleBtn) toggleBtn.addEventListener('click', function () {
+    if (isMobile()) { closeDrawer(); return; }
+    isCollapsed = !isCollapsed;
+    localStorage.setItem('kaimono_sidebar_collapsed', String(isCollapsed));
+    render();
+  });
+
+  window.__kaimonoToggleSidebar = function () {
+    if (isMobile()) { toggleDrawer(); return; }
+    isCollapsed = !isCollapsed;
+    localStorage.setItem('kaimono_sidebar_collapsed', String(isCollapsed));
+    render();
+  };
+})();
+</script>
+
+    <main class="flex-1 flex flex-col gap-4 overflow-hidden pr-1 pb-4">
+
+      <!-- HEADER -->
+      <div class="flex justify-between items-center px-2 pt-1 pb-1 shrink-0">
+        <div class="flex items-baseline gap-1">
+          <h1 class="text-base font-medium tracking-wide" style="color: var(--text-secondary);">GAME E-COMMERCE <span class="font-bold" style="color: var(--text-primary);">COMMUNITY</span> / <span class="font-bold" style="color: var(--text-primary);">HOSHINO ICHIKA</span></h1>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="flex items-center gap-1.5 text-[10px] font-bold surface-card px-3 py-1.5 rounded-full border shadow-sm" style="color: var(--text-secondary);">
+            <span class="w-1.5 h-1.5 rounded-full pulse-dot" style="background: var(--brand);"></span>
+            389 members online
+          </span>
+          <button id="create-post-btn" class="btn-brand font-semibold px-5 py-2.5 rounded-full text-xs flex items-center gap-2 shadow-sm transition-all">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Create Post
+          </button>
+        </div>
+      </div>
+
+      <!-- 2-COLUMN LAYOUT -->
+      <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-4 flex-1 min-h-0">
+
+        <!-- LEFT: FEED -->
+        <section class="flex flex-col gap-3 overflow-y-auto pr-1">
+
+          <!-- Feed Filters -->
+          <div class="flex items-center gap-2 shrink-0 surface-card rounded-2xl border shadow-sm p-1.5">
+            <button class="feed-filter active text-[11px] font-semibold px-3 py-1.5 rounded-full transition-all" data-feed="for-you">For You</button>
+            <button class="feed-filter  text-[11px] font-semibold px-3 py-1.5 rounded-full transition-all" data-feed="following">Following</button>
+            <button class="feed-filter  text-[11px] font-semibold px-3 py-1.5 rounded-full transition-all" data-feed="trending">Trending</button>
+            <button class="feed-filter  text-[11px] font-semibold px-3 py-1.5 rounded-full transition-all" data-feed="latest">Latest</button>
+            <button class="feed-filter  text-[11px] font-semibold px-3 py-1.5 rounded-full transition-all" data-feed="media">Media</button>
+          </div>
+
+          <!-- POSTS -->
+          <div id="posts-container" class="flex flex-col gap-3">
+            
+              
+
+
+
+<article class="post-card rounded-2xl border shadow-sm shrink-0 relative overflow-hidden" data-post-id="1">
+  <div class="absolute left-0 top-0 bottom-0 w-1" style="background: var(--brand);"></div>
+  <div class="p-4 pl-5 sm:p-5 sm:pl-5">
+    <div class="flex items-center gap-2 mb-2">
+      
+      <span class="badge-brand text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Pinned</span>
+      
+      <span class="text-[9px] font-bold px-2 py-0.5 rounded-full uppercase" style="color: var(--text-secondary); background: var(--border-soft);">Announcement</span>
+    </div>
+    <div class="flex items-center gap-2.5 mb-2">
+      <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style="background: var(--brand); color: var(--on-brand);"><i data-lucide="megaphone" class="w-4 h-4"></i></div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-1.5">
+          <span class="text-xs font-extrabold" style="color: var(--text-primary);">Kaimono Official</span>
+          
+          <i data-lucide="badge-check" class="w-3.5 h-3.5 icon-brand"></i>
+          
+        </div>
+        <p class="text-[10px]" style="color: var(--text-muted);">Admin · 2 hours ago · Public</p>
+      </div>
+      
+    </div>
+    <h3 class="text-sm font-extrabold mb-1.5" style="color: var(--text-primary);">🎮 Summer Sale 2026 is HERE — Up to 80% off!</h3>
+    <p class="text-[11px] leading-relaxed mb-3" style="color: var(--text-secondary);">The biggest sale of the year just dropped. Get exclusive discounts on games, figures, and merch from your favorite anime series. Sale ends August 31st.</p>
+
+    
+    <div class="rounded-xl overflow-hidden mb-3 border" style="border-color: var(--border-soft);">
+      <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&amp;fit=crop&amp;w=800&amp;q=80" alt="" class="w-full h-40 object-cover">
+    </div>
+    
+
+    <div class="flex items-center justify-between pt-2 border-t" style="border-color: var(--border-soft);">
+      <div class="flex items-center gap-3 text-[10px] font-medium" style="color: var(--text-muted);">
+        <span class="comment-count">342 comments</span><span>·</span><span class="share-count">1204 shares</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex items-center gap-1 mt-3 pt-3 border-t" style="border-color: var(--border-soft);">
+      <button class="comment-toggle-btn flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full transition-colors text-[11px] font-semibold" style="color: var(--text-secondary);">
+        <i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Comment
+      </button>
+      <button class="share-btn flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full transition-colors text-[11px] font-semibold" style="color: var(--text-secondary);">
+        <i data-lucide="share-2" class="w-3.5 h-3.5"></i> Share
+      </button>
+    </div>
+
+    <!-- Comment Section (hidden by default) -->
+    <div class="comment-section hidden mt-3 pt-3 border-t" style="border-color: var(--border-soft);">
+      <div class="comments-list flex flex-col gap-2 mb-3"></div>
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-full overflow-hidden shrink-0" style="border-color: var(--border-soft); border: 1px solid;"><img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=60&q=80" alt="me" class="w-full h-full object-cover"></div>
+        <input type="text" class="comment-input flex-1 text-[11px] px-3 py-2 rounded-full border focus:outline-none themed-input" placeholder="Write a comment...">
+        <button class="submit-comment-btn p-2 rounded-full btn-brand transition-all" style="opacity: 0.5;" disabled>
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+            
+              
+
+
+
+<article class="post-card rounded-2xl border shadow-sm shrink-0" data-post-id="8">
+  <div class="p-4 sm:p-5">
+    <div class="flex items-center gap-2.5 mb-3">
+      <div class="w-9 h-9 rounded-full border overflow-hidden shrink-0" style="border-color: var(--border-soft);"><img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&amp;fit=crop&amp;w=100&amp;q=80" alt="aoi_gamer" class="w-full h-full object-cover"></div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-1.5">
+          <span class="text-xs font-extrabold" style="color: var(--text-primary);">aoi_gamer</span>
+          
+          <span class="text-[10px]" style="color: var(--text-muted);">in</span>
+          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="color: var(--text-secondary); background: var(--border-soft);">#lfg</span>
+          
+        </div>
+        <p class="text-[10px]" style="color: var(--text-muted);">2 days ago · Public</p>
+      </div>
+      
+    </div>
+    
+    <h3 class="text-sm font-extrabold mb-2" style="color: var(--text-primary);">Co-op partner needed for Honkai Star Rail endgame content</h3>
+    
+    <p class="text-[11px] leading-relaxed mb-3" style="color: var(--text-secondary);">Looking for an active player to team up for Memory of Chaos and Simulated Universe. I&#x27;m TL65 with most meta characters built. DM me your UID!</p>
+    
+    <div class="flex items-center gap-1.5 mb-3 flex-wrap">
+      
+      
+      <span class="text-[9px] font-semibold px-2 py-0.5 rounded-full" style="color: var(--text-secondary); background: var(--border-soft);">#LFG</span>
+      
+      
+      
+      <span class="text-[9px] font-semibold px-2 py-0.5 rounded-full" style="color: var(--text-secondary); background: var(--border-soft);">#HonkaiStarRail</span>
+      
+      
+    </div>
+    
+
+    <div class="flex items-center justify-between pt-2 border-t" style="border-color: var(--border-soft);">
+      <div class="flex items-center gap-3 text-[10px] font-medium" style="color: var(--text-muted);"><span class="comment-count">28 comments</span><span>·</span><span class="share-count">5 shares</span></div>
+    </div>
+    <div class="flex items-center gap-1 mt-3 pt-3 border-t" style="border-color: var(--border-soft);">
+      <button class="comment-toggle-btn flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full transition-colors text-[11px] font-semibold" style="color: var(--text-secondary);"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Comment</button>
+      <button class="share-btn flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full transition-colors text-[11px] font-semibold" style="color: var(--text-secondary);"><i data-lucide="share-2" class="w-3.5 h-3.5"></i> Share</button>
+    </div>
+
+    <!-- Comment Section -->
+    <div class="comment-section hidden mt-3 pt-3 border-t" style="border-color: var(--border-soft);">
+      <div class="comments-list flex flex-col gap-2 mb-3"></div>
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-full overflow-hidden shrink-0" style="border: 1px solid var(--border-soft);"><img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=60&q=80" alt="me" class="w-full h-full object-cover"></div>
+        <input type="text" class="comment-input flex-1 text-[11px] px-3 py-2 rounded-full border focus:outline-none themed-input" placeholder="Write a comment...">
+        <button class="submit-comment-btn p-2 rounded-full btn-brand transition-all" style="opacity: 0.5;" disabled>
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+            
+              
+
+
+
+<article class="post-card rounded-2xl border shadow-sm shrink-0" data-post-id="7">
+  <div class="p-4 sm:p-5">
+    <div class="flex items-center gap-2.5 mb-3">
+      <div class="w-9 h-9 rounded-full border overflow-hidden shrink-0" style="border-color: var(--border-soft);"><img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&amp;fit=crop&amp;w=100&amp;q=80" alt="kai_builder" class="w-full h-full object-cover"></div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-1.5">
+          <span class="text-xs font-extrabold" style="color: var(--text-primary);">kai_builder</span>
+          
+          <span class="text-[10px]" style="color: var(--text-muted);">in</span>
+          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="color: var(--text-secondary); background: var(--border-soft);">#fan-art</span>
+          
+        </div>
+        <p class="text-[10px]" style="color: var(--text-muted);">1 day ago · Public</p>
+      </div>
+      
+    </div>
+    <p class="text-[11px] leading-relaxed mb-3" style="color: var(--text-secondary);">My Genshin Impact shrine setup is finally complete! 🏮 The Raiden Shogun statue was the last piece. #GenshinImpact #Shrine</p>
+
+    
+    <div class="grid grid-cols-2 gap-1.5 rounded-xl overflow-hidden mb-3">
+      
+      <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&amp;fit=crop&amp;w=400&amp;q=80" alt="" class="w-full h-32 object-cover">
+      
+      <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&amp;fit=crop&amp;w=400&amp;q=80" alt="" class="w-full h-32 object-cover">
+      
+    </div>
+    
+
+    <div class="flex items-center justify-between pt-2 border-t" style="border-color: var(--border-soft);">
+      <div class="flex items-center gap-3 text-[10px] font-medium" style="color: var(--text-muted);"><span class="comment-count">89 comments</span><span>·</span><span class="share-count">134 shares</span></div>
+    </div>
+
+    <div class="flex items-center gap-1 mt-3 pt-3 border-t" style="border-color: var(--border-soft);">
+      <button class="comment-toggle-btn flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full transition-colors text-[11px] font-semibold" style="color: var(--text-secondary);"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Comment</button>
+      <button class="share-btn flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full transition-colors text-[11px] font-semibold" style="color: var(--text-secondary);"><i data-lucide="share-2" class="w-3.5 h-3.5"></i> Share</button>
+    </div>
+
+    <!-- Comment Section -->
+    <div class="comment-section hidden mt-3 pt-3 border-t" style="border-color: var(--border-soft);">
+      <div class="comments-list flex flex-col gap-2 mb-3"></div>
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-full overflow-hidden shrink-0" style="border: 1px solid var(--border-soft);"><img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=60&q=80" alt="me" class="w-full h-full object-cover"></div>
+        <input type="text" class="comment-input flex-1 text-[11px] px-3 py-2 rounded-full border focus:outline-none themed-input" placeholder="Write a comment...">
+        <button class="submit-comment-btn p-2 rounded-full btn-brand transition-all" style="opacity: 0.5;" disabled>
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+            
+              
+
+
+
+<article class="post-card rounded-2xl border shadow-sm shrink-0" data-post-id="6">
+  <div class="p-4 sm:p-5">
+    <div class="flex items-center gap-2.5 mb-3">
+      <div class="w-9 h-9 rounded-full border overflow-hidden shrink-0" style="border-color: var(--border-soft);"><img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&amp;fit=crop&amp;w=100&amp;q=80" alt="yuki_traveler" class="w-full h-full object-cover"></div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-1.5">
+          <span class="text-xs font-extrabold" style="color: var(--text-primary);">yuki_traveler</span>
+          
+          <span class="text-[10px]" style="color: var(--text-muted);">in</span>
+          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="color: var(--text-secondary); background: var(--border-soft);">#merch-trading</span>
+          
+        </div>
+        <p class="text-[10px]" style="color: var(--text-muted);">12 hours ago · Public</p>
+      </div>
+      
+    </div>
+    
+    <h3 class="text-sm font-extrabold mb-2" style="color: var(--text-primary);">Best anime figure stores in Tokyo? Visiting next month!</h3>
+    
+    <p class="text-[11px] leading-relaxed mb-3" style="color: var(--text-secondary);">I&#x27;m planning a trip to Tokyo and want to hit up the best figure stores. Akihabara is a given, but any hidden gems? Looking for both new releases and vintage finds. Budget is around ¥50,000.</p>
+    
+    <div class="flex items-center gap-1.5 mb-3 flex-wrap">
+      
+      
+      <span class="text-[9px] font-semibold px-2 py-0.5 rounded-full" style="color: var(--text-secondary); background: var(--border-soft);">#tokyo</span>
+      
+      
+      
+      <span class="text-[9px] font-semibold px-2 py-0.5 rounded-full" style="color: var(--text-secondary); background: var(--border-soft);">#figures</span>
+      
+      
+      
+      <span class="text-[9px] font-semibold px-2 py-0.5 rounded-full" style="color: var(--text-secondary); background: var(--border-soft);">#travel</span>
+      
+      
+    </div>
+    
+
+    <div class="flex items-center justify-between pt-2 border-t" style="border-color: var(--border-soft);">
+      <div class="flex items-center gap-3 text-[10px] font-medium" style="color: var(--text-muted);"><span class="comment-count">67 comments</span><span>·</span><span class="share-count">23 shares</span></div>
+    </div>
+    <div class="flex items-center gap-1 mt-3 pt-3 border-t" style="border-color: var(--border-soft);">
+      <button class="comment-toggle-btn flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full transition-colors text-[11px] font-semibold" style="color: var(--text-secondary);"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Comment</button>
+      <button class="share-btn flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full transition-colors text-[11px] font-semibold" style="color: var(--text-secondary);"><i data-lucide="share-2" class="w-3.5 h-3.5"></i> Share</button>
+    </div>
+
+    <!-- Comment Section -->
+    <div class="comment-section hidden mt-3 pt-3 border-t" style="border-color: var(--border-soft);">
+      <div class="comments-list flex flex-col gap-2 mb-3"></div>
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-full overflow-hidden shrink-0" style="border: 1px solid var(--border-soft);"><img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=60&q=80" alt="me" class="w-full h-full object-cover"></div>
+        <input type="text" class="comment-input flex-1 text-[11px] px-3 py-2 rounded-full border focus:outline-none themed-input" placeholder="Write a comment...">
+        <button class="submit-comment-btn p-2 rounded-full btn-brand transition-all" style="opacity: 0.5;" disabled>
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+            
+              
+
+
+
+<article class="post-card rounded-2xl border shadow-sm shrink-0" data-post-id="5">
+  <div class="p-4 sm:p-5">
+    <div class="flex items-center gap-2.5 mb-3">
+      <div class="w-9 h-9 rounded-full border overflow-hidden shrink-0" style="border-color: var(--border-soft);"><img src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&amp;fit=crop&amp;w=100&amp;q=80" alt="ren_dev" class="w-full h-full object-cover"></div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-1.5">
+          <span class="text-xs font-extrabold" style="color: var(--text-primary);">ren_dev</span>
+          
+          <i data-lucide="badge-check" class="w-3.5 h-3.5 icon-brand"></i>
+          
+          
+          <span class="text-[10px]" style="color: var(--text-muted);">in</span>
+          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="color: var(--text-secondary); background: var(--border-soft);">#guides</span>
+          
+        </div>
+        <p class="text-[10px]" style="color: var(--text-muted);">Yesterday · Public</p>
+      </div>
+      
+    </div>
+    <p class="text-[11px] leading-relaxed mb-3" style="color: var(--text-secondary);">Just published my comprehensive guide on maximizing crystal farming in the new Honkai update.</p>
+
+    
+    
+    <div class="rounded-xl overflow-hidden border mb-3 group cursor-pointer transition-colors" style="border-color: var(--border-soft);">
+      <div class="relative h-32 overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&amp;fit=crop&amp;w=800&amp;q=80" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-transparent"></div>
+        <div class="absolute bottom-3 left-3 right-3"><span class="badge-brand text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Guide · 15 min read</span></div>
+      </div>
+      <div class="p-3">
+        <h4 class="text-xs font-extrabold mb-1" style="color: var(--text-primary);">Ultimate Crystal Farming Guide v2.4 — 10x Efficiency</h4>
+        <p class="text-[10px] line-clamp-2" style="color: var(--text-muted);">Complete breakdown of optimal farming routes, team compositions, and weekly reset strategies...</p>
+        <div class="flex items-center gap-2 mt-2 text-[10px]" style="color: var(--text-muted);">
+          <span class="flex items-center gap-1"><i data-lucide="eye" class="w-3 h-3"></i> 18000</span>
+          <span class="flex items-center gap-1"><i data-lucide="thumbs-up" class="w-3 h-3"></i> 2341</span>
+          <span class="flex items-center gap-1"><i data-lucide="bookmark" class="w-3 h-3"></i> 842</span>
+        </div>
+      </div>
+    </div>
+    
+    
+
+    <div class="flex items-center justify-between pt-2 border-t" style="border-color: var(--border-soft);">
+      <div class="flex items-center gap-3 text-[10px] font-medium" style="color: var(--text-muted);"><span class="comment-count">198 comments</span><span>·</span><span class="share-count">487 shares</span></div>
+    </div>
+    <div class="flex items-center gap-1 mt-3 pt-3 border-t" style="border-color: var(--border-soft);">
+      <button class="comment-toggle-btn flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full transition-colors text-[11px] font-semibold" style="color: var(--text-secondary);"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Comment</button>
+      <button class="share-btn flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full transition-colors text-[11px] font-semibold" style="color: var(--text-secondary);"><i data-lucide="share-2" class="w-3.5 h-3.5"></i> Share</button>
+    </div>
+
+    <!-- Comment Section -->
+    <div class="comment-section hidden mt-3 pt-3 border-t" style="border-color: var(--border-soft);">
+      <div class="comments-list flex flex-col gap-2 mb-3"></div>
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-full overflow-hidden shrink-0" style="border: 1px solid var(--border-soft);"><img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=60&q=80" alt="me" class="w-full h-full object-cover"></div>
+        <input type="text" class="comment-input flex-1 text-[11px] px-3 py-2 rounded-full border focus:outline-none themed-input" placeholder="Write a comment...">
+        <button class="submit-comment-btn p-2 rounded-full btn-brand transition-all" style="opacity: 0.5;" disabled>
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+            
+          </div>
+
+          <!-- Load More -->
+          <div id="load-more-wrap" class="flex justify-center shrink-0 py-2 ">
+            <button id="load-more-btn" class="surface-card font-semibold px-5 py-2.5 rounded-full text-xs border shadow-sm flex items-center gap-2 transition-all hover:opacity-80" style="color: var(--text-secondary);">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Load more posts
+            </button>
+          </div>
+
+        </section>
+
+        <!-- RIGHT: RAIL -->
+        <aside class="flex flex-col gap-4 overflow-y-auto pr-1">
+
+          <!-- Search -->
+          <form id="search-form" class="relative shrink-0" method="GET" action="/community/">
+            <input type="hidden" name="feed" value="for-you">
+            
+            <input type="text" name="q" placeholder="Search community..." value=""
+                   class="themed-input w-full pl-10 pr-10 py-3 rounded-full text-xs focus:outline-none border shadow-sm font-medium transition-colors">
+            <i data-lucide="search" class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 icon-muted"></i>
+            
+          </form>
+
+          <!-- Channels -->
+          <div class="surface-card rounded-2xl border shadow-sm p-2.5 shrink-0">
+            <div class="flex items-center justify-between px-3 py-2">
+              <span class="text-[10px] font-bold uppercase tracking-widest" style="color: var(--text-muted);">Channels</span>
+            </div>
+<div class="flex flex-col gap-1">
+              <a href="/community/?feed=for-you"
+                 class="channel-link w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left shadow-sm btn-brand" data-channel="">
+                <i data-lucide="hash" class="ch-icon w-4 h-4 shrink-0"></i>
+                <span class="ch-name flex-1 text-xs font-bold truncate">all</span>
+              </a>
+              
+              <a href="/community/?channel=cosplay&feed=for-you"
+                 class="channel-link w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left rail-item" data-channel="cosplay">
+                <i data-lucide="sparkles" class="ch-icon w-4 h-4 shrink-0"></i>
+                <span class="ch-name flex-1 text-xs font-bold truncate">cosplay</span>
+              </a>
+              
+              <a href="/community/?channel=fan-art&feed=for-you"
+                 class="channel-link w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left rail-item" data-channel="fan-art">
+                <i data-lucide="palette" class="ch-icon w-4 h-4 shrink-0"></i>
+                <span class="ch-name flex-1 text-xs font-bold truncate">fan-art</span>
+              </a>
+              
+              <a href="/community/?channel=general&feed=for-you"
+                 class="channel-link w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left rail-item" data-channel="general">
+                <i data-lucide="hash" class="ch-icon w-4 h-4 shrink-0"></i>
+                <span class="ch-name flex-1 text-xs font-bold truncate">general</span>
+              </a>
+              
+              <a href="/community/?channel=guides&feed=for-you"
+                 class="channel-link w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left rail-item" data-channel="guides">
+                <i data-lucide="book-open" class="ch-icon w-4 h-4 shrink-0"></i>
+                <span class="ch-name flex-1 text-xs font-bold truncate">guides</span>
+              </a>
+              
+              <a href="/community/?channel=lfg&feed=for-you"
+                 class="channel-link w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left rail-item" data-channel="lfg">
+                <i data-lucide="gamepad-2" class="ch-icon w-4 h-4 shrink-0"></i>
+                <span class="ch-name flex-1 text-xs font-bold truncate">lfg</span>
+              </a>
+              
+              <a href="/community/?channel=merch-trading&feed=for-you"
+                 class="channel-link w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left rail-item" data-channel="merch-trading">
+                <i data-lucide="shopping-bag" class="ch-icon w-4 h-4 shrink-0"></i>
+                <span class="ch-name flex-1 text-xs font-bold truncate">merch-trading</span>
+              </a>
+              
+              <a href="/community/?channel=screenshots&feed=for-you"
+                 class="channel-link w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left rail-item" data-channel="screenshots">
+                <i data-lucide="image" class="ch-icon w-4 h-4 shrink-0"></i>
+                <span class="ch-name flex-1 text-xs font-bold truncate">screenshots</span>
+              </a>
+              
+            </div>
+          </div>
+
+          <!-- Discover -->
+          <div class="rounded-2xl p-5 relative overflow-hidden shrink-0" style="background: var(--brand); color: var(--on-brand);">
+            <div class="absolute -top-10 -right-10 w-32 h-32 rounded-full pointer-events-none" style="background: color-mix(in srgb, var(--on-brand) 5%, transparent);"></div>
+            <div class="absolute -bottom-12 -left-10 w-32 h-32 rounded-full pointer-events-none" style="background: color-mix(in srgb, var(--on-brand) 5%, transparent);"></div>
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center mb-3 relative" style="background: color-mix(in srgb, var(--on-brand) 10%, transparent); color: var(--on-brand);"><i data-lucide="compass" class="w-4 h-4"></i></div>
+            <p class="text-sm font-bold leading-snug relative" style="color: var(--on-brand);">Discover more communities</p>
+            <p class="text-[11px] mt-1.5 leading-relaxed relative" style="color: color-mix(in srgb, var(--on-brand) 70%, transparent);">Find collectors, co-op partners, and trade circles that match your shelf.</p>
+            <button class="mt-4 w-full text-[11px] font-bold py-2.5 rounded-full hover:-translate-y-0.5 transition-all relative" style="background: var(--on-brand); color: var(--brand);">Browse Communities</button>
+          </div>
+
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===== CREATE POST MODAL ===== -->
+  <div id="create-post-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="flex items-center justify-between p-4 border-b" style="border-color: var(--border-soft);">
+        <h3 class="text-sm font-extrabold" style="color: var(--text-primary);">Create Post</h3>
+        <button id="close-modal-btn" class="p-1.5 rounded-full icon-muted hover:opacity-70"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="p-4">
+        <!-- Post type selector -->
+        <div class="flex items-center gap-2 mb-3">
+          <button class="post-type-btn active badge-brand text-[10px] font-bold px-3 py-1.5 rounded-full" data-type="discussion">Discussion</button>
+          <button class="post-type-btn text-[10px] font-bold px-3 py-1.5 rounded-full border" style="color: var(--text-secondary); border-color: var(--border-soft);" data-type="image">Image</button>
+          <button class="post-type-btn text-[10px] font-bold px-3 py-1.5 rounded-full border" style="color: var(--text-secondary); border-color: var(--border-soft);" data-type="poll">Poll</button>
+        </div>
+
+        <!-- Channel selector -->
+        <div class="mb-3">
+          <label class="text-[10px] font-bold uppercase tracking-wider mb-1 block" style="color: var(--text-muted);">Channel</label>
+          <select id="post-channel" class="themed-input w-full px-3 py-2 rounded-xl text-xs border focus:outline-none">
+            <option value="">No channel</option>
+            
+            <option value="cosplay">cosplay</option>
+            
+            <option value="fan-art">fan-art</option>
+            
+            <option value="general">general</option>
+            
+            <option value="guides">guides</option>
+            
+            <option value="lfg">lfg</option>
+            
+            <option value="merch-trading">merch-trading</option>
+            
+            <option value="screenshots">screenshots</option>
+            
+          </select>
+        </div>
+
+        <!-- Title -->
+        <div class="mb-3">
+          <input type="text" id="post-title" class="themed-input w-full px-3 py-2 rounded-xl text-xs border focus:outline-none" placeholder="Title (optional)">
+        </div>
+
+        <!-- Content -->
+        <div class="mb-3">
+          <textarea id="post-content" class="themed-input w-full px-3 py-2 rounded-xl text-xs border focus:outline-none resize-none" rows="4" placeholder="What's on your mind? Use #hashtags to tag your post."></textarea>
+        </div>
+
+        <!-- Image URLs (for image posts) -->
+        <div id="image-urls-section" class="mb-3 hidden">
+          <label class="text-[10px] font-bold uppercase tracking-wider mb-1 block" style="color: var(--text-muted);">Image URLs</label>
+          <input type="text" id="post-image-url" class="themed-input w-full px-3 py-2 rounded-xl text-xs border focus:outline-none mb-2" placeholder="Paste image URL...">
+          <div id="image-preview-list" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <!-- Poll fields (for poll posts) -->
+        <div id="poll-creation-section" class="mb-3 hidden">
+          <label class="text-[10px] font-bold uppercase tracking-wider mb-1 block" style="color: var(--text-muted);">Poll Question</label>
+          <input type="text" id="poll-question" class="themed-input w-full px-3 py-2 rounded-xl text-xs border focus:outline-none mb-2" placeholder="Ask a question...">
+          <label class="text-[10px] font-bold uppercase tracking-wider mb-1 block" style="color: var(--text-muted);">Options (min 2)</label>
+          <div id="poll-options-list" class="flex flex-col gap-2 mb-2">
+            <div class="flex items-center gap-2">
+              <input type="text" class="poll-option-input themed-input flex-1 px-3 py-2 rounded-xl text-xs border focus:outline-none" placeholder="Option 1">
+            </div>
+            <div class="flex items-center gap-2">
+              <input type="text" class="poll-option-input themed-input flex-1 px-3 py-2 rounded-xl text-xs border focus:outline-none" placeholder="Option 2">
+            </div>
+          </div>
+          <button id="add-poll-option-btn" class="text-[11px] font-semibold flex items-center gap-1 transition-colors" style="color: var(--brand);">
+            <i data-lucide="plus" class="w-3 h-3"></i> Add option
+          </button>
+        </div>
+
+        <button id="submit-post-btn" class="btn-brand w-full py-2.5 rounded-xl text-xs font-bold transition-all">
+          Post
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Post Modal -->
+  <div id="edit-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="flex items-center justify-between p-4 border-b" style="border-color: var(--border-soft);">
+        <h3 class="text-sm font-extrabold" style="color: var(--text-primary);">Edit Post</h3>
+        <button id="close-edit-modal-btn" class="p-1.5 rounded-full icon-muted hover:opacity-70"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="p-4">
+        <label class="text-[10px] font-bold uppercase tracking-wider mb-1 block" style="color: var(--text-muted);">Title / Question</label>
+        <input type="text" id="edit-title" class="themed-input w-full px-3 py-2 rounded-xl text-xs border focus:outline-none mb-3" placeholder="Title">
+        <label class="text-[10px] font-bold uppercase tracking-wider mb-1 block" style="color: var(--text-muted);">Content</label>
+        <textarea id="edit-content" class="themed-input w-full px-3 py-2 rounded-xl text-xs border focus:outline-none resize-none mb-4" rows="4" placeholder="What's on your mind?"></textarea>
+        <button id="edit-save-btn" class="btn-brand w-full py-2.5 rounded-xl text-xs font-bold transition-all">
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+  (function() {
+    // === CSRF TOKEN ===
+    const CSRF_TOKEN = '9QskALVBcVmqs4xvKIV3D527h8ftd9VQYxdUVgQXZPW5tF5ukktOZzq7XoCJRu44';
+
+    // === PERFORMANCE: Only init icons inside a given root ===
+    function initIcons(root) {
+      if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        lucide.createIcons({ root: root || document.body, nameAttr: 'data-lucide' });
+      }
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    function apiPost(url, data) {
+      return fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
+        body: JSON.stringify(data),
+      }).then(r => r.json());
+    }
+
+    // === THEME ===
+    const theme = localStorage.getItem('kaimono_theme');
+    if (theme) document.body.setAttribute('data-theme', theme);
+    initIcons();
+
+    // === FEED LOADER (AJAX, no full page reload) — used by tabs & channels ===
+    function applyFeed(data, url) {
+      history.pushState({}, '', url);
+      const container = document.getElementById('posts-container');
+      container.innerHTML = '';
+      if (data.posts_html) {
+        container.innerHTML = data.posts_html;
+        container.querySelectorAll('.post-card').forEach(card => {
+          initIcons(card);
+          bindPostInteractions(card);
+        });
+      } else {
+        container.innerHTML = '<div class="text-center py-10" style="color: var(--text-muted);"><i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 opacity-50"></i><p class="text-xs font-semibold">No posts in this feed yet.</p></div>';
+        initIcons(container);
+      }
+      currentPage = 1;
+      const wrap = document.getElementById('load-more-wrap');
+      if (wrap) wrap.classList.toggle('hidden', !data.has_next);
+    }
+
+    function loadingFeed() {
+      const container = document.getElementById('posts-container');
+      container.innerHTML = '<div class="text-center py-12" style="color: var(--text-muted);"><i data-lucide="loader-2" class="w-6 h-6 mx-auto mb-2 animate-spin"></i><p class="text-xs font-semibold">Loading posts...</p></div>';
+      initIcons(container);
+    }
+
+    function fetchFeed() {
+      const params = new URLSearchParams(window.location.search);
+      params.delete('page');
+      const url = window.location.pathname + '?' + params.toString();
+      loadingFeed();
+      fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(r => r.json())
+        .then(data => applyFeed(data, url));
+    }
+
+    // === FEED FILTERS (tabs) ===
+    function switchFeed(feed) {
+      const params = new URLSearchParams(window.location.search);
+      params.set('feed', feed);
+      params.delete('page');
+      history.pushState({}, '', window.location.pathname + '?' + params.toString());
+      document.querySelectorAll('.feed-filter').forEach(b => {
+        b.classList.toggle('active', b.dataset.feed === feed);
+      });
+      fetchFeed();
+    }
+
+    document.querySelectorAll('.feed-filter').forEach(btn => {
+      btn.addEventListener('click', () => switchFeed(btn.dataset.feed));
+    });
+
+    // === CHANNEL FILTERS (AJAX) ===
+    document.querySelectorAll('.channel-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const slug = link.dataset.channel; // '' = all
+        const params = new URLSearchParams(window.location.search);
+        if (slug) params.set('channel', slug); else params.delete('channel');
+        params.delete('page');
+        history.pushState({}, '', window.location.pathname + '?' + params.toString());
+        // active rail state
+        document.querySelectorAll('.channel-link').forEach(c => { c.classList.remove('btn-brand', 'shadow-sm'); c.classList.add('rail-item'); });
+        link.classList.add('btn-brand', 'shadow-sm');
+        link.classList.remove('rail-item');
+        fetchFeed();
+      });
+    });
+
+    // === SEARCH ===
+    const searchForm = document.getElementById('search-form');
+    const searchInput = searchForm.querySelector('input[name="q"]');
+    let searchTimeout;
+    searchInput.addEventListener('input', () => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => searchForm.submit(), 600);
+    });
+
+    // === CREATE POST MODAL ===
+    const modal = document.getElementById('create-post-modal');
+    const openModal = () => { modal.classList.add('open'); document.body.style.overflow = 'hidden'; };
+    const closeModal = () => { modal.classList.remove('open'); document.body.style.overflow = ''; };
+
+    document.getElementById('create-post-btn').addEventListener('click', openModal);
+    document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+    // Post type toggle
+    let selectedPostType = 'discussion';
+    document.querySelectorAll('.post-type-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.post-type-btn').forEach(b => {
+          b.classList.remove('active', 'badge-brand');
+          b.style.background = '';
+          b.style.color = 'var(--text-secondary)';
+          b.style.borderColor = 'var(--border-soft)';
+        });
+        btn.classList.add('active', 'badge-brand');
+        btn.style.background = 'var(--brand)';
+        btn.style.color = 'var(--on-brand)';
+        selectedPostType = btn.dataset.type;
+        document.getElementById('image-urls-section').classList.toggle('hidden', selectedPostType !== 'image');
+        document.getElementById('poll-creation-section').classList.toggle('hidden', selectedPostType !== 'poll');
+      });
+    });
+
+    // Add poll option
+    document.getElementById('add-poll-option-btn').addEventListener('click', () => {
+      const list = document.getElementById('poll-options-list');
+      if (list.children.length >= 6) { showToast('Max 6 options'); return; }
+      const n = list.children.length + 1;
+      const div = document.createElement('div');
+      div.className = 'flex items-center gap-2';
+      div.innerHTML = '<input type="text" class="poll-option-input themed-input flex-1 px-3 py-2 rounded-xl text-xs border focus:outline-none" placeholder="Option ' + n + '"><button class="remove-poll-option p-1 icon-muted hover:opacity-70"><i data-lucide="x" class="w-3 h-3"></i></button>';
+      list.appendChild(div);
+      initIcons(div);
+      div.querySelector('.remove-poll-option').addEventListener('click', () => { div.remove(); });
+    });
+
+    // Submit post
+    document.getElementById('submit-post-btn').addEventListener('click', () => {
+      const title = document.getElementById('post-title').value.trim();
+      const content = document.getElementById('post-content').value.trim();
+      const channel = document.getElementById('post-channel').value;
+      const imageUrl = document.getElementById('post-image-url').value.trim();
+
+      if (!content && !title) { showToast('Please write something!'); return; }
+
+      const payload = {
+        post_type: selectedPostType,
+        title,
+        content,
+        channel,
+        image_urls: imageUrl ? [imageUrl] : [],
+      };
+
+      // Poll data
+      if (selectedPostType === 'poll') {
+        const question = document.getElementById('poll-question').value.trim();
+        const opts = Array.from(document.querySelectorAll('.poll-option-input')).map(i => i.value.trim()).filter(Boolean);
+        if (!question) { showToast('Poll question is required!'); return; }
+        if (opts.length < 2) { showToast('Need at least 2 options!'); return; }
+        payload.poll_question = question;
+        payload.poll_options = opts;
+        payload.content = question; // for display
+      }
+
+      document.getElementById('submit-post-btn').textContent = 'Posting...';
+      document.getElementById('submit-post-btn').disabled = true;
+
+      apiPost('/api/community/post/', payload).then(data => {
+        if (data.success) {
+          const container = document.getElementById('posts-container');
+          container.insertAdjacentHTML('afterbegin', data.post_html);
+          initIcons(container.firstElementChild);
+          closeModal();
+          document.getElementById('post-title').value = '';
+          document.getElementById('post-content').value = '';
+          document.getElementById('post-image-url').value = '';
+          document.getElementById('image-preview-list').innerHTML = '';
+          document.getElementById('poll-question').value = '';
+          document.getElementById('poll-options-list').innerHTML = '<div class="flex items-center gap-2"><input type="text" class="poll-option-input themed-input flex-1 px-3 py-2 rounded-xl text-xs border focus:outline-none" placeholder="Option 1"></div><div class="flex items-center gap-2"><input type="text" class="poll-option-input themed-input flex-1 px-3 py-2 rounded-xl text-xs border focus:outline-none" placeholder="Option 2"></div>';
+          showToast('Post created!');
+          bindPostInteractions(container.firstElementChild);
+        } else {
+          showToast(data.error || 'Failed to create post');
+        }
+        document.getElementById('submit-post-btn').textContent = 'Post';
+        document.getElementById('submit-post-btn').disabled = false;
+      });
+    });
+
+    // === LOAD MORE ===
+    let currentPage = 1;
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', () => {
+        currentPage++;
+        const params = new URLSearchParams(window.location.search);
+        params.set('page', currentPage);
+        loadMoreBtn.innerHTML = '<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i> Loading...';
+        initIcons(loadMoreBtn);
+
+        fetch(window.location.pathname + '?' + params.toString(), {
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        }).then(r => r.json()).then(data => {
+          if (data.posts_html) {
+            const container = document.getElementById('posts-container');
+            container.insertAdjacentHTML('beforeend', data.posts_html);
+            // Init icons ONLY inside new post cards
+            container.querySelectorAll('.post-card:not([data-bound])').forEach(card => {
+              initIcons(card);
+              bindPostInteractions(card);
+            });
+          }
+          if (!data.has_next) {
+            loadMoreBtn.parentElement.remove();
+          } else {
+            loadMoreBtn.innerHTML = '<i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Load more posts';
+            initIcons(loadMoreBtn);
+          }
+        });
+      });
+    }
+
+    // === POST INTERACTIONS (Like, Bookmark, Vote, Comment, Share) ===
+    function bindPostInteractions(card) {
+      if (card.dataset.bound) return;
+      card.dataset.bound = '1';
+
+      const postId = card.dataset.postId;
+      if (!postId) return;
+
+      // POST MENU (dropdown: Edit / Delete) — only rendered for owner posts
+      const menuBtn = card.querySelector('.post-menu-btn');
+      const menu = card.querySelector('.post-menu');
+      if (menuBtn && menu) {
+        menuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          document.querySelectorAll('.post-menu').forEach(m => { if (m !== menu) m.classList.add('hidden'); });
+          menu.classList.toggle('hidden');
+        });
+        document.addEventListener('click', (e) => {
+          if (!menu.contains(e.target) && !menuBtn.contains(e.target)) menu.classList.add('hidden');
+        });
+        const editBtn = card.querySelector('.post-edit-btn');
+        if (editBtn) {
+          editBtn.addEventListener('click', () => {
+            menu.classList.add('hidden');
+            openEditPost(card);
+          });
+        }
+        const deleteBtn = card.querySelector('.post-delete-btn');
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', () => {
+            menu.classList.add('hidden');
+            if (!confirm('Delete this post? This action cannot be undone.')) return;
+            apiPost('/api/community/post/delete/', { post_id: parseInt(postId) }).then(data => {
+              if (data.error) { showToast(data.error); return; }
+              card.remove();
+              showToast('Post deleted');
+            });
+          });
+        }
+      }
+
+      // SHARE
+      const shareBtn = card.querySelector('.share-btn');
+      if (shareBtn) {
+        shareBtn.addEventListener('click', () => {
+          apiPost('/api/community/share/', { post_id: parseInt(postId) }).then(data => {
+            if (data.success) {
+              const countEl = card.querySelector('.share-count');
+              if (countEl) countEl.textContent = data.count + ' shares';
+              navigator.clipboard.writeText(window.location.href).catch(() => {});
+              showToast('Link copied to clipboard!');
+            }
+          });
+        });
+      }
+
+      // POLL VOTING — pick > verify > submit > changeable
+      const pollOptions = card.querySelectorAll('.poll-option');
+      const pollWrap = card.querySelector('.poll-options');
+      const confirmBar = card.querySelector('.poll-confirm');
+      const confirmLabel = card.querySelector('.poll-confirm-label');
+      const cancelBtn = card.querySelector('.poll-cancel');
+      const submitBtn = card.querySelector('.poll-submit');
+      let pendingOption = null;
+
+      function clearPending() {
+        if (pendingOption) pendingOption.classList.remove('selected');
+        pendingOption = null;
+        if (confirmBar) confirmBar.classList.add('hidden');
+      }
+      function applyResults(data) {
+        data.options.forEach(opt => {
+          const btn = card.querySelector(`.poll-option[data-option-id="${opt.id}"]`);
+          if (!btn) return;
+          const bar = btn.querySelector('.poll-bar');
+          const pct = btn.querySelector('.poll-pct');
+          if (bar) bar.style.width = opt.percentage + '%';
+          if (pct) pct.textContent = opt.percentage + '%';
+          if (opt.is_selected) {
+            btn.classList.add('voted');
+            if (bar) bar.style.background = 'var(--brand-soft)';
+            if (!btn.querySelector('.icon-brand')) {
+              const label = btn.querySelector('.text-xs.font-semibold');
+              const radio = btn.querySelector('.poll-radio');
+              if (label) {
+                const chk = document.createElement('i');
+                chk.setAttribute('data-lucide', 'check-circle-2');
+                chk.className = 'w-4 h-4 icon-brand shrink-0';
+                label.parentNode.insertBefore(chk, label);
+              }
+              if (radio) radio.remove();
+              initIcons(btn);
+            }
+          } else {
+            btn.classList.remove('voted');
+            if (bar) bar.style.background = 'var(--border-soft)';
+          }
+        });
+        card.querySelectorAll('.poll-votes').forEach(el => { el.textContent = data.total_votes; });
+        const hint = card.querySelector('.poll-hint');
+        if (hint) hint.textContent = 'You voted — click another option to change your vote.';
+        if (pollWrap) pollWrap.classList.add('show-results');
+      }
+
+      if (pollWrap && confirmBar) {
+        pollOptions.forEach(optBtn => {
+          optBtn.addEventListener('click', () => {
+            clearPending();
+            pendingOption = optBtn;
+            optBtn.classList.add('selected');
+            if (confirmLabel) confirmLabel.textContent = optBtn.querySelector('.text-xs.font-semibold')?.textContent || '';
+            confirmBar.classList.remove('hidden');
+            initIcons(confirmBar);
+          });
+        });
+        cancelBtn && cancelBtn.addEventListener('click', clearPending);
+        submitBtn && submitBtn.addEventListener('click', () => {
+          if (!pendingOption) return;
+          const optionId = pendingOption.dataset.optionId;
+          apiPost('/api/community/vote/', { option_id: parseInt(optionId) }).then(data => {
+            if (data.error) { showToast(data.error); return; }
+            applyResults(data);
+            clearPending();
+            showToast('Vote recorded!');
+          });
+        });
+        document.addEventListener('click', (e) => {
+          if (confirmBar.classList.contains('hidden')) return;
+          if (confirmBar.contains(e.target)) return;
+          let walk = e.target;
+          while (walk) { if (walk.classList && walk.classList.contains('poll-option')) return; walk = walk.parentNode; }
+          clearPending();
+        });
+      }
+
+      // COMMENT TOGGLE
+      const commentToggleBtn = card.querySelector('.comment-toggle-btn');
+      const commentSection = card.querySelector('.comment-section');
+      if (commentToggleBtn && commentSection) {
+        commentToggleBtn.addEventListener('click', () => {
+          const isHidden = commentSection.classList.contains('hidden');
+          commentSection.classList.toggle('hidden');
+          if (isHidden) {
+            fetch(`/api/community/comments/?post_id=${postId}`).then(r => r.json()).then(data => {
+              const list = commentSection.querySelector('.comments-list');
+              list.innerHTML = '';
+              data.comments.forEach(c => {
+                list.insertAdjacentHTML('beforeend', `<div class="flex items-start gap-2"><div class="w-6 h-6 rounded-full overflow-hidden shrink-0" style="border: 1px solid var(--border-soft);"><img src="${c.author_avatar}" alt="" class="w-full h-full object-cover"></div><div class="flex-1 rounded-xl px-3 py-2" style="background: var(--bg-card);"><span class="text-[10px] font-extrabold" style="color: var(--text-primary);">${c.author_name}</span><p class="text-[11px]" style="color: var(--text-secondary);">${c.content}</p></div></div>`);
+              });
+            });
+            commentSection.querySelector('.comment-input').focus();
+          }
+        });
+      }
+
+      // COMMENT INPUT
+      const commentInput = card.querySelector('.comment-input');
+      const submitCommentBtn = card.querySelector('.submit-comment-btn');
+      if (commentInput && submitCommentBtn) {
+        commentInput.addEventListener('input', () => {
+          submitCommentBtn.style.opacity = commentInput.value.trim() ? '1' : '0.5';
+          submitCommentBtn.disabled = !commentInput.value.trim();
+        });
+
+        const submitComment = () => {
+          const content = commentInput.value.trim();
+          if (!content) return;
+          submitCommentBtn.disabled = true;
+          apiPost('/api/community/comment/', { post_id: parseInt(postId), content }).then(data => {
+            if (data.error) { showToast(data.error); return; }
+            const list = card.querySelector('.comments-list');
+            list.insertAdjacentHTML('beforeend', `<div class="flex items-start gap-2"><div class="w-6 h-6 rounded-full overflow-hidden shrink-0" style="border: 1px solid var(--border-soft);"><img src="${data.comment.author_avatar}" alt="" class="w-full h-full object-cover"></div><div class="flex-1 rounded-xl px-3 py-2" style="background: var(--bg-card);"><span class="text-[10px] font-extrabold" style="color: var(--text-primary);">${data.comment.author_name}</span><p class="text-[11px]" style="color: var(--text-secondary);">${data.comment.content}</p></div></div>`);
+            commentInput.value = '';
+            submitCommentBtn.style.opacity = '0.5';
+            const countEl = card.querySelector('.comment-count');
+            if (countEl) countEl.textContent = data.total_comments + ' comments';
+            showToast('Comment posted!');
+          });
+        };
+
+        submitCommentBtn.addEventListener('click', submitComment);
+        commentInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitComment(); }
+        });
+      }
+    }
+
+    // Bind interactions on all existing post cards
+    document.querySelectorAll('#posts-container .post-card').forEach(card => {
+      bindPostInteractions(card);
+    });
+
+    // === EDIT POST MODAL ===
+    const editModal = document.getElementById('edit-modal');
+    let editingCard = null;
+    function openEditPost(card) {
+      editingCard = card;
+      const h3 = card.querySelector('h3');
+      const body = card.querySelector('p[style*="--text-secondary"]');
+      document.getElementById('edit-title').value = h3 ? h3.textContent.trim() : '';
+      document.getElementById('edit-content').value = body ? body.textContent.trim() : '';
+      editModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    document.getElementById('close-edit-modal-btn').addEventListener('click', () => {
+      editModal.classList.remove('open');
+      document.body.style.overflow = '';
+      editingCard = null;
+    });
+    editModal.addEventListener('click', (e) => { if (e.target === editModal) { editModal.classList.remove('open'); document.body.style.overflow = ''; editingCard = null; } });
+    document.getElementById('edit-save-btn').addEventListener('click', () => {
+      if (!editingCard) return;
+      const postId = editingCard.dataset.postId;
+      const title = document.getElementById('edit-title').value.trim();
+      const content = document.getElementById('edit-content').value.trim();
+      if (!title && !content) { showToast('Fill in at least one field'); return; }
+      const btn = document.getElementById('edit-save-btn');
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+      apiPost('/api/community/post/edit/', { post_id: parseInt(postId), title, content }).then(data => {
+        btn.textContent = 'Save Changes';
+        btn.disabled = false;
+        if (data.error) { showToast(data.error); return; }
+        const idx = Array.from(editingCard.parentNode.children).indexOf(editingCard);
+        const newCard = document.createElement('article');
+        newCard.innerHTML = data.post_html;
+        const card = newCard.firstElementChild;
+        card.parentNode.removeChild(newCard);
+        editingCard.replaceWith(card);
+        if (card.classList.contains('post-card')) {
+          initIcons(card);
+          bindPostInteractions(card);
+        }
+        editingCard = null;
+        editModal.classList.remove('open');
+        document.body.style.overflow = '';
+        showToast('Post updated');
+      });
+    });
+
+  })();
+  </script>
+</body>
+</html>

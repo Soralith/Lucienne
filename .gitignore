@@ -1,0 +1,10 @@
+/target
+/gen
+**/__pycache__
+*.py[cod]
+/rendered
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
