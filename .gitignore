@@ -8,3 +8,6 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Front-end toolchain
+/node_modules

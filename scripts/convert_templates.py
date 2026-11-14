@@ -102,7 +102,15 @@ def convert_filters(text):
 
 def convert(text):
     # Bundle the runtime assets so the desktop app works without a network.
-    text = text.replace("https://cdn.tailwindcss.com", "/static/dashboard/vendor/tailwind.js")
+    # Tailwind is precompiled: drop the CDN script and load the built stylesheet
+    # last in <head>, after the page's own <style> block.
+    text = re.sub(
+        r'\s*<script src="https://cdn\.tailwindcss\.com[^"]*"></script>', "", text
+    )
+    text = text.replace(
+        "</head>",
+        '  <link rel="stylesheet" href="/static/dashboard/css/tailwind.css">\n</head>',
+    )
     text = text.replace("https://unpkg.com/lucide@latest", "/static/dashboard/vendor/lucide.js")
     text = re.sub(
         r"https://fonts\.googleapis\.com/css2[^\"]*",

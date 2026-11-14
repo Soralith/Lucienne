@@ -1,0 +1,12 @@
+{
+  "name": "lucienne",
+  "private": true,
+  "description": "Front-end asset build for the Lucienne desktop UI.",
+  "scripts": {
+    "build:css": "tailwindcss -c tailwind.config.js -i ui/styles/tailwind.css -o ui/static/dashboard/css/tailwind.css --minify",
+    "check:css": "tailwindcss -c tailwind.config.js -i ui/styles/tailwind.css -o /tmp/tailwind.check.css --minify && diff -q /tmp/tailwind.check.css ui/static/dashboard/css/tailwind.css"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.17"
+  }
+}
