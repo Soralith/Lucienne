@@ -25,7 +25,6 @@ const SEED: &str = include_str!("../data/seed.json");
 const CSRF: &str = "lucienne-local-session";
 
 pub struct Store {
-    sources: HashMap<String, String>,
     contexts: HashMap<String, Value>,
     pub products: HashMap<i64, Value>,
     pub user: Value,
@@ -41,6 +40,7 @@ pub struct Store {
 #[derive(Clone)]
 pub struct AppState {
     pub inner: Arc<Mutex<Store>>,
+    env: Arc<Environment<'static>>,
 }
 
 fn system_today() -> String {
@@ -62,8 +62,39 @@ fn system_today() -> String {
     format!("{year:04}-{m:02}-{d:02}")
 }
 
+fn build_environment(sources: &HashMap<String, String>) -> Environment<'static> {
+    let mut env = Environment::new();
+    env.set_undefined_behavior(UndefinedBehavior::Chainable);
+    env.set_auto_escape_callback(|name| {
+        if name.ends_with(".html") {
+            AutoEscape::Html
+        } else {
+            AutoEscape::None
+        }
+    });
+    for (name, source) in sources {
+        let template_name = name.trim_start_matches("templates/").to_string();
+        let _ = env.add_template_owned(template_name, source.clone());
+    }
+    env.add_filter("ddefault", filters::ddefault);
+    env.add_filter("ddefault_if_none", filters::ddefault_if_none);
+    env.add_filter("truncatechars", filters::truncatechars);
+    env.add_filter("truncatewords", filters::truncatewords);
+    env.add_filter("floatformat", filters::floatformat);
+    env.add_filter("yesno", filters::yesno);
+    env.add_filter("pluralize", filters::pluralize);
+    env.add_filter(
+        "escapejs",
+        |value: JinjaValue| -> Result<JinjaValue, minijinja::Error> {
+            Ok(JinjaValue::from(filters::escapejs(value)?))
+        },
+    );
+    env.add_filter("ddate", filters::ddate);
+    env
+}
+
 impl Store {
-    fn load() -> Store {
+    fn load() -> (Store, Environment<'static>) {
         let seed: Value = serde_json::from_str(SEED).expect("seed.json");
         let contexts: Value = serde_json::from_str(CONTEXTS).expect("contexts.json");
 
@@ -151,47 +182,22 @@ impl Store {
             .cloned()
             .unwrap_or(json!({}));
 
-        Store {
-            sources,
-            contexts: contexts_map,
-            products,
-            user,
-            posts,
-            channels,
-            wishlist,
-            library,
-            comments,
-            reviews: Vec::new(),
-            next_id: 1000,
-        }
-    }
-
-    fn environment(&self) -> Environment<'static> {
-        let mut env = Environment::new();
-        env.set_undefined_behavior(UndefinedBehavior::Chainable);
-        env.set_auto_escape_callback(|name| {
-            if name.ends_with(".html") {
-                AutoEscape::Html
-            } else {
-                AutoEscape::None
-            }
-        });
-        for (name, source) in &self.sources {
-            let template_name = name.trim_start_matches("templates/").to_string();
-            let _ = env.add_template_owned(template_name, source.clone());
-        }
-        env.add_filter("ddefault", filters::ddefault);
-        env.add_filter("ddefault_if_none", filters::ddefault_if_none);
-        env.add_filter("truncatechars", filters::truncatechars);
-        env.add_filter("truncatewords", filters::truncatewords);
-        env.add_filter("floatformat", filters::floatformat);
-        env.add_filter("yesno", filters::yesno);
-        env.add_filter("pluralize", filters::pluralize);
-        env.add_filter("escapejs", |value: JinjaValue| -> Result<JinjaValue, minijinja::Error> {
-            Ok(JinjaValue::from(filters::escapejs(value)?))
-        });
-        env.add_filter("ddate", filters::ddate);
-        env
+        let env = build_environment(&sources);
+        (
+            Store {
+                contexts: contexts_map,
+                products,
+                user,
+                posts,
+                channels,
+                wishlist,
+                library,
+                comments,
+                reviews: Vec::new(),
+                next_id: 1000,
+            },
+            env,
+        )
     }
 
     fn hydrate(&self, mut context: Value) -> Value {
@@ -208,7 +214,10 @@ impl Store {
                 }
             }
         }
-        let user = context.get("user").cloned().unwrap_or_else(|| self.user.clone());
+        let user = context
+            .get("user")
+            .cloned()
+            .unwrap_or_else(|| self.user.clone());
         if let Some(obj) = context.as_object_mut() {
             obj.insert(
                 "request".to_string(),
@@ -221,9 +230,37 @@ impl Store {
         context
     }
 
+    /// Context for a single community post card. Callers must clone it out and
+    /// render after releasing the lock, so rendering never blocks the store.
+    fn post_context(&self, post: &Value) -> Value {
+        json!({
+            "post": post,
+            "user": self.user,
+            "request": {"path": "/community/", "user": self.user, "GET": {}},
+            "messages": [],
+            "perms": {},
+            "csrf_token": CSRF,
+        })
+    }
+
+    fn find_post(&mut self, post_id: i64) -> Option<&mut Value> {
+        self.posts
+            .iter_mut()
+            .find(|post| post.get("id").and_then(Value::as_i64) == Some(post_id))
+    }
+
+    fn channel_for_slug(&self, slug: &str) -> Option<Value> {
+        self.channels
+            .iter()
+            .find(|channel| channel.get("slug").and_then(Value::as_str) == Some(slug))
+            .cloned()
+    }
+}
+
+impl AppState {
     fn render(&self, template: &str, context: &Value) -> Result<String, String> {
-        let env = self.environment();
-        let tpl = env
+        let tpl = self
+            .env
             .get_template(template)
             .map_err(|err| format!("template {template}: {err}"))?;
         let html = tpl
@@ -244,37 +281,28 @@ impl Store {
                 other => format!("dashboard/pages/{other}.html"),
             }
         };
-        let context = self
-            .contexts
-            .get(key)
-            .ok_or_else(|| format!("no context for {key}"))?
-            .clone();
-        self.render(&template, &self.hydrate(context))
+        self.render_page_with(key, &template)
+    }
+
+    fn render_page_with(&self, key: &str, template: &str) -> Result<String, String> {
+        let context = {
+            let store = self.inner.lock().unwrap();
+            let raw = store
+                .contexts
+                .get(key)
+                .ok_or_else(|| format!("no context for {key}"))?
+                .clone();
+            store.hydrate(raw)
+        };
+        self.render(template, &context)
     }
 
     fn post_html(&self, post: &Value) -> Result<String, String> {
-        let context = json!({
-            "post": post,
-            "user": self.user,
-            "request": {"path": "/community/", "user": self.user, "GET": {}},
-            "messages": [],
-            "perms": {},
-            "csrf_token": CSRF,
-        });
+        let context = {
+            let store = self.inner.lock().unwrap();
+            store.post_context(post)
+        };
         self.render("dashboard/partials/community_post_card.html", &context)
-    }
-
-    fn find_post(&mut self, post_id: i64) -> Option<&mut Value> {
-        self.posts
-            .iter_mut()
-            .find(|post| post.get("id").and_then(Value::as_i64) == Some(post_id))
-    }
-
-    fn channel_for_slug(&self, slug: &str) -> Option<Value> {
-        self.channels
-            .iter()
-            .find(|channel| channel.get("slug").and_then(Value::as_str) == Some(slug))
-            .cloned()
     }
 }
 
@@ -285,15 +313,22 @@ fn static_asset(path: &str) -> Response {
     let mime = mime_guess::from_path(path).first_or_octet_stream();
     (
         StatusCode::OK,
-        [(header::CONTENT_TYPE, mime.essence_str().to_string())],
+        [
+            (header::CONTENT_TYPE, mime.essence_str().to_string()),
+            // Assets are baked into the binary, so they never change at runtime.
+            // Without this every navigation re-downloads ~760 KB of vendor JS.
+            (
+                header::CACHE_CONTROL,
+                "public, max-age=31536000, immutable".to_string(),
+            ),
+        ],
         file.data.into_owned(),
     )
         .into_response()
 }
 
 fn page_response(state: &AppState, key: &str) -> Response {
-    let store = state.inner.lock().unwrap();
-    match store.page(key) {
+    match state.page(key) {
         Ok(html) => Html(html).into_response(),
         Err(err) => {
             eprintln!("page error: {err}");
@@ -340,7 +375,11 @@ async fn admin_page(State(state): State<AppState>) -> Response {
 
 async fn game_detail(State(state): State<AppState>, AxumPath(id): AxumPath<String>) -> Response {
     let key = format!("detail-{id}");
-    if !state.inner.lock().unwrap().contexts.contains_key(&key) {
+    let known = {
+        let store = state.inner.lock().unwrap();
+        store.contexts.contains_key(&key)
+    };
+    if !known {
         return (StatusCode::NOT_FOUND, "Unknown product").into_response();
     }
     page_response(&state, &key)
@@ -359,46 +398,53 @@ async fn community_page(
         return page_response(&state, "community");
     }
 
-    let store = state.inner.lock().unwrap();
     let channel = params.get("channel").cloned().unwrap_or_default();
     let feed = params.get("feed").cloned().unwrap_or_default();
-    let search = params.get("search").cloned().unwrap_or_else(|| params.get("q").cloned().unwrap_or_default());
+    let search = params
+        .get("search")
+        .cloned()
+        .unwrap_or_else(|| params.get("q").cloned().unwrap_or_default());
     let needle = search.to_lowercase();
 
-    let matching: Vec<Value> = store
-        .posts
-        .iter()
-        .filter(|post| {
-            if !channel.is_empty() {
-                let slug = post
-                    .get("channel")
-                    .and_then(|c| c.get("slug"))
-                    .and_then(Value::as_str)
-                    .unwrap_or("");
-                if slug != channel {
+    // Collect the matching posts, then release the store lock before
+    // rendering so template work never serializes API requests.
+    let matching: Vec<Value> = {
+        let store = state.inner.lock().unwrap();
+        store
+            .posts
+            .iter()
+            .filter(|post| {
+                if !channel.is_empty() {
+                    let slug = post
+                        .get("channel")
+                        .and_then(|c| c.get("slug"))
+                        .and_then(Value::as_str)
+                        .unwrap_or("");
+                    if slug != channel {
+                        return false;
+                    }
+                }
+                if feed == "following" {
                     return false;
                 }
-            }
-            if feed == "following" {
-                return false;
-            }
-            if !needle.is_empty() {
-                let text = format!(
-                    "{} {}",
-                    post.get("title").and_then(Value::as_str).unwrap_or(""),
-                    post.get("content").and_then(Value::as_str).unwrap_or("")
-                )
-                .to_lowercase();
-                return text.contains(&needle);
-            }
-            true
-        })
-        .cloned()
-        .collect();
+                if !needle.is_empty() {
+                    let text = format!(
+                        "{} {}",
+                        post.get("title").and_then(Value::as_str).unwrap_or(""),
+                        post.get("content").and_then(Value::as_str).unwrap_or("")
+                    )
+                    .to_lowercase();
+                    return text.contains(&needle);
+                }
+                true
+            })
+            .cloned()
+            .collect()
+    };
 
     let mut html = String::new();
     for post in &matching {
-        if let Ok(card) = store.post_html(post) {
+        if let Ok(card) = state.post_html(post) {
             html.push_str(&card);
         }
     }
@@ -596,7 +642,13 @@ async fn community_vote(State(state): State<AppState>, Json(body): Json<Value>) 
             let is_chosen = option.get("id").and_then(Value::as_i64) == Some(option_id);
             if let Some(obj) = option.as_object_mut() {
                 let votes = obj.get("votes").and_then(Value::as_i64).unwrap_or(0);
-                let votes = if is_chosen { votes + 1 } else if obj.get("is_selected").and_then(Value::as_bool) == Some(true) { (votes - 1).max(0) } else { votes };
+                let votes = if is_chosen {
+                    votes + 1
+                } else if obj.get("is_selected").and_then(Value::as_bool) == Some(true) {
+                    (votes - 1).max(0)
+                } else {
+                    votes
+                };
                 obj.insert("votes".to_string(), json!(votes));
                 obj.insert("is_selected".to_string(), json!(is_chosen));
             }
@@ -697,12 +749,16 @@ async fn community_create_post(
         "poll_total": 0,
     });
 
-    let html = store.post_html(&post).unwrap_or_default();
-    store.posts.insert(0, post);
+    store.posts.insert(0, post.clone());
+    drop(store);
+    let html = state.post_html(&post).unwrap_or_default();
     Json(json!({"success": true, "post_html": html}))
 }
 
-async fn community_edit_post(State(state): State<AppState>, Json(body): Json<Value>) -> Json<Value> {
+async fn community_edit_post(
+    State(state): State<AppState>,
+    Json(body): Json<Value>,
+) -> Json<Value> {
     let Some(post_id) = body.get("post_id").and_then(Value::as_i64) else {
         return Json(json!({"error": "post_id required"}));
     };
@@ -719,13 +775,17 @@ async fn community_edit_post(State(state): State<AppState>, Json(body): Json<Val
         }
         updated = Some(post.clone());
     }
+    drop(store);
     let html = updated
-        .map(|post| store.post_html(&post).unwrap_or_default())
+        .map(|post| state.post_html(&post).unwrap_or_default())
         .unwrap_or_default();
     Json(json!({"success": true, "post_html": html}))
 }
 
-async fn community_delete_post(State(state): State<AppState>, Json(body): Json<Value>) -> Json<Value> {
+async fn community_delete_post(
+    State(state): State<AppState>,
+    Json(body): Json<Value>,
+) -> Json<Value> {
     let Some(post_id) = body.get("post_id").and_then(Value::as_i64) else {
         return Json(json!({"error": "post_id required"}));
     };
@@ -745,8 +805,10 @@ async fn api_fallback() -> Json<Value> {
 }
 
 pub fn router() -> Router {
+    let (store, env) = Store::load();
     let state = AppState {
-        inner: Arc::new(Mutex::new(Store::load())),
+        inner: Arc::new(Mutex::new(store)),
+        env: Arc::new(env),
     };
 
     Router::new()
