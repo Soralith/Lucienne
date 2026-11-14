@@ -11,3 +11,6 @@ Thumbs.db
 
 # Front-end toolchain
 /node_modules
+
+# Electron shell
+/electron/node_modules

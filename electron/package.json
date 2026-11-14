@@ -1,0 +1,13 @@
+{
+  "name": "kaimono-electron",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Electron shell for the Lucy UI served by the Rust local server.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^41.7.1"
+  }
+}
