@@ -3,7 +3,9 @@
 //! opens that URL. No windowing or webview code lives here.
 
 mod filters;
+mod library_cache;
 mod server;
+mod steam;
 
 fn main() {
     let address = server::start().expect("local server failed to start");

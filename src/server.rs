@@ -15,6 +15,8 @@ use rust_embed::RustEmbed;
 use serde_json::{json, Value};
 
 use crate::filters;
+use crate::library_cache;
+use crate::steam;
 
 #[derive(RustEmbed)]
 #[folder = "ui"]
@@ -285,7 +287,7 @@ impl AppState {
     }
 
     fn render_page_with(&self, key: &str, template: &str) -> Result<String, String> {
-        let context = {
+        let mut context = {
             let store = self.inner.lock().unwrap();
             let raw = store
                 .contexts
@@ -294,6 +296,11 @@ impl AppState {
                 .clone();
             store.hydrate(raw)
         };
+        // The Library page shows what is installed in Steam, not the mocked
+        // seed rows, so the scan replaces that context at render time.
+        if key == "library" {
+            apply_steam_library(&mut context);
+        }
         self.render(template, &context)
     }
 
@@ -304,6 +311,143 @@ impl AppState {
         };
         self.render("dashboard/partials/community_post_card.html", &context)
     }
+}
+
+/// Snapshot of the saved library in `~/.lucienne` as the page expects it.
+/// This only reads local files; pressing Refresh populates the cache.
+fn steam_library_json() -> Value {
+    let cache_dir = library_cache::cache_dir()
+        .map(|path| path.display().to_string())
+        .unwrap_or_default();
+    let Some(cached) = library_cache::load() else {
+        return json!({
+            "available": false,
+            "root": "",
+            "cache_dir": cache_dir,
+            "scanned_at": "",
+            "games": [],
+            "total_count": 0,
+            "total_size": "0 B",
+        });
+    };
+
+    let total_bytes: u64 = cached.games.iter().map(|game| game.size_on_disk).sum();
+    let games: Vec<Value> = cached
+        .games
+        .iter()
+        .map(|game| {
+            let activity = if game.last_updated > 0 {
+                format!("Updated {}", steam::date_from_unix(game.last_updated))
+            } else if game.last_played > 0 {
+                format!("Played {}", steam::date_from_unix(game.last_played))
+            } else {
+                "Installed".to_string()
+            };
+            let size = steam::format_size(game.size_on_disk);
+            let local_cover = format!("/media/steam/{}", game.appid);
+            // Once Refresh has cached the cover, the page never hits the CDN.
+            let image_url = if library_cache::cover_file(game.appid).is_some() {
+                local_cover.clone()
+            } else {
+                steam::cover_url(game.appid)
+            };
+            json!({
+                "appid": game.appid,
+                "title": game.name,
+                "library": game.library,
+                "size_bytes": game.size_on_disk,
+                "meta": size,
+                "status": "Installed",
+                "updated": activity,
+                "updated_at": steam::date_from_unix(game.last_updated),
+                "last_played_at": steam::date_from_unix(game.last_played),
+                "image_url": image_url,
+                "header_url": steam::header_url(game.appid),
+                "local_cover_url": local_cover,
+                "favorite": false,
+                "badge": "",
+            })
+        })
+        .collect();
+    let total_count = games.len();
+
+    json!({
+        "available": true,
+        "root": cached.steam_root,
+        "cache_dir": cache_dir,
+        "scanned_at": steam::date_from_unix(cached.scanned_at),
+        "games": games,
+        "total_count": total_count,
+        "total_size": steam::format_size(total_bytes),
+    })
+}
+
+fn apply_steam_library(context: &mut Value) {
+    let snapshot = steam_library_json();
+    let Some(obj) = context.as_object_mut() else {
+        return;
+    };
+    for (key, fallback) in [
+        ("available", json!(false)),
+        ("root", json!("")),
+        ("cache_dir", json!("")),
+        ("scanned_at", json!("")),
+        ("games", json!([])),
+        ("total_count", json!(0)),
+        ("total_size", json!("0 B")),
+    ] {
+        obj.insert(
+            key.to_string(),
+            snapshot.get(key).cloned().unwrap_or(fallback),
+        );
+    }
+    // The mocked hero banner has no real playtime behind it.
+    obj.insert("now_playing".to_string(), Value::Null);
+}
+
+async fn steam_library() -> Json<Value> {
+    Json(steam_library_json())
+}
+
+/// Scans Steam and writes the snapshot plus covers to `~/.lucienne`.
+async fn steam_library_refresh() -> Response {
+    match tokio::task::spawn_blocking(library_cache::refresh).await {
+        Ok(Ok(_)) => Json(steam_library_json()).into_response(),
+        Ok(Err(err)) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(json!({ "error": err })),
+        )
+            .into_response(),
+        Err(err) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(json!({ "error": err.to_string() })),
+        )
+            .into_response(),
+    }
+}
+
+/// Serves portrait artwork, preferring the copy saved in `~/.lucienne` and
+/// falling back to Steam's own `appcache/librarycache` folder.
+async fn steam_media(AxumPath(appid): AxumPath<String>) -> Response {
+    let Some(appid) = appid.parse::<u64>().ok() else {
+        return (StatusCode::NOT_FOUND, "no cached artwork").into_response();
+    };
+    let Some(path) = library_cache::cover_file(appid).or_else(|| steam::cached_cover(appid)) else {
+        return (StatusCode::NOT_FOUND, "no cached artwork").into_response();
+    };
+    let Ok(bytes) = std::fs::read(&path) else {
+        return (StatusCode::NOT_FOUND, "no cached artwork").into_response();
+    };
+    let mime = mime_guess::from_path(&path).first_or_octet_stream();
+    (
+        StatusCode::OK,
+        [
+            (header::CONTENT_TYPE, mime.essence_str().to_string()),
+            (header::CACHE_CONTROL, "public, max-age=3600".to_string()),
+        ],
+        bytes,
+    )
+        .into_response()
 }
 
 fn static_asset(path: &str) -> Response {
@@ -839,6 +983,9 @@ pub fn router() -> Router {
         .route("/settings/", get(settings_page).post(settings_save))
         .route("/settings/developer/", get(developer_page))
         .route("/settings/admin/", get(admin_page).post(admin_action))
+        .route("/api/steam/library/", get(steam_library))
+        .route("/api/steam/library/refresh/", post(steam_library_refresh))
+        .route("/media/steam/:appid", get(steam_media))
         .route("/api/wishlist/list/", get(wishlist_list))
         .route("/api/wishlist/toggle/", post(wishlist_toggle))
         .route("/api/shop/check-ownership/", get(check_ownership))
