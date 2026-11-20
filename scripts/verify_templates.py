@@ -169,9 +169,15 @@ def main() -> int:
             print(f"FAIL {page}: {type(exc).__name__}: {exc}")
             continue
         (out_dir / f"{page}.html").write_text(html)
-        reference = (ROOT / "reference" / f"{page}.html").read_text()
-        delta = len(html) - len(reference)
-        print(f"ok   {page}: {len(html)} chars (reference {len(reference)}, {delta:+d})")
+        reference = ROOT / "reference" / (
+            "details.html" if page.startswith("detail-") else f"{page}.html"
+        )
+        if reference.exists():
+            text = reference.read_text()
+            delta = len(html) - len(text)
+            print(f"ok   {page}: {len(html)} chars (reference {len(text)}, {delta:+d})")
+        else:
+            print(f"ok   {page}: {len(html)} chars")
 
     print(f"\n{len(contexts) - failures}/{len(contexts)} pages rendered")
     return 1 if failures else 0
